@@ -8,7 +8,7 @@ add_executable(${PROJECT_NAME})
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries(${PROJECT_NAME} -lstdc++fs)
+    target_link_libraries(${PROJECT_NAME} -lstdc++fs sfml-graphics sfml-system)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -21,7 +21,9 @@ target_sources(${PROJECT_NAME}
         src/Entity.cpp
 
         src/components/Component.cpp
-        
+        src/components/Position.cpp
+        src/components/Velocity.cpp
+        src/components/Text.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

@@ -9,10 +9,9 @@ namespace R_TYPE {
         enum class Type {
             POSITION,
             VELOCITY,
-            TRANSFORM,
-            ROTATION,
             TEXT,
             SPRITE,
+
             HITBOX,
             MUSIC,
             SOUND,
