@@ -12,11 +12,11 @@ namespace R_TYPE {
             Sprite(std::string pathTexture);
             ~Sprite();
 
-            /// @brief Draw sprite in the window
-            /// @param window the window of the game
-            void drawSprite(sf::RenderWindow window);
+            /// @brief Getter sprite
+            sf::Sprite getSprite();
         private:
             sf::Sprite sprite;
+            sf::Texture texture;
     };
 }
 

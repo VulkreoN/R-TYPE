@@ -31,6 +31,13 @@ namespace R_TYPE {
              * @return Returns a reference of the entity's tags vector
              */
             const std::vector<Tags> &getTags() const {return (_tags);};
+            /**
+             * @brief [] Operator overload that returns a pointer to a component or null
+             *
+             * @param type the type to search for
+             * @return std::shared_ptr<IComponent> to that component or nullptr
+             */
+            std::shared_ptr<IComponent> &operator[](IComponent::Type type);
 
             bool hasTag(Tags tag) const;
         private:

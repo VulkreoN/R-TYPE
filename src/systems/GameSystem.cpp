@@ -44,7 +44,7 @@ namespace R_TYPE {
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
-        std::shared_ptr<Sprite> component = std::make_shared<Sprite>("Jerome.png");
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>("arrow.png");
         std::shared_ptr<Position> component2 = std::make_shared<Position>(0, 0);
 
         entity->addComponent(component2)

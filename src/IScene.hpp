@@ -32,6 +32,8 @@ namespace R_TYPE {
              * @return Returns a vector of entities
              */
             virtual std::map<IEntity::Tags, std::vector<std::shared_ptr<IEntity>>> getTaggedEntities(std::vector<IEntity::Tags> tags) = 0;
+
+            virtual std::vector<std::shared_ptr<IEntity>> &operator[](IEntity::Tags tag) = 0;
     };
 }
 #endif /* ISCENE_HPP */

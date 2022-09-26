@@ -19,7 +19,12 @@ namespace R_TYPE {
 
     void SceneManager::setCurrentScene(SceneType sceneType, bool initScene)
     {
-        std::cout << "SetCurrentScene\n";
+        if (_scenes.find(sceneType) == _scenes.end())
+            throw std::invalid_argument("SceneManager: Invalid scene type: " + std::to_string((int)sceneType));
+        _currentScene = sceneType;
+        if (initScene) {
+            _scenes[_currentScene] = _scenes[_currentScene]->initScene();
+        }
     }
 
     void SceneManager::setShouldClose(bool shouldClose)

@@ -8,6 +8,8 @@
 #include "GraphicSystem.hpp"
 #include <iostream>
 #include "SceneManager.hpp"
+#include "Component.hpp"
+#include "Sprite.hpp"
 
 namespace R_TYPE {
     GraphicSystem::GraphicSystem()
@@ -33,7 +35,10 @@ namespace R_TYPE {
             if (event.type == sf::Event::Closed)
                 manager.setShouldClose(true);
         }
-        
+        for (auto &e : manager.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
+            auto test = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            window->draw(test->getSprite());
+        }
         window->display();
     }
 
