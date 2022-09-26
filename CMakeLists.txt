@@ -24,11 +24,16 @@ target_sources(${PROJECT_NAME}
         src/components/Position.cpp
         src/components/Velocity.cpp
         src/components/Text.cpp
+
+        src/systems/EventSystem.cpp
+        src/systems/GraphicSystem.cpp
+        src/systems/GameSystem.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         src/components
+        src/systems
         src
 )
 

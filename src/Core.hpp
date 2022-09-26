@@ -1,6 +1,8 @@
 #ifndef CORE_HPP
 #define CORE_HPP
 
+#include <map>
+#include "ISystem.hpp"
 #include "SceneManager.hpp"
 
 namespace R_TYPE {
@@ -22,6 +24,7 @@ namespace R_TYPE {
             void mainLoop();
         private:
             SceneManager _sceneManager;
+            std::map<SystemType, std::unique_ptr<ISystem>> _systems;
     };
 }
 
