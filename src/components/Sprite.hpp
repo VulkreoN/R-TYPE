@@ -3,13 +3,14 @@
 
 #include "Component.hpp"
 #include <SFML/Graphics.hpp>
+#include "Position.hpp"
 
 namespace R_TYPE {
     class Sprite : public Component {
         public: 
             /// @brief Init Sprite class
             /// @param pathTexture Path to the texture file
-            Sprite(std::string pathTexture);
+            Sprite(std::string pathTexture, Position position);
             ~Sprite();
 
             /// @brief Getter sprite
