@@ -25,8 +25,9 @@ namespace R_TYPE {
         for (auto &system : _systems)
             system.second->init(_sceneManager);
         std::cout << "boucle inf ma gueule\n";
-        // while (!_sceneManager.getShouldClose()) {
-        // }
-        std::cout << "Destroy system here\n";
+        while (!_sceneManager.getShouldClose()) {
+            for (auto &system : _systems)
+            system.second->update(_sceneManager, 17);
+        }
     }
 }

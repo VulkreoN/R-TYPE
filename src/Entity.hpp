@@ -31,6 +31,8 @@ namespace R_TYPE {
              * @return Returns a reference of the entity's tags vector
              */
             const std::vector<Tags> &getTags() const {return (_tags);};
+
+            bool hasTag(Tags tag) const;
         private:
             std::vector<Tags> _tags;
             std::map<IComponent::Type, std::shared_ptr<IComponent>> _components;

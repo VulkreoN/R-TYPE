@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include "Entity.hpp"
 
@@ -20,10 +21,42 @@ namespace R_TYPE {
     };
 
     IEntity &Entity::addComponent(std::shared_ptr<IComponent> component) {
+        bool notFound = false;
+
+        IComponent::Type type = component->getType();
+        _componentsType.push_back(type);
+        _components[type] = component;
+        for (auto &tag : entityTags) {
+            if (this->hasTag(tag.first))
+                continue;
+            for (auto &vec : tag.second) {
+                notFound = false;
+                for (auto &ctag : vec) {
+                    if (std::find(_componentsType.begin(), _componentsType.end(), ctag) == _componentsType.end()) {
+                        notFound = true;
+                        break;
+                    }
+                }
+                if (notFound)
+                    continue;
+                _tags.push_back(tag.first);
+                break;
+            }
+        }
+        return *this;
+    }
+
+    bool Entity::hasTag(Tags tag) const
+    {
+        return (std::find(_tags.begin(), _tags.end(), tag) != _tags.end());
     }
 
     IEntity &Entity::addComponents(std::vector<std::shared_ptr<IComponent>> components)
-    {}
+    {
+        for (auto &component : components)
+            this->addComponent(component);
+        return *this;
+    }
 
     std::map<IComponent::Type, std::shared_ptr<IComponent>> &Entity::getComponents() {
     }

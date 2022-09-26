@@ -9,6 +9,7 @@
 #define ISYSTEM_HPP_
 
 #include <iostream>
+#include <memory>
 
 namespace R_TYPE {
 

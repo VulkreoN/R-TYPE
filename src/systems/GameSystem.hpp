@@ -9,18 +9,22 @@
 #define GAMESYSTEM_HPP_
 
 #include "ISystem.hpp"
+#include "IScene.hpp"
 
 namespace R_TYPE {
+
     class GameSystem: public ISystem {
         public:
             GameSystem();
             ~GameSystem();
 
-            void init(SceneManager &manager) final;
-            void update(SceneManager &manager, uint64_t deltaTime) final;
+            void init(SceneManager &sceneManager) final;
+            void update(SceneManager &sceneManager, uint64_t deltaTime) final;
             void destroy() final;
 
         protected:
+
+            std::unique_ptr<R_TYPE::IScene> createSceneTest();
         private:
     };
 }

@@ -26,7 +26,7 @@ namespace R_TYPE {
             TYPE_NB
         };
         virtual const Type &getType() const = 0;
-        virtual bool isInitialized() const = 0;
+        // virtual bool isInitialized() const = 0;
     };
 }
 #endif /* ICOMPONENT_HPP */

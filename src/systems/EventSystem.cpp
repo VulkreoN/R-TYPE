@@ -25,7 +25,7 @@ namespace R_TYPE {
 
     void EventSystem::update(SceneManager &manager, uint64_t deltaTime)
     {
-        std::cout << "Event System update" << std::endl;
+        
     }
 
     void EventSystem::destroy()

@@ -9,6 +9,7 @@
 #define GRAPHICSYSTEM_HPP_
 
 #include "ISystem.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace R_TYPE {
     class GraphicSystem: public ISystem {
@@ -22,6 +23,7 @@ namespace R_TYPE {
 
         protected:
         private:
+            sf::RenderWindow *window;
     };
 }
 
