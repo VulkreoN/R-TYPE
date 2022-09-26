@@ -36,3 +36,8 @@ void Connection::connect_to_server(const asio::ip::tcp::resolver::results_type& 
                 std::cout << "Connected successfully" << std::endl;
         });
 }
+
+const std::unique_ptr<asio::ip::tcp::socket> &Connection::get_socket() const
+{
+    return (_socket);
+}

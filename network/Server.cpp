@@ -29,7 +29,7 @@ void Server::connect()
 void Server::accept_client()
 {
     _connections.push_back(std::make_unique<Connection>(std::make_unique<asio::ip::tcp::socket>(_context)));
-    _acceptor.async_accept([this](std::error_code ec, asio::ip::tcp::socket socket)
+    _acceptor.async_accept(*(_connections.back()->get_socket()), [this](std::error_code ec)
         {
             if (ec) {
                 std::cout << "SERVER ERROR: " << ec.message() << std::endl;

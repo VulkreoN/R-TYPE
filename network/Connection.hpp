@@ -21,6 +21,7 @@
             void add_to_write_queue(std::string);
             std::string get_from_read_queue();
             void connect_to_server(const asio::ip::tcp::resolver::results_type& endpoint);
+            const std::unique_ptr<asio::ip::tcp::socket> &get_socket() const;
 
         protected:
         private:
