@@ -30,17 +30,6 @@ std::string Connection::get_read_queue()
     return (_read_queue->get_queue());
 }
 
-void Connection::connect_to_server(const asio::ip::tcp::resolver::results_type& endpoint)
-{
-    asio::async_connect(*_socket, endpoint,
-        [this] (std::error_code ec, asio::ip::tcp::endpoint endpt)
-        {
-            if (!ec) {
-                std::cout << "Connected successfully" << std::endl;
-                }
-        });
-}
-
 const std::unique_ptr<asio::ip::tcp::socket> &Connection::get_socket() const
 {
     return (_socket);
