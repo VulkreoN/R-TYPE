@@ -35,7 +35,21 @@ void Server::accept_client()
                 std::cout << "SERVER ERROR: " << ec.message() << std::endl;
             } else {
                 std::cout << "Connected" << std::endl;
+                _connections.back()->set_connection(true);
             }
             accept_client(); // recursive to accept another client
         });
+}
+
+void Server::broadcast(std::string msg)
+{
+    for (std::unique_ptr<Connection>& connection : _connections)
+        if (connection->check_if_connected())
+            connection->add_to_write_queue(msg);
+}
+
+void Server::update()
+{
+    for (std::unique_ptr<Connection>& connection : _connections)
+        connection->check_for_writing();
 }

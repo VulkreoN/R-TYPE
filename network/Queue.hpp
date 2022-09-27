@@ -16,7 +16,8 @@
             Queue();
             ~Queue();
             void add_to_queue(std::string);
-            std::string get_from_queue();
+            std::string get_queue();
+            void remove_from_queue(size_t size);
 
         protected:
         private:

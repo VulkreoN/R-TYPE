@@ -18,6 +18,8 @@
             Server(size_t port);
             ~Server();
             void connect();
+            void broadcast(std::string);
+            void update();
 
         protected:
         private:
