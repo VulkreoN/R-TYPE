@@ -25,16 +25,17 @@
             bool check_if_connected();
             void set_connection(bool);
             void check_for_writing();
+            void setup_read();
 
         protected:
         private:
             std::unique_ptr<Queue> _write_queue;
             std::unique_ptr<Queue> _read_queue;
             std::unique_ptr<asio::ip::tcp::socket> _socket;
-            // asio::io_context& _asioContext;
-            // size_t _id;
             bool _connected;
             bool _writing;
+            bool _reading;
+            char _read_buffer[1024];
     };
 
 #endif /* !CONNECTION_HPP_ */

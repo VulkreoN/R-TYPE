@@ -36,6 +36,7 @@ void Server::accept_client()
             } else {
                 std::cout << "Connected" << std::endl;
                 _connections.back()->set_connection(true);
+                _connections.back()->setup_read();
             }
             accept_client(); // recursive to accept another client
         });
