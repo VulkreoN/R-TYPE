@@ -11,16 +11,15 @@ namespace R_TYPE {
             VELOCITY,
             TEXT,
             SPRITE,
+            EVENT,
 
             HITBOX,
             MUSIC,
             SOUND,
             PLAYER,
-            CAMERA,
             ANIMATION,
             PARTICLES,
             PROJECTILES,
-            TIMER,
             DESTRUCTIBLE,
             UI,
             TYPE_NB

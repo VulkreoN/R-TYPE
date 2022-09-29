@@ -10,6 +10,7 @@
 
 #include "ISystem.hpp"
 #include <SFML/Graphics.hpp>
+#include "EventSystem.hpp"
 
 namespace R_TYPE {
     class GraphicSystem: public ISystem {
@@ -24,6 +25,7 @@ namespace R_TYPE {
         protected:
         private:
             sf::RenderWindow *window;
+            std::unique_ptr<EventSystem> eventSystem;
     };
 }
 

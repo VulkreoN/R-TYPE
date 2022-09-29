@@ -37,6 +37,8 @@ namespace R_TYPE {
         /// @brief  Set if game should close
         void setShouldClose(bool shouldClose);
 
+        SceneType getCurrentSceneType() {return (_currentScene);};
+
         private:
             std::map<SceneType, std::unique_ptr<IScene>> _scenes;
             SceneType _currentScene = SceneType::NONE;
