@@ -17,16 +17,16 @@
         public:
             Server(size_t port);
             ~Server();
-            void connect();
-            void broadcast(std::string);
-            void update();
+            void connect(); // a function that once called, accepts all the clients that try to connect
+            void broadcast(std::string); // send a message to all players that are connected
+            void update(); // a function that needs to be called regularly, writes all the messages from write queues
 
         protected:
         private:
             std::vector<std::unique_ptr<Connection>> _connections;
             std::thread _threadContext;
             asio::ip::tcp::acceptor _acceptor;
-            void accept_client();
+            void accept_client(); // recursive that accepts clients and adds them to _connections
     };
 
 #endif /* !SERVER_HPP_ */

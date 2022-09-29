@@ -14,13 +14,10 @@
         public:
             ~INetwork() = default;
             virtual void connect() = 0;
-            //virtual void run() = 0;
-            //virtual void shut_down() = 0;
             virtual void broadcast(std::string) = 0;
             virtual void update() = 0;
 
         protected:
-            // core
             asio::io_context _context;
         private:
     };

@@ -17,9 +17,9 @@
         public:
             Client(const std::string ip, const size_t port);
             ~Client();
-            void connect();
-            void broadcast(std::string);
-            void update();
+            void connect(); // connects to a server
+            void broadcast(std::string); // sends a message to the server
+            void update(); // a function that needs to be called regularly, writes all the messages from write queue
 
         protected:
         private:
