@@ -6,7 +6,7 @@
 namespace R_TYPE {
     const std::map<Entity::Tags, std::vector<std::vector<IComponent::Type>>> Entity::entityTags = {
         {IEntity::Tags::SPRITE_2D,
-         {{IComponent::Type::SPRITE, IComponent::Type::POSITION}}},
+         {{IComponent::Type::SPRITE}}},
         {Entity::Tags::TEXT,
          {{IComponent::Type::TEXT, IComponent::Type::POSITION}}},
         {Entity::Tags::AUDIBLE,

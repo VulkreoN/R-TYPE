@@ -13,6 +13,10 @@ namespace R_TYPE {
             Component(const Type &type);
             const Type &getType() const;
 
+            /// @brief Fonction to get a component from Entity
+            /// @tparam T Component class you want 
+            /// @param component components inside the Entity class (voir graphic system)
+            /// @return 
             template <typename T>
             static std::shared_ptr<T> castComponent(std::shared_ptr<IComponent> component)
             {
