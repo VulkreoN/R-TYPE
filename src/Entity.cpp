@@ -18,6 +18,8 @@ namespace R_TYPE {
          {{IComponent::Type::PLAYER}}},
         {Entity::Tags::DESTRUCTIBLE,
          {{IComponent::Type::DESTRUCTIBLE}}},
+        {Entity::Tags::CALLABLE,
+         {{IComponent::Type::EVENT}}}
     };
 
     IEntity &Entity::addComponent(std::shared_ptr<IComponent> component) {

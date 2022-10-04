@@ -20,12 +20,14 @@ target_sources(${PROJECT_NAME}
         src/SceneManager.cpp
         src/Entity.cpp
         src/Scene.cpp
+        src/ButtonCallback.cpp
 
         src/components/Component.cpp
         src/components/Position.cpp
         src/components/Velocity.cpp
         src/components/Text.cpp
         src/components/Sprite.cpp
+        src/components/Event.cpp
 
         src/systems/EventSystem.cpp
         src/systems/GraphicSystem.cpp

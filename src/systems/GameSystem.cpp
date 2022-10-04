@@ -7,6 +7,7 @@
 
 #include "GameSystem.hpp"
 #include "Scene.hpp"
+#include "Event.hpp"
 #include "SceneManager.hpp"
 
 #include "Entity.hpp"
@@ -46,8 +47,20 @@ namespace R_TYPE {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(200, 0);
         std::shared_ptr<Sprite> component = std::make_shared<Sprite>("arrow.png", *component2);
+        std::shared_ptr<Event> event = std::make_shared<Event>();
 
-        entity->addComponent(component);
+        ButtonCallbacks call (
+            [](SceneManager &) {
+                std::cout << "pressed Z" << std::endl;
+            },
+            [](SceneManager &) {
+                std::cout << "released Z" << std::endl;
+            });
+
+        event->addKeyboardEvent(sf::Keyboard::Z, call);
+
+        entity->addComponent(component)
+            .addComponent(event);
 
         scene->addEntity(entity);
         return (scene);
