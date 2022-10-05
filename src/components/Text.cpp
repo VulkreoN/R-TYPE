@@ -16,14 +16,16 @@ namespace R_TYPE {
         text.setCharacterSize(size);
         text.setColor(color);
     }
-    
+
     Text::~Text()
     {
     }
 
-    void Text::printText(sf::RenderWindow window)
+    void Text::printText(sf::RenderWindow window, Position position)
     {
+        sf::Vector2f pos(position.getPosition());
+
+        text.setPosition(pos);
         window.draw(text);
     }
-    
 }
