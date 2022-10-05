@@ -4,6 +4,7 @@
 #include "Component.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <Position.hpp>
 
 namespace R_TYPE {
     class Text : public Component{
@@ -18,7 +19,7 @@ namespace R_TYPE {
         ~Text();
 
         /// @brief Print text
-        void printText(sf::RenderWindow window);
+        void printText(sf::RenderWindow window, Position position);
     private:
         sf::Text text;
         /* data */
