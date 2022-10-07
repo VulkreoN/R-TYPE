@@ -4,6 +4,7 @@
 #include "Component.hpp"
 #include "ButtonCallback.hpp"
 #include <SFML/Graphics.hpp>
+#include "MouseCallback.hpp"
 
 namespace R_TYPE {
     class Event : public Component {
@@ -32,10 +33,35 @@ namespace R_TYPE {
          */
         void replaceKeyboardEvent(sf::Keyboard::Key oldKey, sf::Keyboard::Key newKey);
 
+        /**
+         * @brief Adds a mouse event to the listener
+         *
+         * @param key the key to listen to
+         * @param func the function to call when the key is pressed
+         */
+        void addMouseEvent(sf::Mouse::Button key, MouseCallback func);
+        /**
+         * @brief unbinds a mouseButton
+         *
+         * @param button The mouseButton to unbind
+         */
+        void removeMouseEvent(sf::Mouse::Button button);
+        /**
+         * @brief replaces the key for a listener
+         *
+         * @param oldKey the old key to take the callbacks from
+         * @param newKey the new key that will receive the callbacks
+         */
+        void replaceMouseEvent(sf::Mouse::Button oldKey, sf::Mouse::Button newKey);
+
         std::map<sf::Keyboard::Key, ButtonCallbacks> getKeyboardMap() {return (_keyboardMap);};
+
+        /// @brief gets a reference to the mouse mappings
+        std::map<sf::Mouse::Button, MouseCallback> &getMouseMappings();
     private:
 
         std::map<sf::Keyboard::Key, ButtonCallbacks> _keyboardMap;
+        std::map<sf::Mouse::Button, MouseCallback> _mouseMap;
     };
 }
 

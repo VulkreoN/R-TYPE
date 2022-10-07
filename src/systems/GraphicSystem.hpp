@@ -22,9 +22,11 @@ namespace R_TYPE {
             void update(SceneManager &manager, uint64_t deltaTime) final;
             void destroy() final;
 
+            static sf::RenderWindow *getWindow() {return (window);};
+
         protected:
         private:
-            sf::RenderWindow *window;
+            static sf::RenderWindow *window;
             std::unique_ptr<EventSystem> eventSystem;
     };
 }

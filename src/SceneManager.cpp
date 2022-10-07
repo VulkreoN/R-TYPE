@@ -36,4 +36,26 @@ namespace R_TYPE {
     {
         return _shouldClose;
     }
+
+    std::map<SceneManager::SceneType, std::unique_ptr<IScene>> &SceneManager::getScenes()
+    {
+        return _scenes;
+    }
+
+    std::vector<SceneManager::SceneType> SceneManager::getSceneTypeList()
+    {
+        std::vector<SceneType> sceneTypeList;
+
+        for (auto &scene : _scenes) {
+            sceneTypeList.push_back(scene.first);
+        }
+        return sceneTypeList;
+    }
+
+    IScene &SceneManager::getScene(SceneType sceneType)
+    {
+        if (_scenes.find(sceneType) == _scenes.end())
+            throw std::invalid_argument("SceneManager: Invalid scene type: " + std::to_string((int)sceneType));
+        return *_scenes[sceneType];
+    }
 }

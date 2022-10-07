@@ -25,10 +25,12 @@ namespace R_TYPE {
 
     void EventSystem::init(SceneManager &manager)
     {
-        for (auto &entity : manager.getCurrentScene()[IEntity::Tags::CALLABLE]) {
-            auto listener = Component::castComponent<Event>((*entity)[IComponent::Type::EVENT]);
-            if (listener)
-                _event[0].push_back(listener);
+        for (auto &index : manager.getSceneTypeList()) {
+            for (auto &entity : manager.getScene(index)[IEntity::Tags::CALLABLE]) {
+                auto listener = Component::castComponent<Event>((*entity)[IComponent::Type::EVENT]);
+                if (listener)
+                    _event[(int)index].push_back(listener);
+            }
         }
     }
 
@@ -40,6 +42,7 @@ namespace R_TYPE {
                 manager.setShouldClose(true);
             for (auto &listener : _event[(int)manager.getCurrentSceneType()]) {
                 handleKeyboard(manager, listener, event);
+                handleMouse(manager, listener, event);
             }
         }
     }
@@ -63,6 +66,28 @@ namespace R_TYPE {
                 it.second.released(manager);
                 wasPressed = false;
             }
+        }
+    }
+
+    void EventSystem::handleMouse(SceneManager &manager, std::shared_ptr<Event> listener, sf::Event event)
+    {
+        for (auto &it : listener->getMouseMappings()) {
+            if (it.second._pressed && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == it.first) {
+                it.second._pressed(manager);
+                break;
+            }
+            // if (it.second._down && Window::isMouseButtonDown(it.first)) {
+            //     it.second._down(manager, pos);
+            //     break;
+            // }
+            if (it.second._released && event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == it.first) {
+                it.second._released(manager);
+                break;
+            }
+            // if (Window::isMouseButtonUp(it.first)) {
+            //     it.second._up(manager, pos);
+            //     break;
+            // }
         }
     }
 }

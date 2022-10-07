@@ -12,6 +12,9 @@
 #include "Sprite.hpp"
 
 namespace R_TYPE {
+
+    sf::RenderWindow *GraphicSystem::window;
+
     GraphicSystem::GraphicSystem()
     {
         std::cout << "Graphic System create" << std::endl;
@@ -34,8 +37,11 @@ namespace R_TYPE {
     void GraphicSystem::update(SceneManager &manager, uint64_t deltaTime)
     {
         eventSystem->update(manager, deltaTime);
+        window->clear(sf::Color::Black);
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             auto test = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            test->getSprite().setPosition(pos->getPosition());
             window->draw(test->getSprite());
         }
         window->display();
