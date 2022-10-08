@@ -13,12 +13,9 @@
     class INetwork {
         public:
             ~INetwork() = default;
-            virtual void connect() = 0;
             virtual void broadcast(std::string) = 0;
-            virtual void update() = 0;
 
         protected:
-            asio::io_context _context;
         private:
     };
 
