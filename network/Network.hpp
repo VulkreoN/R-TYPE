@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2022
 ** Untitled (Workspace)
 ** File description:
-** ANetwork
+** Network
 */
 
 #ifndef ANETWORK_HPP_
@@ -12,15 +12,17 @@
 
     #include "INetwork.hpp"
 
-    class ANetwork {
+    class Network {
         public:
-            ANetwork(); // write only
-            ANetwork(asio::ip::udp::endpoint); // can read and write
-            ~ANetwork();
+            Network(); // write only
+            Network(asio::ip::udp::endpoint); // can read and write
+            ~Network();
             void write(std::string, asio::ip::udp::endpoint);
 
         protected:
             void read_setup();
+            virtual void handle_incomming_message();
+
             asio::io_context _context;
             asio::ip::udp::socket _socket;
             std::thread _threadContext;
