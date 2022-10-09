@@ -10,6 +10,8 @@
 Network::Network() : _socket(_context)
 {
     _socket.open(asio::ip::udp::v4());
+    read_setup();
+    _threadContext = std::thread([this]() { _context.run(); }); // make context run fake tasks to keep it busy
 }
 
 Network::Network(asio::ip::udp::endpoint endpoint) : _socket(_context, endpoint)
@@ -43,5 +45,9 @@ void Network::read_setup()
 }
 
 void Network::handle_incomming_message()
+{
+}
+
+void Network::broadcast(std::string)
 {
 }

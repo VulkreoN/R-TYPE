@@ -8,24 +8,21 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-    #include "INetwork.hpp"
+    #include "Network.hpp"
     #include "Connection.hpp"
 
     #include <memory>
 
-    class Client : INetwork {
+    class Client : Network {
         public:
             Client(const std::string ip, const size_t port);
             ~Client();
-            void connect(); // connects to a server
-            void broadcast(std::string); // sends a message to the server
-            void update(); // a function that needs to be called regularly, writes all the messages from write queue
+            void handle_incomming_message() override;
+            void broadcast(std::string) override;
 
         protected:
         private:
             std::unique_ptr<Connection> _connection;
-            asio::ip::tcp::resolver::results_type _endpoint;
-            std::thread _threadContext;
     };
 
 #endif /* !CLIENT_HPP_ */

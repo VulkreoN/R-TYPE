@@ -14,10 +14,11 @@
 
     class Network {
         public:
-            Network(); // write only
-            Network(asio::ip::udp::endpoint); // can read and write
+            Network(); // client
+            Network(asio::ip::udp::endpoint); // server
             ~Network();
             void write(std::string, asio::ip::udp::endpoint);
+            virtual void broadcast(std::string);
 
         protected:
             void read_setup();

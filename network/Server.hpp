@@ -18,6 +18,7 @@
             Server(size_t port);
             ~Server();
             void handle_incomming_message() override;
+            void broadcast(std::string) override;
 
         protected:
         private:
