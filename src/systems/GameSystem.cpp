@@ -12,6 +12,7 @@
 #include "Position.hpp"
 #include "Sprite.hpp"
 #include "GraphicSystem.hpp"
+#include "Text.hpp"
 
 namespace R_TYPE {
     GameSystem::GameSystem()
@@ -48,6 +49,17 @@ namespace R_TYPE {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
         std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2);
+
+        entity->addComponent(component)
+                .addComponent(component2);
+        return(entity);
+    }
+
+    std::shared_ptr<Entity> GameSystem::createText(std::string text, int posX, int posY, int size)
+    {
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
+        std::shared_ptr<Text> component = std::make_shared<Text>("font.ttf", text, size, sf::Color::White);
 
         entity->addComponent(component)
                 .addComponent(component2);
@@ -102,11 +114,13 @@ namespace R_TYPE {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createOptionMenu, this));
         std::shared_ptr<Entity> entity = createSprite("assets/menus/mnu.jpg", 0, 0);
         std::shared_ptr<Entity> entity2 = createSprite("assets/menus/return.png", 230, 500);
+        std::shared_ptr<Entity> entity3 = createText("OPTION", 350, 250, 50);
 
         createButtonEvent(entity2, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
 
         scene->addEntity(entity)
-              .addEntity(entity2);
+              .addEntity(entity2)
+              .addEntity(entity3);
         return (scene);
     }
 
@@ -115,12 +129,14 @@ namespace R_TYPE {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createOptionMenu, this));
         std::shared_ptr<Entity> entity = createSprite("assets/menus/backtoMenu.png", 230, 300);
         std::shared_ptr<Entity> entity2 = createSprite("assets/menus/return.png", 230, 400);
+        std::shared_ptr<Entity> entity3 = createText("PAUSE", 350, 25, 50);
 
         createButtonEvent(entity, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
         createButtonEvent(entity2, SceneManager::SceneType::GAME, sf::Vector2i(315, 50));
 
         scene->addEntity(entity)
-              .addEntity(entity2);
+              .addEntity(entity2)
+              .addEntity(entity3);
         return (scene);
     }
 
