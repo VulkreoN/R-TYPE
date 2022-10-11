@@ -3,27 +3,20 @@
 
 namespace R_TYPE {
 
-    Ennemy::Ennemy():
+    Ennemy::Ennemy(Ennemy::Type _type):
     Component(Component::Type::ENNEMY)
     {
         isAlive = true;
-        type = Ennemy::Type::TURRET;
-    }
-
-    void Ennemy::script1()
-    {
-        sf::Time elapsed1 = clock.getElapsedTime();
-
-        if (elapsed1.asSeconds() > 2) {
-            std::cout << "Turret shoot" << std::endl;
-            clock.restart();
-        }
+        type = _type;
     }
 
     void Ennemy::launchScript()
     {
         if (type == Ennemy::Type::TURRET)
-            script1();
+            scripts.turretScript();
+        else if (type == Ennemy::Type::JORYDE_ALIEN)
+            scripts.jorydeScript();
+        
     }
 
     Ennemy::~Ennemy()

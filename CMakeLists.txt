@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
         src/Scene.cpp
         src/ButtonCallback.cpp
         src/MouseCallback.cpp
+        src/Script.cpp
 
         src/components/Component.cpp
         src/components/Position.cpp

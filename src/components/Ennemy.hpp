@@ -2,6 +2,7 @@
 #define ENNEMY_HPP
 
 #include "Component.hpp"
+#include "Script.hpp"
 #include <SFML/Graphics.hpp>
 
 namespace R_TYPE {
@@ -9,9 +10,9 @@ namespace R_TYPE {
         public:
             enum class Type {
                 TURRET,
-                ALIEN_DRONE,
+                JORYDE_ALIEN,
             };
-            Ennemy();
+            Ennemy(Ennemy::Type type);
             ~Ennemy();
 
             /// @brief check if ennemy is alive 
@@ -20,11 +21,9 @@ namespace R_TYPE {
             /// @brief Launch the good script with the type of the ennemy
             void launchScript();
         private:
-            void script1();
-
             bool isAlive;
             Type type;
-            sf::Clock clock;
+            Script scripts;
     };
 }
 
