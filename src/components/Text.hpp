@@ -19,9 +19,12 @@ namespace R_TYPE {
         ~Text();
 
         /// @brief Print text
-        void printText(sf::RenderWindow window, Position position);
+        void printText(sf::RenderWindow *window, Position position);
+
     private:
         sf::Text text;
+
+        sf::Font font;
         /* data */
     };
 }

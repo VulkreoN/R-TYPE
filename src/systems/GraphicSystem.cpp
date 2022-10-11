@@ -10,8 +10,12 @@
 #include "SceneManager.hpp"
 #include "Component.hpp"
 #include "Sprite.hpp"
+#include "Text.hpp"
 
 namespace R_TYPE {
+
+    sf::RenderWindow *GraphicSystem::window;
+
     GraphicSystem::GraphicSystem()
     {
         std::cout << "Graphic System create" << std::endl;
@@ -34,9 +38,18 @@ namespace R_TYPE {
     void GraphicSystem::update(SceneManager &manager, uint64_t deltaTime)
     {
         eventSystem->update(manager, deltaTime);
+        window->clear(sf::Color::Black);
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
-            auto test = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
-            window->draw(test->getSprite());
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            sprite->getSprite().setPosition(pos->getPosition());
+            window->draw(sprite->getSprite());
+        }
+        for (auto &e : manager.getCurrentScene()[IEntity::Tags::TEXT]) {
+            auto text = Component::castComponent<Text>((*e)[IComponent::Type::TEXT]);
+            auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+
+            text->printText(window, *pos.get());
         }
         window->display();
     }

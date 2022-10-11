@@ -27,6 +27,7 @@ namespace R_TYPE {
         protected:
         private:
             void handleKeyboard(SceneManager &manager, std::shared_ptr<Event> listener, sf::Event event);
+            void handleMouse(SceneManager &, std::shared_ptr<Event> listener, sf::Event event);
             static std::map<int, std::vector<std::shared_ptr<Event>>> _event;
             sf::RenderWindow *window;
     };

@@ -1,3 +1,6 @@
+#ifndef SCENEMANAGER_HPP
+#define SCENEMANAGER_HPP
+
 #include <map>
 #include <memory>
 
@@ -10,6 +13,8 @@ namespace R_TYPE {
                 NONE = -1,
                 GAME,
                 MAIN_MENU,
+                OPTION,
+                PAUSE,
             };
         /**
          * @brief Add a scene to the scene manager
@@ -39,9 +44,18 @@ namespace R_TYPE {
 
         SceneType getCurrentSceneType() {return (_currentScene);};
 
+        std::map<SceneManager::SceneType, std::unique_ptr<IScene>> &getScenes();
+
+        std::vector<SceneManager::SceneType> getSceneTypeList();
+
+        IScene &getScene(SceneType sceneType);
+
         private:
             std::map<SceneType, std::unique_ptr<IScene>> _scenes;
             SceneType _currentScene = SceneType::NONE;
             bool _shouldClose = false;
     };
 }
+
+
+#endif /* SCENEMANAGER_HPP */

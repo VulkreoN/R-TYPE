@@ -21,6 +21,7 @@ target_sources(${PROJECT_NAME}
         src/Entity.cpp
         src/Scene.cpp
         src/ButtonCallback.cpp
+        src/MouseCallback.cpp
 
         src/components/Component.cpp
         src/components/Position.cpp
