@@ -30,7 +30,7 @@ namespace R_TYPE {
     bool CollideSystem::canMove(SceneManager &sceneManager, Position pos)
     {
         const sf::Image image = GraphicSystem::getWindow()->capture();
-        const sf::Color wallcolor(image.getPixel(201, 401));
+        const sf::Color wallcolor(image.getPixel(201, 400));
 
         for (int a = 0; a < 100; a++) {
             for (int b = 0; b < 38; b++) {
