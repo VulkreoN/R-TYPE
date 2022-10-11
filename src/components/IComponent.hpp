@@ -12,6 +12,8 @@ namespace R_TYPE {
             TEXT,
             SPRITE,
             EVENT,
+            ENNEMY,
+            SCRIPT,
 
             HITBOX,
             MUSIC,

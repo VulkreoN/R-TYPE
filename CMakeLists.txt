@@ -29,6 +29,7 @@ target_sources(${PROJECT_NAME}
         src/components/Text.cpp
         src/components/Sprite.cpp
         src/components/Event.cpp
+        src/components/Ennemy.cpp
 
         src/systems/EventSystem.cpp
         src/systems/GraphicSystem.cpp

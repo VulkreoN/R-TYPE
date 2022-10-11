@@ -13,6 +13,7 @@
 #include "Sprite.hpp"
 #include "GraphicSystem.hpp"
 #include "Text.hpp"
+#include "Ennemy.hpp"
 
 namespace R_TYPE {
     GameSystem::GameSystem()
@@ -63,6 +64,19 @@ namespace R_TYPE {
 
         entity->addComponent(component)
                 .addComponent(component2);
+        return(entity);
+    }
+
+    std::shared_ptr<Entity> GameSystem::createEnnemy(std::string path, int posX, int posY)
+    {
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2);
+        std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>();
+
+        entity->addComponent(component)
+                .addComponent(component2)
+                .addComponent(compoment3);
         return(entity);
     }
 
@@ -144,6 +158,7 @@ namespace R_TYPE {
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
         std::shared_ptr<Entity> entity = createSprite("arrow.png", 200, 0);
+        std::shared_ptr<Entity> entity2 = createEnnemy("ennemy.png", 500, 50);
         std::shared_ptr<Event> event = std::make_shared<Event>();
 
         ButtonCallbacks call (
@@ -155,7 +170,8 @@ namespace R_TYPE {
         event->addKeyboardEvent(sf::Keyboard::Escape, call);
         entity->addComponent(event);
 
-        scene->addEntity(entity);
+        scene->addEntity(entity)
+              .addEntity(entity2);
         return (scene);
     }
 }

@@ -11,6 +11,7 @@
 #include "Component.hpp"
 #include "Sprite.hpp"
 #include "Text.hpp"
+#include "Ennemy.hpp"
 
 namespace R_TYPE {
 

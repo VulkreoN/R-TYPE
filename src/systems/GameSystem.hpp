@@ -29,6 +29,7 @@ namespace R_TYPE {
 
             std::shared_ptr<Entity> createSprite(std::string path, int posX, int posY);
             std::shared_ptr<Entity> createText(std::string text, int posX, int posY, int size);
+            std::shared_ptr<Entity> createEnnemy(std::string path, int posX, int posY);
             void createButtonEvent(std::shared_ptr<Entity> &entity, SceneManager::SceneType goTo, sf::Vector2i click);
 
             std::unique_ptr<R_TYPE::IScene> createSceneTest();

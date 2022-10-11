@@ -19,7 +19,9 @@ namespace R_TYPE {
         {Entity::Tags::DESTRUCTIBLE,
          {{IComponent::Type::DESTRUCTIBLE}}},
         {Entity::Tags::CALLABLE,
-         {{IComponent::Type::EVENT}}}
+         {{IComponent::Type::EVENT}}},
+        {Entity::Tags::ENNEMY,
+         {{IComponent::Type::ENNEMY}}}
     };
 
     IEntity &Entity::addComponent(std::shared_ptr<IComponent> component) {

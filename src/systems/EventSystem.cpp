@@ -9,6 +9,7 @@
 #include "GraphicSystem.hpp"
 #include "SceneManager.hpp"
 #include <iostream>
+#include "Ennemy.hpp"
 
 namespace R_TYPE {
 
@@ -44,6 +45,11 @@ namespace R_TYPE {
                 handleKeyboard(manager, listener, event);
                 handleMouse(manager, listener, event);
             }
+        }
+        for (auto &script : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+            auto ennemy = Component::castComponent<Ennemy>((*script)[IComponent::Type::ENNEMY]);
+
+            ennemy->launchScript();
         }
     }
 
