@@ -144,7 +144,62 @@ namespace R_TYPE {
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
         std::shared_ptr<Entity> entity = createSprite("arrow.png", 200, 0);
+        std::shared_ptr<Entity> entity2 = createSprite("arrow.png", 200, 400);
         std::shared_ptr<Event> event = std::make_shared<Event>();
+        std::shared_ptr<Event> move_up = std::make_shared<Event>();
+        std::shared_ptr<Event> move_down = std::make_shared<Event>();
+        std::shared_ptr<Event> move_RIGHT = std::make_shared<Event>();
+        std::shared_ptr<Event> move_Left = std::make_shared<Event>();
+
+        ButtonCallbacks moveLeft (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+
+                pos->setX(pos->getPosition().x - 10);
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks moveRight (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+
+                pos->setX(pos->getPosition().x + 10);
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks moveUp (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+
+                pos->setY(pos->getPosition().y - 10);
+            },
+            [](SceneManager &) {});
+        
+        ButtonCallbacks moveDown (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+
+                pos->setY(pos->getPosition().y + 10);
+            },
+            [](SceneManager &) {});
+
+        event->addKeyboardEvent(sf::Keyboard::Z, moveUp);
+        event->addKeyboardEvent(sf::Keyboard::S, moveDown);
+        event->addKeyboardEvent(sf::Keyboard::D, moveRight);
+        event->addKeyboardEvent(sf::Keyboard::Q, moveLeft);
+        entity->addComponent(move_up)
+               .addComponent(move_down)
+               .addComponent(move_RIGHT)
+               .addComponent(move_Left);
+
 
         ButtonCallbacks call (
             [](SceneManager &sceneManager) {
@@ -155,7 +210,8 @@ namespace R_TYPE {
         event->addKeyboardEvent(sf::Keyboard::Escape, call);
         entity->addComponent(event);
 
-        scene->addEntity(entity);
+        scene->addEntity(entity)
+              .addEntity(entity2);
         return (scene);
     }
 }

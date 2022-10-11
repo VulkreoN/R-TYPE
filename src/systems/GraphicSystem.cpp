@@ -42,7 +42,7 @@ namespace R_TYPE {
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-            sprite->getSprite().setPosition(pos->getPosition());
+            sprite->setPos(pos->getPosition());
             window->draw(sprite->getSprite());
         }
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::TEXT]) {

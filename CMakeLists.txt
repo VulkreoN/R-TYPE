@@ -33,6 +33,7 @@ target_sources(${PROJECT_NAME}
         src/systems/EventSystem.cpp
         src/systems/GraphicSystem.cpp
         src/systems/GameSystem.cpp
+        src/systems/CollideSystem.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

@@ -2,6 +2,7 @@
 #include "GameSystem.hpp"
 #include "EventSystem.hpp"
 #include "GraphicSystem.hpp"
+#include "CollideSystem.hpp"
 #include <iostream>
 
 namespace R_TYPE {
@@ -12,6 +13,7 @@ namespace R_TYPE {
         _systems[SystemType::GAME] = std::make_unique<GameSystem>();
         _systems[SystemType::GRAPHIC] = std::make_unique<GraphicSystem>();
         // _systems[SystemType::EVENT] = std::make_unique<EventSystem>();
+        _systems[SystemType::COLLIDE] = std::make_unique<CollideSystem>();
     }
 
     Core::~Core()
