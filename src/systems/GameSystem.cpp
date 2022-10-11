@@ -12,6 +12,7 @@
 #include "Position.hpp"
 #include "Sprite.hpp"
 #include "GraphicSystem.hpp"
+#include "CollideSystem.hpp"
 #include "Text.hpp"
 
 namespace R_TYPE {
@@ -143,8 +144,8 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> entity = createSprite("arrow.png", 200, 0);
-        std::shared_ptr<Entity> entity2 = createSprite("arrow.png", 200, 400);
+        std::shared_ptr<Entity> entity = createSprite("ship.png", 200, 0);
+        std::shared_ptr<Entity> entity2 = createSprite("testcollide.jpg", 200, 400);
         std::shared_ptr<Event> event = std::make_shared<Event>();
         std::shared_ptr<Event> move_up = std::make_shared<Event>();
         std::shared_ptr<Event> move_down = std::make_shared<Event>();
@@ -157,7 +158,13 @@ namespace R_TYPE {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
 
-                pos->setX(pos->getPosition().x - 10);
+                Position moved(*pos.get());
+                moved.setX(pos->getPosition().x - 10);
+
+                if (CollideSystem::canMove(sceneManager, moved))
+                    pos->setX(pos->getPosition().x - 10);
+                else
+                    std::cout << "can't move" << std::endl;
             },
             [](SceneManager &) {});
 
@@ -167,7 +174,13 @@ namespace R_TYPE {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
 
-                pos->setX(pos->getPosition().x + 10);
+                Position moved(*pos.get());
+                moved.setX(pos->getPosition().x + 10);
+
+                if (CollideSystem::canMove(sceneManager, moved))
+                    pos->setX(pos->getPosition().x + 10);
+                else
+                    std::cout << "can't move" << std::endl;
             },
             [](SceneManager &) {});
 
@@ -177,7 +190,13 @@ namespace R_TYPE {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
 
-                pos->setY(pos->getPosition().y - 10);
+                Position moved(*pos.get());
+                moved.setY(pos->getPosition().y - 10);
+
+                if (CollideSystem::canMove(sceneManager, moved))
+                    pos->setY(pos->getPosition().y - 10);
+                else
+                    std::cout << "can't move" << std::endl;
             },
             [](SceneManager &) {});
         
@@ -187,7 +206,13 @@ namespace R_TYPE {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
 
-                pos->setY(pos->getPosition().y + 10);
+                Position moved(*pos.get());
+                moved.setY(pos->getPosition().y + 10);
+
+                if (CollideSystem::canMove(sceneManager, moved))
+                    pos->setY(pos->getPosition().y + 10);
+                else
+                    std::cout << "can't move" << std::endl;
             },
             [](SceneManager &) {});
 
