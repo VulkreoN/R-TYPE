@@ -14,14 +14,11 @@ namespace R_TYPE {
             EVENT,
             ENNEMY,
             SCRIPT,
+            PROJECTILES,
 
             HITBOX,
-            MUSIC,
-            SOUND,
             PLAYER,
             ANIMATION,
-            PARTICLES,
-            PROJECTILES,
             DESTRUCTIBLE,
             UI,
             TYPE_NB

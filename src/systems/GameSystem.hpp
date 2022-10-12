@@ -26,6 +26,7 @@ namespace R_TYPE {
             void update(SceneManager &sceneManager, uint64_t deltaTime) final;
             void destroy() final;
 
+            static std::shared_ptr<Entity> createProjectiles(std::string path, int posX, int posY);
         protected:
 
             std::shared_ptr<Entity> createSprite(std::string path, int posX, int posY);

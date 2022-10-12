@@ -9,9 +9,6 @@ namespace R_TYPE {
          {{IComponent::Type::SPRITE, IComponent::Type::POSITION}}},
         {Entity::Tags::TEXT,
          {{IComponent::Type::TEXT, IComponent::Type::POSITION}}},
-        {Entity::Tags::AUDIBLE,
-         {{IComponent::Type::MUSIC},
-          {IComponent::Type::SOUND}}},
         {Entity::Tags::COLLIDABLE,
          {{IComponent::Type::HITBOX}}},
         {Entity::Tags::PLAYER,
@@ -21,7 +18,9 @@ namespace R_TYPE {
         {Entity::Tags::CALLABLE,
          {{IComponent::Type::EVENT}}},
         {Entity::Tags::ENNEMY,
-         {{IComponent::Type::ENNEMY}}}
+         {{IComponent::Type::ENNEMY}}},
+        {Entity::Tags::PROJECTILES,
+         {{IComponent::Type::POSITION, IComponent::Type::VELOCITY, IComponent::Type::PROJECTILES}}}
     };
 
     IEntity &Entity::addComponent(std::shared_ptr<IComponent> component) {

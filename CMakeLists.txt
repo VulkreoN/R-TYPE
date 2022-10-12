@@ -31,6 +31,7 @@ target_sources(${PROJECT_NAME}
         src/components/Sprite.cpp
         src/components/Event.cpp
         src/components/Ennemy.cpp
+        src/components/Projectiles.cpp
 
         src/systems/EventSystem.cpp
         src/systems/GraphicSystem.cpp

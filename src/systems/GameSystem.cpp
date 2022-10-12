@@ -13,6 +13,8 @@
 #include "Sprite.hpp"
 #include "GraphicSystem.hpp"
 #include "Text.hpp"
+#include "Projectiles.hpp"
+#include "Velocity.hpp"
 
 namespace R_TYPE {
     GameSystem::GameSystem()
@@ -36,7 +38,15 @@ namespace R_TYPE {
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
     {
-        
+        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::GAME) {
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+
+                pos->setX(pos->getPosition().x + velocity->getVelocity().x);
+                pos->setY(pos->getPosition().y + velocity->getVelocity().y);
+            }
+        }
     }
 
     void GameSystem::destroy()
@@ -77,6 +87,21 @@ namespace R_TYPE {
                 .addComponent(component2)
                 .addComponent(compoment3);
         return(entity);
+    }
+
+    std::shared_ptr<Entity> GameSystem::createProjectiles(std::string path, int posX, int posY) 
+    {
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2);
+        std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(-0.001f, 0);
+        std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>();
+
+        entity->addComponent(component)
+                .addComponent(component2)
+                .addComponent(component3)
+                .addComponent(component4);
+        return (entity);
     }
 
     void GameSystem::createButtonEvent(std::shared_ptr<Entity> &entity, SceneManager::SceneType goTo, sf::Vector2i click)
@@ -156,7 +181,7 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> entity = createSprite("arrow.png", 200, 0);
+        std::shared_ptr<Entity> entity = createSprite("arrow.png", 200, 10);
         std::shared_ptr<Entity> entity2 = createEnnemy("ennemy.png", 500, 50, Ennemy::Type::TURRET);
         std::shared_ptr<Event> event = std::make_shared<Event>();
 

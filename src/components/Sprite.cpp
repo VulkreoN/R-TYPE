@@ -22,4 +22,9 @@ namespace R_TYPE {
     {
 
     }
+
+    void Sprite::setPos(sf::Vector2f pos)
+    {
+        sprite.setPosition(pos);
+    }
 }

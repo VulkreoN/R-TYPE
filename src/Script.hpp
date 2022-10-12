@@ -2,13 +2,14 @@
 #define SCRIPT_HPP
 
 #include <SFML/Graphics.hpp>
+#include "Position.hpp"
 
 namespace R_TYPE {
 
     class Script {
         public: 
 
-            void turretScript();
+        bool turretScript(int distance, Position selfPos);
             void jorydeScript();
         private:
             sf::Clock clock;
