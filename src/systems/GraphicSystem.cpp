@@ -10,6 +10,7 @@
 #include "SceneManager.hpp"
 #include "Component.hpp"
 #include "Sprite.hpp"
+#include "Player.hpp"
 #include "Text.hpp"
 
 namespace R_TYPE {
@@ -29,7 +30,7 @@ namespace R_TYPE {
     void GraphicSystem::init(SceneManager &manager)
     {
         std::cout << "Graphic System init" << std::endl;
-        
+
         window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
         eventSystem->init(manager);
         eventSystem->setWindow(window);
@@ -50,6 +51,11 @@ namespace R_TYPE {
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
             text->printText(window, *pos.get());
+        }
+        for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+            auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+            player->getSprite().setPosition(player->getPosition());
+            window->draw(player->getSprite());
         }
         window->display();
     }

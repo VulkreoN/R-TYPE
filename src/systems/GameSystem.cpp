@@ -9,6 +9,7 @@
 #include "Scene.hpp"
 #include "Event.hpp"
 #include "Entity.hpp"
+#include "Player.hpp"
 #include "Position.hpp"
 #include "Sprite.hpp"
 #include "GraphicSystem.hpp"
@@ -78,7 +79,7 @@ namespace R_TYPE {
                     mousePosition.y > pos->getPosition().y && mousePosition.y < pos->getPosition().y + click.y) {
                         if (goTo != SceneManager::SceneType::NONE)
                             sceneManager.setCurrentScene(goTo);
-                        else 
+                        else
                             sceneManager.setShouldClose(true);
                 }
             },
@@ -143,19 +144,69 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> entity = createSprite("arrow.png", 200, 0);
-        std::shared_ptr<Event> event = std::make_shared<Event>();
+        std::shared_ptr<Entity> player_e = std::make_shared<Entity>();
+        std::shared_ptr<Position> player_pos = std::make_shared<Position>(200, 0);
+        std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
+        //std::shared_ptr<Sprite> charge = std::make_shared<Sprite>("sprites/player.png", *attack_pos, sf::IntRect(0, 15, 14, 12));
+        //std::shared_ptr<Sprite> laser = std::make_shared<Sprite>("sprites/player.png", *player_pos, sf::IntRect(0, 27, 16, 4));
+        std::shared_ptr<Event> event_p = std::make_shared<Event>();
+        //std::shared_ptr<Event> event_a = std::make_shared<Event>();
 
-        ButtonCallbacks call (
-            [](SceneManager &sceneManager) {
-                sceneManager.setCurrentScene(SceneManager::SceneType::PAUSE);
+        player_e->addComponent(player);
+
+        ButtonCallbacks up (
+            [player_e](SceneManager &) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+
+                player->setPosition(sf::Vector2f(player->getPosition().x, player->getPosition().y - 10));
             },
             [](SceneManager &) {});
 
-        event->addKeyboardEvent(sf::Keyboard::Escape, call);
-        entity->addComponent(event);
+        ButtonCallbacks left (
+            [player_e](SceneManager &) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
 
-        scene->addEntity(entity);
+                player->setPosition(sf::Vector2f(player->getPosition().x - 10, player->getPosition().y));
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks down (
+            [player_e](SceneManager &) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+
+                player->setPosition(sf::Vector2f(player->getPosition().x, player->getPosition().y + 10));
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks right (
+            [player_e](SceneManager &) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+
+                player->setPosition(sf::Vector2f(player->getPosition().x + 10, player->getPosition().y));
+            },
+            [](SceneManager &) {});
+
+        //ButtonCallbacks shoot (
+        //    [](SceneManager &scene) {
+        //        
+        //    },
+        //    [](SceneManager &scene) {
+        //        std::cout << "released Z" << std::endl;
+        //    });
+
+        event_p->addKeyboardEvent(sf::Keyboard::Z, up);
+        event_p->addKeyboardEvent(sf::Keyboard::Q, left);
+        event_p->addKeyboardEvent(sf::Keyboard::S, down);
+        event_p->addKeyboardEvent(sf::Keyboard::D, right);
+        //event_a->addKeyboardEvent(sf::Keyboard::Space, shoot);
+
+        player_e->addComponent(event_p);
+
+        scene->addEntity(player_e);
         return (scene);
     }
 }
