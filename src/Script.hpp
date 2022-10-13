@@ -9,7 +9,7 @@ namespace R_TYPE {
     class Script {
         public: 
 
-        bool turretScript(int distance, Position selfPos);
+        bool turretScript(Position selfPos);
             void jorydeScript();
         private:
             sf::Clock clock;

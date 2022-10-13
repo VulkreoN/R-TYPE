@@ -12,7 +12,7 @@ namespace R_TYPE {
         {Entity::Tags::COLLIDABLE,
          {{IComponent::Type::HITBOX}}},
         {Entity::Tags::PLAYER,
-         {{IComponent::Type::PLAYER}}},
+         {{IComponent::Type::EVENT}}},
         {Entity::Tags::DESTRUCTIBLE,
          {{IComponent::Type::DESTRUCTIBLE}}},
         {Entity::Tags::CALLABLE,

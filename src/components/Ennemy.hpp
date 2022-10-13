@@ -6,6 +6,7 @@
 #include "SceneManager.hpp"
 #include <SFML/Graphics.hpp>
 #include "Position.hpp"
+#include "Velocity.hpp"
 
 namespace R_TYPE {
     class Ennemy : public Component {
@@ -22,6 +23,8 @@ namespace R_TYPE {
 
             /// @brief Launch the good script with the type of the ennemy
             void launchScript(SceneManager &manager, Position selfPos);
+
+            Velocity getVelocityTarget(sf::Vector2f distance);
         private:
             bool isAlive;
             Type type;

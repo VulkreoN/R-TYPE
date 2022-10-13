@@ -3,14 +3,13 @@
 
 namespace R_TYPE {
 
-    bool Script::turretScript(int distance, Position selfPos)
+    bool Script::turretScript(Position selfPos)
     {
         lastFrame = CurrentFrame;
         CurrentFrame = clock.getElapsedTime();
 
         if (CurrentFrame.asSeconds() > 5) {
             std::cout << "Turret shoot dans la direction du joueur " << std::endl;
-            std::cout << "distance " << distance << std::endl;
             clock.restart();
             return (true);
         }

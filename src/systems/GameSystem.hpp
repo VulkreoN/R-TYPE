@@ -14,6 +14,7 @@
 #include "Entity.hpp"
 #include "Ennemy.hpp"
 #include <SFML/System.hpp>
+#include "Velocity.hpp"
 
 namespace R_TYPE {
 
@@ -26,7 +27,7 @@ namespace R_TYPE {
             void update(SceneManager &sceneManager, uint64_t deltaTime) final;
             void destroy() final;
 
-            static std::shared_ptr<Entity> createProjectiles(std::string path, int posX, int posY);
+            static std::shared_ptr<Entity> createProjectiles(std::string path, Position pos, Velocity velocity);
         protected:
 
             std::shared_ptr<Entity> createSprite(std::string path, int posX, int posY);
