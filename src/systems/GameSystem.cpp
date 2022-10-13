@@ -12,6 +12,7 @@
 #include "Position.hpp"
 #include "Sprite.hpp"
 #include "GraphicSystem.hpp"
+#include "CollideSystem.hpp"
 #include "Text.hpp"
 #include "Projectiles.hpp"
 
@@ -180,9 +181,88 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> entity = createSprite("arrow.png", 200, 100);
-        std::shared_ptr<Entity> entity2 = createEnnemy("ennemy.png", 500, 400, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> entity3 = createEnnemy("ennemy.png", 500, 400, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> entity = createSprite("ship.png", 200, 0);
+        std::shared_ptr<Entity> entity2 = createSprite("testcollide.jpg", 200, 400);
         std::shared_ptr<Event> event = std::make_shared<Event>();
+        std::shared_ptr<Event> move_up = std::make_shared<Event>();
+        std::shared_ptr<Event> move_down = std::make_shared<Event>();
+        std::shared_ptr<Event> move_RIGHT = std::make_shared<Event>();
+        std::shared_ptr<Event> move_Left = std::make_shared<Event>();
+
+        ButtonCallbacks moveLeft (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+
+                Position moved(*pos.get());
+                moved.setX(pos->getPosition().x - 10);
+
+                if (CollideSystem::canMove(sceneManager, moved))
+                    pos->setX(pos->getPosition().x - 10);
+                else
+                    std::cout << "can't move" << std::endl;
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks moveRight (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+
+                Position moved(*pos.get());
+                moved.setX(pos->getPosition().x + 10);
+
+                if (CollideSystem::canMove(sceneManager, moved))
+                    pos->setX(pos->getPosition().x + 10);
+                else
+                    std::cout << "can't move" << std::endl;
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks moveUp (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+
+                Position moved(*pos.get());
+                moved.setY(pos->getPosition().y - 10);
+
+                if (CollideSystem::canMove(sceneManager, moved))
+                    pos->setY(pos->getPosition().y - 10);
+                else
+                    std::cout << "can't move" << std::endl;
+            },
+            [](SceneManager &) {});
+        
+        ButtonCallbacks moveDown (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+
+                Position moved(*pos.get());
+                moved.setY(pos->getPosition().y + 10);
+
+                if (CollideSystem::canMove(sceneManager, moved))
+                    pos->setY(pos->getPosition().y + 10);
+                else
+                    std::cout << "can't move" << std::endl;
+            },
+            [](SceneManager &) {});
+
+        event->addKeyboardEvent(sf::Keyboard::Z, moveUp);
+        event->addKeyboardEvent(sf::Keyboard::S, moveDown);
+        event->addKeyboardEvent(sf::Keyboard::D, moveRight);
+        event->addKeyboardEvent(sf::Keyboard::Q, moveLeft);
+        entity->addComponent(move_up)
+               .addComponent(move_down)
+               .addComponent(move_RIGHT)
+               .addComponent(move_Left);
+
 
         ButtonCallbacks call (
             [](SceneManager &sceneManager) {
@@ -194,7 +274,8 @@ namespace R_TYPE {
         entity->addComponent(event);
 
         scene->addEntity(entity)
-              .addEntity(entity2);
+              .addEntity(entity2)
+              .addEntity(entity3);
         return (scene);
     }
 }

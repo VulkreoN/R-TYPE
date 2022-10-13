@@ -11,6 +11,7 @@ namespace R_TYPE {
             std::cerr << "error load texture path\n";
         sprite.setTexture(texture);
         sprite.setPosition(pos);
+        size = sprite.getTexture()->getSize();
     }
 
     sf::Sprite Sprite::getSprite()
