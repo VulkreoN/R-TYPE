@@ -181,14 +181,16 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> entity3 = createEnnemy("ennemy.png", 500, 400, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> entity = createSprite("ship.png", 200, 0);
         std::shared_ptr<Entity> entity2 = createSprite("testcollide.jpg", 200, 400);
+        std::shared_ptr<Entity> entity3 = createEnnemy("ennemy.png", 500, 400, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> entity4 = createEnnemy("ennemy.png", 500, 50, Ennemy::Type::TURRET);
         std::shared_ptr<Event> event = std::make_shared<Event>();
         std::shared_ptr<Event> move_up = std::make_shared<Event>();
         std::shared_ptr<Event> move_down = std::make_shared<Event>();
         std::shared_ptr<Event> move_RIGHT = std::make_shared<Event>();
         std::shared_ptr<Event> move_Left = std::make_shared<Event>();
+        std::shared_ptr<Event> shoot = std::make_shared<Event>();
 
         ButtonCallbacks moveLeft (
             [](SceneManager &sceneManager) {
@@ -201,8 +203,6 @@ namespace R_TYPE {
 
                 if (CollideSystem::canMove(sceneManager, moved))
                     pos->setX(pos->getPosition().x - 10);
-                else
-                    std::cout << "can't move" << std::endl;
             },
             [](SceneManager &) {});
 
@@ -217,8 +217,6 @@ namespace R_TYPE {
 
                 if (CollideSystem::canMove(sceneManager, moved))
                     pos->setX(pos->getPosition().x + 10);
-                else
-                    std::cout << "can't move" << std::endl;
             },
             [](SceneManager &) {});
 
@@ -233,8 +231,6 @@ namespace R_TYPE {
 
                 if (CollideSystem::canMove(sceneManager, moved))
                     pos->setY(pos->getPosition().y - 10);
-                else
-                    std::cout << "can't move" << std::endl;
             },
             [](SceneManager &) {});
         
@@ -249,20 +245,19 @@ namespace R_TYPE {
 
                 if (CollideSystem::canMove(sceneManager, moved))
                     pos->setY(pos->getPosition().y + 10);
-                else
-                    std::cout << "can't move" << std::endl;
             },
             [](SceneManager &) {});
-
-        event->addKeyboardEvent(sf::Keyboard::Z, moveUp);
-        event->addKeyboardEvent(sf::Keyboard::S, moveDown);
-        event->addKeyboardEvent(sf::Keyboard::D, moveRight);
-        event->addKeyboardEvent(sf::Keyboard::Q, moveLeft);
-        entity->addComponent(move_up)
-               .addComponent(move_down)
-               .addComponent(move_RIGHT)
-               .addComponent(move_Left);
-
+        
+        ButtonCallbacks shootButton (
+            [](SceneManager &sceneManager) {
+                auto entity = sceneManager.getCurrentScene()[IEntity::Tags::SPRITE_2D][0];
+                auto comp = (*entity)[IComponent::Type::POSITION];
+                auto pos = Component::castComponent<Position>(comp);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
+                    ("projectiles.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.1f, 0));
+                sceneManager.getCurrentScene().addEntity(shoot);
+            },
+            [](SceneManager &) {});
 
         ButtonCallbacks call (
             [](SceneManager &sceneManager) {
@@ -270,12 +265,18 @@ namespace R_TYPE {
             },
             [](SceneManager &) {});
 
+        event->addKeyboardEvent(sf::Keyboard::Z, moveUp);
+        event->addKeyboardEvent(sf::Keyboard::S, moveDown);
+        event->addKeyboardEvent(sf::Keyboard::D, moveRight);
+        event->addKeyboardEvent(sf::Keyboard::Q, moveLeft);
+        event->addKeyboardEvent(sf::Keyboard::Space, shootButton);
         event->addKeyboardEvent(sf::Keyboard::Escape, call);
         entity->addComponent(event);
 
         scene->addEntity(entity)
               .addEntity(entity2)
-              .addEntity(entity3);
+              .addEntity(entity3)
+              .addEntity(entity4);
         return (scene);
     }
 }
