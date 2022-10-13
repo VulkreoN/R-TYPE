@@ -8,11 +8,12 @@ namespace R_TYPE {
 
     class Projectiles : public Component {
         public:
-            Projectiles();
+            Projectiles(bool _byPlayer);
             ~Projectiles();
 
-
+            bool shootByPlayer() {return (byPlayer);};
         private:
+            bool byPlayer;
     };
 }
 

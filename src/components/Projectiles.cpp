@@ -1,10 +1,10 @@
 #include "Projectiles.hpp"
 
 namespace R_TYPE {
-    Projectiles::Projectiles():
+    Projectiles::Projectiles(bool _byPlayer):
     Component(Component::Type::PROJECTILES)
     {
-
+        byPlayer = _byPlayer;
     }
     Projectiles::~Projectiles() 
     {

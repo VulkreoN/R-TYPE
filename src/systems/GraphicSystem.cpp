@@ -32,6 +32,7 @@ namespace R_TYPE {
         std::cout << "Graphic System init" << std::endl;
         
         window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
+        window->setFramerateLimit(60);
         eventSystem->init(manager);
         eventSystem->setWindow(window);
     }

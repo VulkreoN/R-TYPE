@@ -43,8 +43,8 @@ namespace R_TYPE {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
-                pos->setX(pos->getPosition().x + velocity->getVelocity().x);
-                pos->setY(pos->getPosition().y + velocity->getVelocity().y);
+                pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+                pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
             }
         }
     }
@@ -89,13 +89,13 @@ namespace R_TYPE {
         return(entity);
     }
 
-    std::shared_ptr<Entity> GameSystem::createProjectiles(std::string path, Position pos, Velocity velocity)
+    std::shared_ptr<Entity> GameSystem::createProjectiles(std::string path, Position pos, Velocity velocity, bool byPlayer)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
         std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2);
         std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(velocity);
-        std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>();
+        std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
 
         entity->addComponent(component)
                 .addComponent(component2)
@@ -201,7 +201,7 @@ namespace R_TYPE {
                 Position moved(*pos.get());
                 moved.setX(pos->getPosition().x - 10);
 
-                if (CollideSystem::canMove(sceneManager, moved))
+                if (CollideSystem::canMove(moved))
                     pos->setX(pos->getPosition().x - 10);
             },
             [](SceneManager &) {});
@@ -215,7 +215,7 @@ namespace R_TYPE {
                 Position moved(*pos.get());
                 moved.setX(pos->getPosition().x + 10);
 
-                if (CollideSystem::canMove(sceneManager, moved))
+                if (CollideSystem::canMove(moved))
                     pos->setX(pos->getPosition().x + 10);
             },
             [](SceneManager &) {});
@@ -229,7 +229,7 @@ namespace R_TYPE {
                 Position moved(*pos.get());
                 moved.setY(pos->getPosition().y - 10);
 
-                if (CollideSystem::canMove(sceneManager, moved))
+                if (CollideSystem::canMove(moved))
                     pos->setY(pos->getPosition().y - 10);
             },
             [](SceneManager &) {});
@@ -243,7 +243,7 @@ namespace R_TYPE {
                 Position moved(*pos.get());
                 moved.setY(pos->getPosition().y + 10);
 
-                if (CollideSystem::canMove(sceneManager, moved))
+                if (CollideSystem::canMove(moved))
                     pos->setY(pos->getPosition().y + 10);
             },
             [](SceneManager &) {});
@@ -254,7 +254,7 @@ namespace R_TYPE {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                    ("projectiles.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.1f, 0));
+                    ("projectiles.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.1f, 0), true);
                 sceneManager.getCurrentScene().addEntity(shoot);
             },
             [](SceneManager &) {});

@@ -17,7 +17,10 @@ namespace R_TYPE {
             void update(SceneManager &sceneManager, uint64_t deltaTime) final;
             void destroy() final;
 
-            static bool canMove(SceneManager &sceneManager, Position pos);
+            static bool canMove(Position pos);
+
+            void didHitPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            void didHitEnnemi(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
         
         private:
             std::vector<std::shared_ptr<IEntity>> _collidables2D;

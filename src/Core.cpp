@@ -4,6 +4,10 @@
 #include "GraphicSystem.hpp"
 #include "CollideSystem.hpp"
 #include <iostream>
+#include <chrono>
+#include <thread>
+
+#define UPDATE_DELTA 17
 
 namespace R_TYPE {
 
@@ -24,11 +28,21 @@ namespace R_TYPE {
 
     void Core::mainLoop()
     {
+        auto clock = std::chrono::high_resolution_clock::now();
+
         for (auto &system : _systems)
             system.second->init(_sceneManager);
         while (!_sceneManager.getShouldClose()) {
-            for (auto &system : _systems)
-                system.second->update(_sceneManager, 17);
+            auto time = std::chrono::high_resolution_clock::now();
+            auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(time - clock).count();
+            if (deltaTime < UPDATE_DELTA) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(UPDATE_DELTA - deltaTime));
+                continue;
+            }
+            for (auto &system : _systems) {
+                system.second->update(_sceneManager, deltaTime);
+                clock = time;
+            }
         }
     }
 }

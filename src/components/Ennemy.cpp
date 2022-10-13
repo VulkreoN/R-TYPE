@@ -30,7 +30,7 @@ namespace R_TYPE {
         }
         if (type == Ennemy::Type::TURRET) {
             if (scripts.turretScript(selfPos)) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("projectiles.png", selfPos, getVelocityTarget(distance));
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("projectiles.png", selfPos, getVelocityTarget(distance), false);
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::JORYDE_ALIEN)
@@ -65,7 +65,6 @@ namespace R_TYPE {
             velo.setY(0.1f);
             velo.setX(distance.x * 100 / distance.y * 0.001);
         }
-
         return (velo);
     }
 
