@@ -22,6 +22,7 @@ target_sources(${PROJECT_NAME}
         src/Scene.cpp
         src/ButtonCallback.cpp
         src/MouseCallback.cpp
+        src/Script.cpp
 
         src/components/Component.cpp
         src/components/Position.cpp
@@ -29,10 +30,13 @@ target_sources(${PROJECT_NAME}
         src/components/Text.cpp
         src/components/Sprite.cpp
         src/components/Event.cpp
+        src/components/Ennemy.cpp
+        src/components/Projectiles.cpp
 
         src/systems/EventSystem.cpp
         src/systems/GraphicSystem.cpp
         src/systems/GameSystem.cpp
+        src/systems/CollideSystem.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

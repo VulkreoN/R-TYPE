@@ -11,6 +11,7 @@ namespace R_TYPE {
             std::cerr << "error load texture path\n";
         sprite.setTexture(texture);
         sprite.setPosition(pos);
+        size = sprite.getTexture()->getSize();
     }
 
     sf::Sprite Sprite::getSprite()
@@ -21,5 +22,10 @@ namespace R_TYPE {
     Sprite::~Sprite() 
     {
 
+    }
+
+    void Sprite::setPos(sf::Vector2f pos)
+    {
+        sprite.setPosition(pos);
     }
 }

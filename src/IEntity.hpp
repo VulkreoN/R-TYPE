@@ -19,6 +19,7 @@ namespace R_TYPE {
             DESTRUCTIBLE,
             PLAYER,
             UI,
+            ENNEMY,
         };
 
         virtual ~IEntity() = default;

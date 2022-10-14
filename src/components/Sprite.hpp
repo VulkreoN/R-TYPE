@@ -15,8 +15,11 @@ namespace R_TYPE {
 
             /// @brief Getter sprite
             sf::Sprite getSprite();
+
+            void setPos(sf::Vector2f pos);
         private:
             sf::Sprite sprite;
+            sf::Vector2u size;
             sf::Texture texture;
     };
 }

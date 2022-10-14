@@ -11,6 +11,7 @@
 #include "Component.hpp"
 #include "Sprite.hpp"
 #include "Text.hpp"
+#include "Ennemy.hpp"
 
 namespace R_TYPE {
 
@@ -31,6 +32,7 @@ namespace R_TYPE {
         std::cout << "Graphic System init" << std::endl;
         
         window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
+        window->setFramerateLimit(60);
         eventSystem->init(manager);
         eventSystem->setWindow(window);
     }
@@ -42,7 +44,7 @@ namespace R_TYPE {
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-            sprite->getSprite().setPosition(pos->getPosition());
+            sprite->setPos(pos->getPosition());
             window->draw(sprite->getSprite());
         }
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::TEXT]) {
