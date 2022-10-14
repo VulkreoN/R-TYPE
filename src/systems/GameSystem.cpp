@@ -31,7 +31,8 @@ namespace R_TYPE {
         sceneManager.addScene(createMainMenu(), SceneManager::SceneType::MAIN_MENU);
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
-        sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
+        sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
+        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -88,6 +89,15 @@ namespace R_TYPE {
 
         eventListener->addMouseEvent(sf::Mouse::Button::Left, mouseCallbacks);
         entity->addComponent(eventListener);
+    }
+
+    std::shared_ptr<Entity> GameSystem::createCamera(int posX, int posY, int rectX, int rectY)
+    {
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
+        std::shared_ptr<Position> component = std::make_shared<Position>(rectX, rectY);
+
+        
     }
 
     std::unique_ptr<R_TYPE::IScene> GameSystem::createMainMenu()
@@ -156,6 +166,20 @@ namespace R_TYPE {
         entity->addComponent(event);
 
         scene->addEntity(entity);
+        return (scene);
+    }
+
+    std::unique_ptr<R_TYPE::IScene> GameSystem::createFirstLevel()
+    {
+        std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createFirstLevel, this));
+        std::shared_ptr<Entity> top_wall = createSprite("assets/sprites_statics/top_wall_lvl1.png", 0, 0);
+        std::shared_ptr<Entity> player = createSprite("assets/sprites_sheets/r-typesheet42.gif", 0, 0);
+        std::shared_ptr<Entity> camera = createCamera(0, 0, 1980, 1080);
+
+        scene->addEntity(top_wall);
+        scene->addEntity(player);
+        //scene->addEntity(camera);
+        //std::cout << "ok" << std::endl;
         return (scene);
     }
 }
