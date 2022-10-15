@@ -12,6 +12,7 @@ namespace R_TYPE {
             enum class SystemType {
                 GAME,
                 EVENT,
+                NETWORK,
                 AUDIO,
                 GRAPHIC,
                 PARTICLE,
