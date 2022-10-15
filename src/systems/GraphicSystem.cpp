@@ -35,6 +35,8 @@ namespace R_TYPE {
         window->setFramerateLimit(60);
         eventSystem->init(manager);
         eventSystem->setWindow(window);
+        camera = new sf::View(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
+        window->setView(*camera);
     }
 
     void GraphicSystem::update(SceneManager &manager, uint64_t deltaTime)
@@ -52,6 +54,10 @@ namespace R_TYPE {
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
             text->printText(window, *pos.get());
+        }
+        if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
+            camera->move(0.25f, 0.f);
+            window->setView(*camera);
         }
         window->display();
     }

@@ -293,14 +293,8 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createFirstLevel()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createFirstLevel, this));
-        std::shared_ptr<Entity> top_wall = createSprite("assets/sprites_statics/top_wall_lvl1.png", 0, 0);
-        std::shared_ptr<Entity> player = createSprite("assets/sprites_sheets/r-typesheet42.gif", 0, 0);
-        std::shared_ptr<Entity> camera = createCamera(0, 0, 1980, 1080);
-
+        std::shared_ptr<Entity> top_wall = createSprite("assets/maquettes/Maquette_1.jpg", 0, 0);
         scene->addEntity(top_wall);
-        scene->addEntity(player);
-        //scene->addEntity(camera);
-        //std::cout << "ok" << std::endl;
         return (scene);
     }
 }
