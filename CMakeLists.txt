@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME}
 
         src/components/Component.cpp
         src/components/Position.cpp
+        src/components/Player.cpp
         src/components/Velocity.cpp
         src/components/Text.cpp
         src/components/Sprite.cpp
