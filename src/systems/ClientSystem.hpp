@@ -10,7 +10,7 @@
 
     #include "NetworkSystem.hpp"
 
-    #define NETWORK_PING_FREQUENCY  400
+    #define NETWORK_PING_FREQUENCY  100
 
     namespace R_TYPE {
 

@@ -32,6 +32,8 @@ void ClientSystem::update(SceneManager &/*manager*/, uint64_t deltaTime)
     if (_ping_cooldown >= NETWORK_PING_FREQUENCY) {
         _ping_cooldown = 0;
         broadcast();
+    } else {
+        std::cout << _ping_cooldown << " " << deltaTime << " " << NETWORK_PING_FREQUENCY << std::endl;
     }
 }
 
@@ -47,7 +49,11 @@ void ClientSystem::handle_incomming_message()
 
 void ClientSystem::broadcast()
 {
-    _socket.send_to(asio::buffer("SS!!!!!!!!"), _server_endpoint);
+    char buff[1024];
+
+    for (int i = 0; i < 1024; buff[i] = '\0', i++);
+    buff[0] = protocol::Header::PING;
+    _socket.send_to(asio::buffer(buff), _server_endpoint);
 }
 
 }

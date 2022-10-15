@@ -11,6 +11,7 @@
     #include <asio.hpp>
 
     #include "ISystem.hpp"
+    #include "network/protocol.h"
 
     #define PRINT_READ_MSG  true    // set to true if you want to print every message the server recieves
 

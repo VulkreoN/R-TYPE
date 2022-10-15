@@ -54,8 +54,12 @@ void ServerSystem::handle_incomming_message()
 
 void ServerSystem::broadcast()
 {
+    char buff[1024];
+
+    for (int i = 0; i < 1024; buff[i] = '\0', i++);
+    buff[0] = protocol::Header::GAME_INFO;
     for (size_t i = 0; i < _connections.size(); i++)
-        _socket.send_to(asio::buffer("Test!!!"), _connections[i]->get_endpoint());
+        _socket.send_to(asio::buffer(buff), _connections[i]->get_endpoint());
 }
 
 }

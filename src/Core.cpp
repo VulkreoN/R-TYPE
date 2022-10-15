@@ -15,6 +15,7 @@ namespace R_TYPE {
         _systems[SystemType::GRAPHIC] = std::make_unique<GraphicSystem>();
         // _systems[SystemType::EVENT] = std::make_unique<EventSystem>();
         _systems[SystemType::NETWORK] = std::make_unique<ClientSystem>("127.0.0.1", 5005);
+        //_systems[SystemType::NETWORK] = std::make_unique<ServerSystem>(5005);
     }
 
     Core::~Core()
