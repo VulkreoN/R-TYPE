@@ -108,7 +108,7 @@ namespace R_TYPE {
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
 
-        if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().x > 765 || real.getPosition().y > 585)
+        if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
         for (auto &e : sceneManger.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             if (e->hasTag(IEntity::Tags::PLAYER))
@@ -133,7 +133,7 @@ namespace R_TYPE {
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
 
-        if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().x > 765 || real.getPosition().y > 585)
+        if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
         for (auto &e : sceneManger.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             if (e->hasTag(IEntity::Tags::PLAYER))
@@ -158,7 +158,7 @@ namespace R_TYPE {
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
 
-        if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().x > 765 || real.getPosition().y > 585)
+        if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
         const sf::Image image = GraphicSystem::getWindow()->capture();
         for (auto &e : sceneManger.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
@@ -185,7 +185,7 @@ namespace R_TYPE {
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
 
-        if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().x > 765 || real.getPosition().y > 585)
+        if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
         for (auto &e : sceneManger.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             if (e->hasTag(IEntity::Tags::PLAYER))

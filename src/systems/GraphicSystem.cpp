@@ -58,7 +58,7 @@ namespace R_TYPE {
             text->printText(window, *pos.get());
         }
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
-            // camera->move(0.25f, 0.f);
+            camera->move(0.25f, 0.f);
             window->setView(*camera);
         }
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
