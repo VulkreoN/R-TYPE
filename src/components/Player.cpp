@@ -11,8 +11,7 @@ namespace R_TYPE {
     Player::Player(Position position, int8_t id): Component(Component::Type::PLAYER),
     _id(id), _pos(position), _attacking(false), _alive(true)
     {
-        _spritesheet = std::make_unique<Sprite>("assets/player/player.png", _pos, sf::IntRect(66, 0, 32, 15));
-        _spritesheet->getSprite().setScale(sf::Vector2f(2, 2));
+        _spritesheet = std::make_unique<Sprite>("assets/player/player.png", _pos, sf::IntRect(66, 0, 32, 12));
     }
 
     Player::~Player()

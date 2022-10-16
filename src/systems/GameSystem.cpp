@@ -40,7 +40,7 @@ namespace R_TYPE {
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
     {
-        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::GAME) {
+        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
@@ -104,6 +104,83 @@ namespace R_TYPE {
                 .addComponent(component3)
                 .addComponent(component4);
         return (entity);
+    }
+
+    std::shared_ptr<Entity> GameSystem::createPlayer(int posX, int posY)
+    {
+        std::shared_ptr<Entity> player_e = std::make_shared<Entity>();
+        std::shared_ptr<Position> player_pos = std::make_shared<Position>(posX, posY);
+        std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
+        std::shared_ptr<Event> event_p = std::make_shared<Event>();
+
+        player_e->addComponent(player);
+
+        ButtonCallbacks up (
+            [player_e](SceneManager &manager) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+                Position moved(player->getPosition().x, player->getPosition().y - 10);
+
+                // std::cout << player->getSprite().getColor().r << std::endl;
+
+                if (CollideSystem::canMoveUp(moved, manager))
+                    player->setPosition(moved.getPosition());
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks left (
+            [player_e](SceneManager &manager) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+                Position moved(player->getPosition().x - 10, player->getPosition().y);
+
+                if (CollideSystem::canMoveLeft(moved, manager))
+                    player->setPosition(moved.getPosition());
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks down (
+            [player_e](SceneManager &manager) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+                Position moved(player->getPosition().x, player->getPosition().y + 10);
+
+                if (CollideSystem::canMoveDown(moved, manager))
+                    player->setPosition(moved.getPosition());
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks right (
+            [player_e](SceneManager &manager) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+                Position moved(player->getPosition().x + 10, player->getPosition().y);
+
+                if (CollideSystem::canMoveRight(moved, manager))
+                    player->setPosition(moved.getPosition());
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks shoot (
+           [](SceneManager &scene) {
+                auto entity = scene.getCurrentScene()[IEntity::Tags::PLAYER][0];
+                auto comp = (*entity)[IComponent::Type::PLAYER];
+                auto pos = Component::castComponent<Player>(comp);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
+                    ("projectile.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.1f, 0), true);
+                scene.getCurrentScene().addEntity(shoot);
+           },
+           [](SceneManager &scene) {
+           });
+
+        event_p->addKeyboardEvent(sf::Keyboard::Z, up);
+        event_p->addKeyboardEvent(sf::Keyboard::Q, left);
+        event_p->addKeyboardEvent(sf::Keyboard::S, down);
+        event_p->addKeyboardEvent(sf::Keyboard::D, right);
+        event_p->addKeyboardEvent(sf::Keyboard::Space, shoot);
+
+        player_e->addComponent(event_p);
+        return (player_e);
     }
 
     void GameSystem::createButtonEvent(std::shared_ptr<Entity> &entity, SceneManager::SceneType goTo, sf::Vector2i click)
@@ -192,82 +269,21 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> player_e = std::make_shared<Entity>();
-        std::shared_ptr<Position> player_pos = std::make_shared<Position>(200, 0);
-        std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
-        //std::shared_ptr<Sprite> charge = std::make_shared<Sprite>("sprites/player.png", *attack_pos, sf::IntRect(0, 15, 14, 12));
-        //std::shared_ptr<Sprite> laser = std::make_shared<Sprite>("sprites/player.png", *player_pos, sf::IntRect(0, 27, 16, 4));
-        std::shared_ptr<Event> event_p = std::make_shared<Event>();
-        //std::shared_ptr<Event> event_a = std::make_shared<Event>();
-
-        player_e->addComponent(player);
-
-        ButtonCallbacks up (
-            [player_e](SceneManager &) {
-                auto comp = (*player_e)[IComponent::Type::PLAYER];
-                auto player = Component::castComponent<Player>(comp);
-
-                player->setPosition(sf::Vector2f(player->getPosition().x, player->getPosition().y - 10));
-            },
-            [](SceneManager &) {});
-
-        ButtonCallbacks left (
-            [player_e](SceneManager &) {
-                auto comp = (*player_e)[IComponent::Type::PLAYER];
-                auto player = Component::castComponent<Player>(comp);
-
-                player->setPosition(sf::Vector2f(player->getPosition().x - 10, player->getPosition().y));
-            },
-            [](SceneManager &) {});
-
-        ButtonCallbacks down (
-            [player_e](SceneManager &) {
-                auto comp = (*player_e)[IComponent::Type::PLAYER];
-                auto player = Component::castComponent<Player>(comp);
-
-                player->setPosition(sf::Vector2f(player->getPosition().x, player->getPosition().y + 10));
-            },
-            [](SceneManager &) {});
-
-        ButtonCallbacks right (
-            [player_e](SceneManager &) {
-                auto comp = (*player_e)[IComponent::Type::PLAYER];
-                auto player = Component::castComponent<Player>(comp);
-
-                player->setPosition(sf::Vector2f(player->getPosition().x + 10, player->getPosition().y));
-            },
-            [](SceneManager &) {});
-
-        //ButtonCallbacks shoot (
-        //    [](SceneManager &scene) {
-        //        
-        //    },
-        //    [](SceneManager &scene) {
-        //        std::cout << "released Z" << std::endl;
-        //    });
-
-        event_p->addKeyboardEvent(sf::Keyboard::Z, up);
-        event_p->addKeyboardEvent(sf::Keyboard::Q, left);
-        event_p->addKeyboardEvent(sf::Keyboard::S, down);
-        event_p->addKeyboardEvent(sf::Keyboard::D, right);
-        //event_a->addKeyboardEvent(sf::Keyboard::Space, shoot);
-
-        player_e->addComponent(event_p);
-
-        scene->addEntity(player_e);
         return (scene);
     }
 
     std::unique_ptr<R_TYPE::IScene> GameSystem::createFirstLevel()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createFirstLevel, this));
-        std::shared_ptr<Entity> top_wall = createSprite("assets/sprites_statics/top_wall_lvl1.png", 300, 0);
-        std::shared_ptr<Entity> bottom_wall = createSprite("assets/sprites_statics/bottom_wall_lvl1.png", 300, 127);
-        std::shared_ptr<Entity> player = createSprite("ship.png", 50, 100);
+        std::shared_ptr<Entity> top_wall = createSprite("assets/sprites_statics/top_wall_lvl1.png", 100, 0);
+        std::shared_ptr<Entity> bottom_wall = createSprite("assets/sprites_statics/bottom_wall_lvl1.png", 100, 127);
+        std::shared_ptr<Entity> player = createPlayer(50, 100);
+        // std::shared_ptr<Entity> ennemy1 = createEnnemy("ennemy.png", 387, 187, Ennemy::Type::TURRET);
 
         scene->addEntity(top_wall)
               .addEntity(bottom_wall)
               .addEntity(player);
+            //   .addEntity(ennemy1);
         return (scene);
     }
 }

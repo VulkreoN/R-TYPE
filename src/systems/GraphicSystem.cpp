@@ -44,6 +44,7 @@ namespace R_TYPE {
     {
         eventSystem->update(manager, deltaTime);
         window->clear(sf::Color::Black);
+        
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
@@ -57,7 +58,7 @@ namespace R_TYPE {
             text->printText(window, *pos.get());
         }
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
-            camera->move(0.25f, 0.f);
+            // camera->move(0.25f, 0.f);
             window->setView(*camera);
         }
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {

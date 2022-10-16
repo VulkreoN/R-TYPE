@@ -3,6 +3,7 @@
 #include <cmath>
 #include "Entity.hpp"
 #include "GameSystem.hpp"
+#include "Player.hpp"
 
 namespace R_TYPE {
 
@@ -21,7 +22,7 @@ namespace R_TYPE {
         for (auto &player : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             sf::Vector2f distance2 = {0, 0};
 
-            auto target = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
+            auto target = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
 
             distance2.x = target->getPosition().x - selfPos.getPosition().x;
             distance2.y = target->getPosition().y - selfPos.getPosition().y;
@@ -30,7 +31,7 @@ namespace R_TYPE {
         }
         if (type == Ennemy::Type::TURRET) {
             if (scripts.turretScript(selfPos)) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("projectiles.png", selfPos, getVelocityTarget(distance), false);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("projectile.png", selfPos, getVelocityTarget(distance), false);
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::JORYDE_ALIEN)
