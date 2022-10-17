@@ -12,8 +12,12 @@ namespace R_TYPE {
         Position(sf::Vector2f _pos);
         ~Position();
 
-        /// @brief get the position 
+        /// @brief get the position
         sf::Vector2f getPosition() {return (pos);};
+
+        void setX(float _x) {pos.x = _x;};
+
+        void setY(float _y) {pos.y = _y;};
 
         void operator=(const Position &other);
     private:

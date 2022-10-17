@@ -9,10 +9,13 @@
 #include "Scene.hpp"
 #include "Event.hpp"
 #include "Entity.hpp"
+#include "Player.hpp"
 #include "Position.hpp"
 #include "Sprite.hpp"
 #include "GraphicSystem.hpp"
+#include "CollideSystem.hpp"
 #include "Text.hpp"
+#include "Projectiles.hpp"
 
 namespace R_TYPE {
     GameSystem::GameSystem()
@@ -31,12 +34,21 @@ namespace R_TYPE {
         sceneManager.addScene(createMainMenu(), SceneManager::SceneType::MAIN_MENU);
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
-        sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
+        sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
+        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
     {
-        
+        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+
+                pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+                pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+            }
+        }
     }
 
     void GameSystem::destroy()
@@ -66,6 +78,111 @@ namespace R_TYPE {
         return(entity);
     }
 
+    std::shared_ptr<Entity> GameSystem::createEnnemy(std::string path, int posX, int posY, float angle, Ennemy::Type type)
+    {
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2, angle);
+        std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
+
+        entity->addComponent(component)
+                .addComponent(component2)
+                .addComponent(compoment3);
+        return(entity);
+    }
+
+    std::shared_ptr<Entity> GameSystem::createProjectiles(std::string path, Position pos, Velocity velocity, bool byPlayer)
+    {
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2);
+        std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(velocity);
+        std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
+
+        entity->addComponent(component)
+                .addComponent(component2)
+                .addComponent(component3)
+                .addComponent(component4);
+        return (entity);
+    }
+
+    std::shared_ptr<Entity> GameSystem::createPlayer(int posX, int posY)
+    {
+        std::shared_ptr<Entity> player_e = std::make_shared<Entity>();
+        std::shared_ptr<Position> player_pos = std::make_shared<Position>(posX, posY);
+        std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
+        std::shared_ptr<Event> event_p = std::make_shared<Event>();
+
+        player_e->addComponent(player);
+
+        ButtonCallbacks up (
+            [player_e](SceneManager &manager) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+                Position moved(player->getPosition().x, player->getPosition().y - 10);
+
+                // std::cout << player->getSprite().getColor().r << std::endl;
+
+                if (CollideSystem::canMoveUp(moved, manager))
+                    player->setPosition(moved.getPosition());
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks left (
+            [player_e](SceneManager &manager) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+                Position moved(player->getPosition().x - 10, player->getPosition().y);
+
+                if (CollideSystem::canMoveLeft(moved, manager))
+                    player->setPosition(moved.getPosition());
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks down (
+            [player_e](SceneManager &manager) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+                Position moved(player->getPosition().x, player->getPosition().y + 10);
+
+                if (CollideSystem::canMoveDown(moved, manager))
+                    player->setPosition(moved.getPosition());
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks right (
+            [player_e](SceneManager &manager) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+                Position moved(player->getPosition().x + 10, player->getPosition().y);
+
+                if (CollideSystem::canMoveRight(moved, manager))
+                    player->setPosition(moved.getPosition());
+            },
+            [](SceneManager &) {});
+
+        ButtonCallbacks shoot (
+           [](SceneManager &scene) {
+                auto entity = scene.getCurrentScene()[IEntity::Tags::PLAYER][0];
+                auto comp = (*entity)[IComponent::Type::PLAYER];
+                auto pos = Component::castComponent<Player>(comp);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
+                    ("projectile.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.1f, 0), true);
+                scene.getCurrentScene().addEntity(shoot);
+           },
+           [](SceneManager &scene) {
+           });
+
+        event_p->addKeyboardEvent(sf::Keyboard::Z, up);
+        event_p->addKeyboardEvent(sf::Keyboard::Q, left);
+        event_p->addKeyboardEvent(sf::Keyboard::S, down);
+        event_p->addKeyboardEvent(sf::Keyboard::D, right);
+        event_p->addKeyboardEvent(sf::Keyboard::Space, shoot);
+
+        player_e->addComponent(event_p);
+        return (player_e);
+    }
+
     void GameSystem::createButtonEvent(std::shared_ptr<Entity> &entity, SceneManager::SceneType goTo, sf::Vector2i click)
     {
         MouseCallback mouseCallbacks(
@@ -78,7 +195,7 @@ namespace R_TYPE {
                     mousePosition.y > pos->getPosition().y && mousePosition.y < pos->getPosition().y + click.y) {
                         if (goTo != SceneManager::SceneType::NONE)
                             sceneManager.setCurrentScene(goTo);
-                        else 
+                        else
                             sceneManager.setShouldClose(true);
                 }
             },
@@ -88,6 +205,15 @@ namespace R_TYPE {
 
         eventListener->addMouseEvent(sf::Mouse::Button::Left, mouseCallbacks);
         entity->addComponent(eventListener);
+    }
+
+    std::shared_ptr<Entity> GameSystem::createCamera(int posX, int posY, int rectX, int rectY)
+    {
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
+        std::shared_ptr<Position> component = std::make_shared<Position>(rectX, rectY);
+
+        
     }
 
     std::unique_ptr<R_TYPE::IScene> GameSystem::createMainMenu()
@@ -143,19 +269,48 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> entity = createSprite("arrow.png", 200, 0);
-        std::shared_ptr<Event> event = std::make_shared<Event>();
+        return (scene);
+    }
 
-        ButtonCallbacks call (
-            [](SceneManager &sceneManager) {
-                sceneManager.setCurrentScene(SceneManager::SceneType::PAUSE);
-            },
-            [](SceneManager &) {});
+    std::unique_ptr<R_TYPE::IScene> GameSystem::createFirstLevel()
+    {
+        std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createFirstLevel, this));
+        std::shared_ptr<Entity> top_wall = createSprite("assets/sprites_statics/top_wall_lvl1.png", 100, 0);
+        std::shared_ptr<Entity> bottom_wall = createSprite("assets/sprites_statics/bottom_wall_lvl1.png", 100, 127);
+        std::shared_ptr<Entity> player = createPlayer(50, 100);
+        std::shared_ptr<Entity> tower1 = createEnnemy("ennemy.png", 333, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower2 = createEnnemy("ennemy.png", 385, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower3 = createEnnemy("ennemy.png", 428, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower4 = createEnnemy("ennemy.png", 529, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower5 = createEnnemy("ennemy.png", 573, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower6 = createEnnemy("ennemy.png", 720, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower7 = createEnnemy("ennemy.png", 772, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower8 = createEnnemy("ennemy.png", 823, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower9 = createEnnemy("ennemy.png", 702, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower10 = createEnnemy("ennemy.png", 754, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower11 = createEnnemy("ennemy.png", 806, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower12 = createEnnemy("ennemy.png", 145, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower13 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower14 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
 
-        event->addKeyboardEvent(sf::Keyboard::Escape, call);
-        entity->addComponent(event);
 
-        scene->addEntity(entity);
+        scene-> addEntity(top_wall)
+                .addEntity(bottom_wall)
+                .addEntity(player)
+                .addEntity(tower1)
+                .addEntity(tower2)
+                .addEntity(tower3)
+                .addEntity(tower4)
+                .addEntity(tower5)
+                .addEntity(tower6)
+                .addEntity(tower7)
+                .addEntity(tower8)
+                .addEntity(tower9)
+                .addEntity(tower10)
+                .addEntity(tower11)
+                .addEntity(tower12)
+                .addEntity(tower13)
+                .addEntity(tower14);
         return (scene);
     }
 }
