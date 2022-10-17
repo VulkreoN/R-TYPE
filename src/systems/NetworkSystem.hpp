@@ -11,6 +11,7 @@
     #include <asio.hpp>
 
     #include "ISystem.hpp"
+    #include "SceneManager.hpp"
     #include "network/protocol.h"
 
     #define PRINT_READ_MSG  true    // set to true if you want to print every message the server recieves
@@ -25,7 +26,7 @@
 
             protected:
                 void read_setup();
-                virtual void broadcast() = 0;
+                virtual void broadcast(SceneManager &) = 0;
                 virtual void handle_incomming_message() = 0;
 
                 // network variables

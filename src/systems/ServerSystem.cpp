@@ -27,12 +27,12 @@ void ServerSystem::init(SceneManager &/*manager*/)
     _threadContext = std::thread([this]() { _context.run(); });
 }
 
-void ServerSystem::update(SceneManager &/*manager*/, uint64_t deltaTime)
+void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
 {
     _broadcast_cooldown += deltaTime;
     if (_broadcast_cooldown >= NETWORK_BROADCAST_FREQUENCY) {
         _broadcast_cooldown = 0;
-        broadcast();
+        broadcast(manager);
     }
 }
 
@@ -53,13 +53,28 @@ void ServerSystem::handle_incomming_message()
     // here, handle the recienved message stored in _buffer
 }
 
-void ServerSystem::broadcast()
+void ServerSystem::broadcast(SceneManager &manager)
 {
     char buff[1024];
 
-    for (std::unique_ptr<Connection> &con : _connections) {
-        create_start_game_msg(buff, con);
-        _socket.send_to(asio::buffer(buff), con->get_endpoint());
+    for (int i = 0; i < 1024; buff[i] = '\0', i++);
+    if (true /* not game start */) {
+        switch (manager.getCurrentSceneType()) {
+            case SceneManager::SceneType::GAME:
+                create_game_info_msg(buff, manager);
+                break;
+            default :
+                buff[0] = protocol::Header::PING;
+                break;
+        }
+        for (std::unique_ptr<Connection> &con : _connections) {
+            _socket.send_to(asio::buffer(buff), con->get_endpoint());
+        }
+    } else {
+        for (std::unique_ptr<Connection> &con : _connections) {
+            create_start_game_msg(buff, con);
+            _socket.send_to(asio::buffer(buff), con->get_endpoint());
+        }
     }
 }
 
@@ -69,6 +84,11 @@ void ServerSystem::create_start_game_msg(char *buff, std::unique_ptr<Connection>
     buff[sizeof(protocol::Header)] = (size_t)connection->get_id();
     buff[sizeof(protocol::Header) + sizeof(size_t)] = (size_t)_connections.size();
     buff[sizeof(protocol::Header) + 2 * sizeof(size_t)] = '\0';
+}
+
+void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
+{
+    buff[0] = protocol::Header::GAME_INFO;
 }
 
 }

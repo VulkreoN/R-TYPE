@@ -27,13 +27,14 @@
             protected:
             private:
                 void handle_incomming_message() final;
-                void broadcast() final;
+                void broadcast(SceneManager &) final;
 
                 int _broadcast_cooldown;
                 std::vector<std::unique_ptr<Connection>> _connections;
 
                 // functions to create messages to send
                 void create_start_game_msg(char *buff, std::unique_ptr<Connection> &connection);
+                void create_game_info_msg(char *buff, SceneManager &manager);
         };
 
     }
