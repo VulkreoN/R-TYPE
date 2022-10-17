@@ -8,14 +8,21 @@
 
 namespace R_TYPE {
 
-    Core::Core()
+    Core::Core(size_t port)
+    {
+        std::cout << "Core init\n";
+        _systems[SystemType::GAME] = std::make_unique<GameSystem>();
+        // _systems[SystemType::EVENT] = std::make_unique<EventSystem>();
+        _systems[SystemType::NETWORK] = std::make_unique<ServerSystem>(port);
+    }
+
+    Core::Core(std::string ip, size_t port)
     {
         std::cout << "Core init\n";
         _systems[SystemType::GAME] = std::make_unique<GameSystem>();
         _systems[SystemType::GRAPHIC] = std::make_unique<GraphicSystem>();
         // _systems[SystemType::EVENT] = std::make_unique<EventSystem>();
-        _systems[SystemType::NETWORK] = std::make_unique<ClientSystem>("127.0.0.1", 5005);
-        //_systems[SystemType::NETWORK] = std::make_unique<ServerSystem>(5005);
+        _systems[SystemType::NETWORK] = std::make_unique<ClientSystem>(ip, port);
     }
 
     Core::~Core()

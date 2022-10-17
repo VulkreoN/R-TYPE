@@ -19,7 +19,8 @@ namespace R_TYPE {
                 /// sub-system of game system
                 COLLIDE,
             };
-            Core();
+            Core(size_t port); // for server
+            Core(std::string ip, size_t port); // for client
             ~Core();
             /// @brief Game loop
             void mainLoop();

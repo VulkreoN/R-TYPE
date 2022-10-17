@@ -32,8 +32,6 @@ void ClientSystem::update(SceneManager &/*manager*/, uint64_t deltaTime)
     if (_ping_cooldown >= NETWORK_PING_FREQUENCY) {
         _ping_cooldown = 0;
         broadcast();
-    } else {
-        std::cout << _ping_cooldown << " " << deltaTime << " " << NETWORK_PING_FREQUENCY << std::endl;
     }
 }
 
@@ -52,7 +50,23 @@ void ClientSystem::broadcast()
     char buff[1024];
 
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
-    buff[0] = protocol::Header::PING;
+    //buff[0] = protocol::Header::PING;
+    if (rand() % 15 == 1) {
+        buff[0] = protocol::Header::PLAYER_ACTION;
+        buff[sizeof(protocol::Header)] = protocol::Action::FIRE;
+    } else if (rand() % 15 == 1) {
+        buff[0] = protocol::Header::PLAYER_ACTION;
+        buff[sizeof(protocol::Header)] = protocol::Action::MOVE;
+        buff[sizeof(protocol::Header) + sizeof(protocol::Action)] = (size_t)125;
+        buff[sizeof(protocol::Header) + sizeof(protocol::Action) + sizeof(size_t)] = (size_t)87;
+    } else if (rand() % 15 == 1) {
+        buff[0] = protocol::Header::PLAYER_ACTION;
+        buff[sizeof(protocol::Header)] = protocol::Action::BOTH;
+        buff[sizeof(protocol::Header) + sizeof(protocol::Action)] = (size_t)5;
+        buff[sizeof(protocol::Header) + sizeof(protocol::Action) + sizeof(size_t)] = (size_t)22;
+    } else {
+        buff[0] = protocol::Header::PING;
+    }
     _socket.send_to(asio::buffer(buff), _server_endpoint);
 }
 

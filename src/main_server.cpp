@@ -4,7 +4,7 @@
 
 int main(void)
 {
-    R_TYPE::Core core;
+    R_TYPE::Core core(5005);
 
     try {
         core.mainLoop();
