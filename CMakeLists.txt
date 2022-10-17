@@ -8,14 +8,14 @@ add_executable(${PROJECT_NAME})
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries(${PROJECT_NAME} -lstdc++fs sfml-graphics sfml-system sfml-window)
+    target_link_libraries(${PROJECT_NAME} -lstdc++fs sfml-graphics sfml-system sfml-window -pthread)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
 target_sources(${PROJECT_NAME}
     PRIVATE
-        src/main.cpp
+        src/main_server.cpp
         src/Core.cpp
         src/SceneManager.cpp
         src/Entity.cpp
@@ -38,6 +38,10 @@ target_sources(${PROJECT_NAME}
         src/systems/GraphicSystem.cpp
         src/systems/GameSystem.cpp
         src/systems/CollideSystem.cpp
+        src/systems/NetworkSystem.cpp
+        src/systems/ServerSystem.cpp
+        src/systems/ClientSystem.cpp
+        src/systems/network/Connection.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
