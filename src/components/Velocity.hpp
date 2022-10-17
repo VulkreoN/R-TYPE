@@ -15,6 +15,9 @@ namespace R_TYPE {
         /// @brief get the Velocity 
         sf::Vector2f getVelocity() {return (velocity);};
 
+        void setX(float _x) {velocity.x = _x;};
+
+        void setY(float _y) {velocity.y = _y;};
 
         void operator=(const Velocity &other);
     private:

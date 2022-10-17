@@ -19,6 +19,7 @@ namespace R_TYPE {
             DESTRUCTIBLE,
             PLAYER,
             UI,
+            ENNEMY,
         };
 
         virtual ~IEntity() = default;
@@ -45,6 +46,8 @@ namespace R_TYPE {
          * @param type the type to search for
          * @return std::shared_ptr<IComponent> to that component or nullptr
          */
+        virtual bool hasTag(Tags tag) const = 0;
+
         virtual std::shared_ptr<IComponent> &operator[](IComponent::Type type) = 0;
     };
 }

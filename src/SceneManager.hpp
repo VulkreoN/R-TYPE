@@ -15,6 +15,7 @@ namespace R_TYPE {
                 MAIN_MENU,
                 OPTION,
                 PAUSE,
+                LEVEL1,
             };
         /**
          * @brief Add a scene to the scene manager
