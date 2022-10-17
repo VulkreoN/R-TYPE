@@ -6,10 +6,8 @@
 */
 
 #ifndef CONNECTION_HPP_
-    #define CONNECTION_HPP_
+    #define CONNECTION_HPP
 
-    #include "Queue.hpp"
-    #include <memory>
     #include <iostream>
 
     #include <asio.hpp>
