@@ -6,6 +6,7 @@
 */
 
 #include "ServerSystem.hpp"
+#include "network/protocol.h"
 
 namespace R_TYPE {
 
@@ -56,10 +57,18 @@ void ServerSystem::broadcast()
 {
     char buff[1024];
 
-    for (int i = 0; i < 1024; buff[i] = '\0', i++);
-    buff[0] = protocol::Header::GAME_INFO;
-    for (size_t i = 0; i < _connections.size(); i++)
-        _socket.send_to(asio::buffer(buff), _connections[i]->get_endpoint());
+    for (std::unique_ptr<Connection> &con : _connections) {
+        create_start_game_msg(buff, con);
+        _socket.send_to(asio::buffer(buff), con->get_endpoint());
+    }
+}
+
+void ServerSystem::create_start_game_msg(char *buff, std::unique_ptr<Connection> &connection)
+{
+    buff[0] = protocol::Header::START_GAME;
+    buff[sizeof(protocol::Header)] = (size_t)connection->get_id();
+    buff[sizeof(protocol::Header) + sizeof(size_t)] = (size_t)_connections.size();
+    buff[sizeof(protocol::Header) + 2 * sizeof(size_t)] = '\0';
 }
 
 }

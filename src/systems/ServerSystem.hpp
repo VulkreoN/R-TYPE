@@ -31,6 +31,9 @@
 
                 int _broadcast_cooldown;
                 std::vector<std::unique_ptr<Connection>> _connections;
+
+                // functions to create messages to send
+                void create_start_game_msg(char *buff, std::unique_ptr<Connection> &connection);
         };
 
     }

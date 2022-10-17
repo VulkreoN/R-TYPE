@@ -43,6 +43,9 @@ void ClientSystem::destroy()
 void ClientSystem::handle_incomming_message()
 {
     // here, handle the recienved message stored in _buffer
+    if ((protocol::Header)_buffer[0] == protocol::Header::START_GAME) {
+        std::cout << "Starting game, ID: " << (size_t)_buffer[sizeof(protocol::Header)] << " and there are : " << (size_t)_buffer[sizeof(protocol::Header) + sizeof(size_t)] << " players." << std::endl;
+    }
 }
 
 void ClientSystem::broadcast()
@@ -50,8 +53,8 @@ void ClientSystem::broadcast()
     char buff[1024];
 
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
-    //buff[0] = protocol::Header::PING;
-    if (rand() % 15 == 1) {
+    buff[0] = protocol::Header::PING;
+    /*if (rand() % 15 == 1) {
         buff[0] = protocol::Header::PLAYER_ACTION;
         buff[sizeof(protocol::Header)] = protocol::Action::FIRE;
     } else if (rand() % 15 == 1) {
@@ -66,7 +69,7 @@ void ClientSystem::broadcast()
         buff[sizeof(protocol::Header) + sizeof(protocol::Action) + sizeof(size_t)] = (size_t)22;
     } else {
         buff[0] = protocol::Header::PING;
-    }
+    }*/
     _socket.send_to(asio::buffer(buff), _server_endpoint);
 }
 

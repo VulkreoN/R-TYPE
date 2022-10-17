@@ -33,13 +33,6 @@ void NetworkSystem::read_setup()
             if (PRINT_READ_MSG) {
                 protocol::Header header = (protocol::Header)_buffer[0];
                 std::cout << _edp_buff << " : " << header << std::endl;
-                if (header == protocol::Header::PLAYER_ACTION) {
-                    protocol::Action action = (protocol::Action)_buffer[sizeof(protocol::Header)];
-                    std::cout << action << std::endl;
-                    if (action == protocol::Action::BOTH || action == protocol::Action::MOVE) {
-                        std::cout << "Moving to " << (size_t)_buffer[sizeof(protocol::Header) + sizeof(protocol::Action)] << ", " << (size_t)_buffer[sizeof(protocol::Header) + sizeof(protocol::Action) + sizeof(size_t)] << std::endl;
-                    }
-                }
             }
             handle_incomming_message();
             read_setup();
