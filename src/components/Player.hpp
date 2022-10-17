@@ -9,14 +9,14 @@
     #define PLAYER_HPP_
 
     #include "Sprite.hpp"
+    #include "Velocity.hpp"
 
 namespace R_TYPE {
     class Player : public Component {
         public:
             /// @brief Init Player class
             /// @param position Position of the player
-            /// @param id Id of the player 1 to 4
-            Player(Position position, int8_t id = 1);
+            Player(Position position);
             ~Player();
 
             /// @brief Set the position of the player

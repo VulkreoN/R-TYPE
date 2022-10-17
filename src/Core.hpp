@@ -1,9 +1,11 @@
 #ifndef CORE_HPP
-#define CORE_HPP
+    #define CORE_HPP
 
-#include <map>
-#include "ISystem.hpp"
-#include "SceneManager.hpp"
+    #define UPDATE_DELTA 17
+
+    #include <map>
+    #include "ISystem.hpp"
+    #include "SceneManager.hpp"
 
 namespace R_TYPE {
     class Core {
