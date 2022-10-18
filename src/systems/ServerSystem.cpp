@@ -5,6 +5,8 @@
 ** ServerSystem
 */
 
+#include "Position.hpp"
+#include "Player.hpp"
 #include "ServerSystem.hpp"
 #include "network/protocol.h"
 
@@ -60,7 +62,7 @@ void ServerSystem::broadcast(SceneManager &manager)
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
     if (true /* not game start */) {
         switch (manager.getCurrentSceneType()) {
-            case SceneManager::SceneType::GAME:
+            case SceneManager::SceneType::LEVEL1:
                 create_game_info_msg(buff, manager);
                 break;
             default :
@@ -88,7 +90,53 @@ void ServerSystem::create_start_game_msg(char *buff, std::unique_ptr<Connection>
 
 void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
 {
-    buff[0] = protocol::Header::GAME_INFO;
+    size_t c = 0;
+
+    buff[c] = protocol::Header::GAME_INFO;
+    c += sizeof(protocol::Header);
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+        auto comp = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
+            buff[c] = (uint8_t)1;
+            c += sizeof(uint8_t);
+            buff[c] = comp->getPosition().x;
+            c += sizeof(float);
+            buff[c] = comp->getPosition().y;
+            c += sizeof(float);
+            buff[c] = (size_t)1; // to change, this is the ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)1; // to change, this is status
+            c += sizeof(uint8_t);
+        }
+    }
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
+            buff[c] = (uint8_t)1;
+            c += sizeof(uint8_t);
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x;
+            c += sizeof(float);
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y;
+            c += sizeof(float);
+            buff[c] = (size_t)5; // to change, this is the ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)1; // to change, this is status
+            c += sizeof(uint8_t);
+        }
+    }
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
+            buff[c] = (uint8_t)1;
+            c += sizeof(uint8_t);
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x;
+            c += sizeof(float);
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y;
+            c += sizeof(float);
+            buff[c] = (size_t)7; // to change, this is the ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)1; // to change, this is status
+            c += sizeof(uint8_t);
+        }
+    }
 }
 
 }
