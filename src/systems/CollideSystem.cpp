@@ -28,16 +28,25 @@ namespace R_TYPE {
         // ca seg la dedans quand tu tue tous les ennemy
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
             auto component = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
-            if (component->shootByPlayer() == false)
+            if (component->shootByPlayer() == false) {
                 didHitPlayer(sceneManager, e);
-            else if (component->shootByPlayer() == true)
+            } else if (component->shootByPlayer() == true)
                 didHitEnnemi(sceneManager, e);
+        }
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+            auto component = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
+
+            if (component->getIsActive() == false) {
+                sceneManager.getCurrentScene().removeEntity(e);
+                return;
+            }
         }
     }
 
     void CollideSystem::didHitEnnemi(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
     {
         auto pos = Component::castComponent<Position>((*project)[IComponent::Type::POSITION]);
+        auto projectile = Component::castComponent<Projectiles>((*project)[IComponent::Type::PROJECTILES]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
@@ -46,7 +55,7 @@ namespace R_TYPE {
             if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width
             && pos->getPosition().y > posEnnemi->getPosition().y && pos->getPosition().y < posEnnemi->getPosition().y + box.height)  {
                 sceneManager.getCurrentScene().removeEntity(e);
-                sceneManager.getCurrentScene().removeEntity(project);
+                projectile->setIsActive(false);
                 return;
             }
         }
@@ -55,6 +64,7 @@ namespace R_TYPE {
     void CollideSystem::didHitPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
     {
         auto pos = Component::castComponent<Position>((*project)[IComponent::Type::POSITION]);
+        auto projectile = Component::castComponent<Projectiles>((*project)[IComponent::Type::PROJECTILES]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
 
@@ -62,7 +72,7 @@ namespace R_TYPE {
             if (pos->getPosition().x > player->getPosition().x && pos->getPosition().x < player->getPosition().x + box.width
             && pos->getPosition().y > player->getPosition().y && pos->getPosition().y < player->getPosition().y + box.height)  {
                 sceneManager.getCurrentScene().removeEntity(e);
-                sceneManager.getCurrentScene().removeEntity(project);
+                projectile->setIsActive(false);
                 return;
             }
         }
