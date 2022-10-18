@@ -28,6 +28,7 @@ namespace R_TYPE {
         private:
             static sf::RenderWindow *window;
             std::unique_ptr<EventSystem> eventSystem;
+            sf::View *camera;
     };
 }
 
