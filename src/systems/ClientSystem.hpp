@@ -26,7 +26,7 @@
             protected:
             private:
                 void handle_incomming_message() final;
-                void broadcast() final;
+                void broadcast(SceneManager &) final;
 
                 int _ping_cooldown;
                 asio::ip::udp::endpoint _server_endpoint;

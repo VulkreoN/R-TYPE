@@ -1,5 +1,7 @@
 .vscode
 build
 R-TYPE
+r-type_server
+r-type_client
 Makefile
 make
