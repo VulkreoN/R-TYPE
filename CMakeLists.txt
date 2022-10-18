@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 3.16)
 
 project(R-TYPE VERSION 1.0.0 LANGUAGES CXX)
 
-add_executable(${PROJECT_NAME})
+file(GLOB_RECURSE HEADERS "include/*.hpp")
+add_library(${PROJECT_NAME} ${HEADERS})
+add_executable(r-type_server src/main_server.cpp )
+target_link_libraries(r-type_server ${PROJECT_NAME})
+add_executable(r-type_client src/main_client.cpp)
+target_link_libraries(r-type_client ${PROJECT_NAME})
 
 # Call the cmake that checks and pulls the raylib
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -15,7 +20,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 target_sources(${PROJECT_NAME}
     PRIVATE
-        src/main_server.cpp
         src/Core.cpp
         src/SceneManager.cpp
         src/Entity.cpp
