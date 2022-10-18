@@ -16,6 +16,8 @@ namespace R_TYPE {
                 OPTION,
                 PAUSE,
                 LEVEL1,
+                LOSE,
+                WIN
             };
         /**
          * @brief Add a scene to the scene manager

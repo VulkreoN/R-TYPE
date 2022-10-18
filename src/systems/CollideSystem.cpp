@@ -71,7 +71,8 @@ namespace R_TYPE {
             sf::FloatRect box = player->getSprite().getGlobalBounds();
             if (pos->getPosition().x > player->getPosition().x && pos->getPosition().x < player->getPosition().x + box.width
             && pos->getPosition().y > player->getPosition().y && pos->getPosition().y < player->getPosition().y + box.height)  {
-                sceneManager.getCurrentScene().removeEntity(e);
+                // sceneManager.getCurrentScene().removeEntity(e);
+                player->setAlive(false);
                 projectile->setIsActive(false);
                 return;
             }

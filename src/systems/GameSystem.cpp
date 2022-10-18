@@ -35,6 +35,8 @@ namespace R_TYPE {
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
+        sceneManager.addScene(createSceneLose(), SceneManager::SceneType::LOSE);
+        sceneManager.addScene(createSceneWin(), SceneManager::SceneType::WIN);
         sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
     }
 
@@ -47,6 +49,13 @@ namespace R_TYPE {
 
                 pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                 pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+            }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+
+                if (player->isAlive() == false) {
+                    sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
+                }
             }
         }
     }
@@ -310,6 +319,38 @@ namespace R_TYPE {
                 .addEntity(tower12)
                 .addEntity(tower13)
                 .addEntity(tower14);
+        return (scene);
+    }
+
+    std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneLose()
+    {
+        std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneLose, this));
+        std::shared_ptr<Entity> entity = createText("You Lose", 350, 25, 50);
+        std::shared_ptr<Entity> entity1 = createSprite("assets/menus/backtoMenu.png", 230, 300);
+        std::shared_ptr<Entity> entity2 = createSprite("assets/menus/quit.png", 230, 400);
+
+        createButtonEvent(entity1, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
+        createButtonEvent(entity2, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
+
+        scene->addEntity(entity)
+              .addEntity(entity1)
+              .addEntity(entity2);
+        return (scene);
+    }
+
+    std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneWin()
+    {
+        std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneWin, this));
+        std::shared_ptr<Entity> entity = createText("You Win", 350, 25, 50);
+        std::shared_ptr<Entity> entity1 = createSprite("assets/menus/backtoMenu.png", 230, 300);
+        std::shared_ptr<Entity> entity2 = createSprite("assets/menus/quit.png", 230, 400);
+
+        createButtonEvent(entity1, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
+        createButtonEvent(entity2, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
+
+        scene->addEntity(entity)
+              .addEntity(entity1)
+              .addEntity(entity2);
         return (scene);
     }
 }
