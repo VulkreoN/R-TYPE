@@ -5,6 +5,7 @@ namespace R_TYPE {
     Component(Component::Type::PROJECTILES)
     {
         byPlayer = _byPlayer;
+        isActive = true;
     }
     Projectiles::~Projectiles() 
     {

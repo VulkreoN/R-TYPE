@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 target_sources(${PROJECT_NAME}
     PRIVATE
-        src/main_server.cpp
+        src/main_client.cpp
         src/Core.cpp
         src/SceneManager.cpp
         src/Entity.cpp
