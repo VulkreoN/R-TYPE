@@ -125,10 +125,14 @@ elif os.name == 'posix':
     # building the project
     print("Building the project...\n")
     os.system("cmake -S . -B build")
-    os.system("cmake --build build")
-    os.system("cmake --install build")
-    print("Project built successfully\n")
-    sys.exit(0)
+    if os.system("cmake --build build") != 0:
+        print("Building the project failed")
+        sys.exit(1)
+    else :
+        os.system("mv build/r-type_server r-type_server")
+        os.system("mv build/r-type_client r-type_client")
+        print("Project built successfully\n")
+        sys.exit(0)
 
 
 
