@@ -2,7 +2,7 @@
 #include <iostream>
 
 namespace R_TYPE {
-    Sprite::Sprite(std::string pathTexture, Position position, sf::IntRect rect):
+    Sprite::Sprite(std::string pathTexture, Position position, float angle, sf::IntRect rect):
     Component(Component::Type::SPRITE)
     {
         sf::Vector2f pos(position.getPosition());
@@ -13,6 +13,7 @@ namespace R_TYPE {
         if (rect.height != 0 && rect.width != 0)
             sprite.setTextureRect(rect);
         sprite.setPosition(pos);
+        sprite.setRotation(angle);
         size = sprite.getTexture()->getSize();
     }
 
@@ -34,5 +35,10 @@ namespace R_TYPE {
     void Sprite::setPos(sf::Vector2f pos)
     {
         sprite.setPosition(pos);
+    }
+
+    void Sprite::setAngle(float angle)
+    {
+        sprite.setRotation(angle);
     }
 }

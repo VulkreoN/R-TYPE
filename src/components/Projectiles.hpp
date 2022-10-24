@@ -12,8 +12,11 @@ namespace R_TYPE {
             ~Projectiles();
 
             bool shootByPlayer() {return (byPlayer);};
+            void setIsActive(bool _isActive) {isActive = _isActive;};
+            bool getIsActive() {return (isActive);};
         private:
             bool byPlayer;
+            bool isActive;
     };
 }
 

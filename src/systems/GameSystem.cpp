@@ -78,11 +78,11 @@ namespace R_TYPE {
         return(entity);
     }
 
-    std::shared_ptr<Entity> GameSystem::createEnnemy(std::string path, int posX, int posY, Ennemy::Type type)
+    std::shared_ptr<Entity> GameSystem::createEnnemy(std::string path, int posX, int posY, float angle, Ennemy::Type type)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
-        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2);
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2, angle);
         std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
 
         entity->addComponent(component)
@@ -282,12 +282,39 @@ namespace R_TYPE {
         std::shared_ptr<Entity> top_wall = createSprite("assets/sprites_statics/top_wall_lvl1.png", 100, 0);
         std::shared_ptr<Entity> bottom_wall = createSprite("assets/sprites_statics/bottom_wall_lvl1.png", 100, 127);
         std::shared_ptr<Entity> player = createPlayer(50, 100);
-        // std::shared_ptr<Entity> ennemy1 = createEnnemy("ennemy.png", 387, 187, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower1 = createEnnemy("ennemy.png", 333, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower2 = createEnnemy("ennemy.png", 385, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower3 = createEnnemy("ennemy.png", 428, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower4 = createEnnemy("ennemy.png", 529, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower5 = createEnnemy("ennemy.png", 573, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower6 = createEnnemy("ennemy.png", 720, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower7 = createEnnemy("ennemy.png", 772, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower8 = createEnnemy("ennemy.png", 823, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower9 = createEnnemy("ennemy.png", 702, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower10 = createEnnemy("ennemy.png", 754, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower11 = createEnnemy("ennemy.png", 806, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower12 = createEnnemy("ennemy.png", 145, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower13 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower14 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
 
-        scene->addEntity(top_wall)
-              .addEntity(bottom_wall)
-              .addEntity(player);
-            //   .addEntity(ennemy1);
+
+        scene-> addEntity(top_wall)
+                .addEntity(bottom_wall)
+                .addEntity(player)
+                .addEntity(tower1)
+                .addEntity(tower2)
+                .addEntity(tower3)
+                .addEntity(tower4)
+                .addEntity(tower5)
+                .addEntity(tower6)
+                .addEntity(tower7)
+                .addEntity(tower8)
+                .addEntity(tower9)
+                .addEntity(tower10)
+                .addEntity(tower11)
+                .addEntity(tower12)
+                .addEntity(tower13)
+                .addEntity(tower14);
         return (scene);
     }
 }
