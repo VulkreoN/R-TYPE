@@ -27,13 +27,13 @@ namespace R_TYPE {
             void update(SceneManager &sceneManager, uint64_t deltaTime) final;
             void destroy() final;
 
-            static std::shared_ptr<Entity> createProjectiles(std::string path, Position pos, Velocity velocity, bool byPlayer);
+            static std::shared_ptr<Entity> createProjectiles(int name, Position pos, Velocity velocity, bool byPlayer);
         protected:
 
-            std::shared_ptr<Entity> createSprite(std::string path, int posX, int posY);
+            std::shared_ptr<Entity> createSprite(int name, int posX, int posY);
             std::shared_ptr<Entity> createPlayer(int posX, int posY);
             std::shared_ptr<Entity> createText(std::string text, int posX, int posY, int size);
-            std::shared_ptr<Entity> createEnnemy(std::string path, int posX, int posY, float angle, Ennemy::Type type);
+            std::shared_ptr<Entity> createEnnemy(int name, int posX, int posY, float angle, Ennemy::Type type);
             void createButtonEvent(std::shared_ptr<Entity> &entity, SceneManager::SceneType goTo, sf::Vector2i click);
             std::shared_ptr<Entity> createCamera(int posX, int posY, int rectX, int rectY);
 
