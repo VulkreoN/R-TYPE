@@ -51,7 +51,7 @@ namespace R_TYPE {
             auto pos = Component::castComponent<Position>((*script)[IComponent::Type::POSITION]);
             auto ennemy = Component::castComponent<Ennemy>((*script)[IComponent::Type::ENNEMY]);
 
-            ennemy->launchScript(manager, *pos);
+            ennemy->launchScript(manager, script);
         }
     }
 

@@ -3,14 +3,16 @@
 
 #include <SFML/Graphics.hpp>
 #include "Position.hpp"
+#include "Velocity.hpp"
 
 namespace R_TYPE {
 
     class Script {
         public: 
 
-        bool turretScript(Position selfPos);
-            void jorydeScript();
+        bool turretScript();
+        bool jorydeScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::Velocity> selfVel);
+        bool robotScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::Velocity> selfVel);
         private:
             sf::Clock clock;
             sf::Time lastFrame;

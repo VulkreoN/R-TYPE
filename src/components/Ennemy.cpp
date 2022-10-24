@@ -14,7 +14,31 @@ namespace R_TYPE {
         type = _type;
     }
 
-    void Ennemy::launchScript(SceneManager &manager, Position selfPos)
+    void Ennemy::launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy)
+    {
+        auto selfPos = Component::castComponent<Position>((*ennemy)[IComponent::Type::POSITION]);
+        auto selfVel = Component::castComponent<Velocity>((*ennemy)[IComponent::Type::VELOCITY]);
+        sf::Vector2f distance = getDistance(manager, *selfPos);
+
+        if (type == Ennemy::Type::TURRET) {
+            if (scripts.turretScript()) {
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("projectile.png", *selfPos, getVelocityTarget(distance), false);
+                manager.getCurrentScene().addEntity(shoot);
+            }
+        } else if (type == Ennemy::Type::JORYDE_ALIEN) {
+            if (scripts.jorydeScript(distance, selfVel)) {
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet9.gif", *selfPos, Velocity(-0.1f, 0), false);
+                manager.getCurrentScene().addEntity(shoot);
+            }
+        } else if (type == Ennemy::Type::ROBOT_DINO) {
+            if (scripts.robotScript(distance, selfVel)) {
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet10.gif", *selfPos, Velocity(-0.1f, 0), false);
+                manager.getCurrentScene().addEntity(shoot);
+            }
+        }
+    }
+
+    sf::Vector2f Ennemy::getDistance(SceneManager &manager, Position selfPos) 
     {
         sf::Vector2i targetPos;
         sf::Vector2f distance = {0, 0};
@@ -29,14 +53,7 @@ namespace R_TYPE {
             if (distance2.x + distance2.y < distance.x + distance.y || distance.x == 0)
                 distance = distance2;
         }
-        if (type == Ennemy::Type::TURRET) {
-            if (scripts.turretScript(selfPos)) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("projectile.png", selfPos, getVelocityTarget(distance), false);
-                manager.getCurrentScene().addEntity(shoot);
-            }
-        } else if (type == Ennemy::Type::JORYDE_ALIEN)
-            scripts.jorydeScript();
-        
+        return (distance);
     }
 
     Velocity Ennemy::getVelocityTarget(sf::Vector2f distance)

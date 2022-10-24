@@ -35,13 +35,21 @@ namespace R_TYPE {
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
-        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
+        sceneManager.setCurrentScene(SceneManager::SceneType::GAME);
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
     {
-        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
+        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1 || sceneManager.getCurrentSceneType() == SceneManager::SceneType::GAME) {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+
+                pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+                pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+            }
+
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
@@ -82,12 +90,25 @@ namespace R_TYPE {
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
-        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2, angle);
+        std::shared_ptr<Sprite> component;
+        std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
+
+        if (type == Ennemy::Type::TURRET) {
+            component = std::make_shared<Sprite>(path, *component2, angle);
+        } else if (type == Ennemy::Type::JORYDE_ALIEN) {
+            component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 14, 47, 42));
+            component->getSprite().setScale(0.5, 0.5);
+        } else if (type == Ennemy::Type::ROBOT_DINO) {
+            component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 2, 29, 24));
+            component->getSprite().setScale(0.7, 0.7);
+            velocity = std::make_shared<Velocity>(0.03f, 0);
+        }
         std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
 
         entity->addComponent(component)
                 .addComponent(component2)
-                .addComponent(compoment3);
+                .addComponent(compoment3)
+                .addComponent(velocity);
         return(entity);
     }
 
@@ -95,7 +116,14 @@ namespace R_TYPE {
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
-        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2);
+        std::shared_ptr<Sprite> component;
+        if (path == "assets/sprites_sheets/r-typesheet9.gif") {
+            component = std::make_shared<Sprite>(path, *component2, 0, sf::IntRect(18, 59, 15, 15));
+        } else if (path == "assets/sprites_sheets/r-typesheet10.gif") {
+            component = std::make_shared<Sprite>(path, *component2, 0, sf::IntRect(191, 63, 6, 12));
+        } else 
+            component = std::make_shared<Sprite>(path, *component2);
+        component->getSprite().setScale(0.7, 0.7);
         std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(velocity);
         std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
 
@@ -269,6 +297,13 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
+        std::shared_ptr<Entity> player = createPlayer(50, 100);
+        std::shared_ptr<Entity> tower1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> tower2 = createEnnemy("assets/sprites_sheets/r-typesheet10.gif", 53, 150, 0.f, Ennemy::Type::ROBOT_DINO);
+
+        scene->addEntity(player)
+              .addEntity(tower1)
+              .addEntity(tower2);
         return (scene);
     }
 
