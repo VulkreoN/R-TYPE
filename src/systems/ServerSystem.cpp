@@ -5,7 +5,10 @@
 ** ServerSystem
 */
 
+#include "Position.hpp"
+#include "Player.hpp"
 #include "ServerSystem.hpp"
+#include "network/protocol.h"
 
 namespace R_TYPE {
 
@@ -26,12 +29,12 @@ void ServerSystem::init(SceneManager &/*manager*/)
     _threadContext = std::thread([this]() { _context.run(); });
 }
 
-void ServerSystem::update(SceneManager &/*manager*/, uint64_t deltaTime)
+void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
 {
     _broadcast_cooldown += deltaTime;
     if (_broadcast_cooldown >= NETWORK_BROADCAST_FREQUENCY) {
         _broadcast_cooldown = 0;
-        broadcast();
+        broadcast(manager);
     }
 }
 
@@ -52,14 +55,88 @@ void ServerSystem::handle_incomming_message()
     // here, handle the recienved message stored in _buffer
 }
 
-void ServerSystem::broadcast()
+void ServerSystem::broadcast(SceneManager &manager)
 {
     char buff[1024];
 
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
-    buff[0] = protocol::Header::GAME_INFO;
-    for (size_t i = 0; i < _connections.size(); i++)
-        _socket.send_to(asio::buffer(buff), _connections[i]->get_endpoint());
+    if (true /* not game start */) {
+        switch (manager.getCurrentSceneType()) {
+            case SceneManager::SceneType::LEVEL1:
+                create_game_info_msg(buff, manager);
+                break;
+            default :
+                buff[0] = protocol::Header::PING;
+                break;
+        }
+        for (std::unique_ptr<Connection> &con : _connections) {
+            _socket.send_to(asio::buffer(buff), con->get_endpoint());
+        }
+    } else {
+        for (std::unique_ptr<Connection> &con : _connections) {
+            create_start_game_msg(buff, con);
+            _socket.send_to(asio::buffer(buff), con->get_endpoint());
+        }
+    }
+}
+
+void ServerSystem::create_start_game_msg(char *buff, std::unique_ptr<Connection> &connection)
+{
+    buff[0] = protocol::Header::START_GAME;
+    buff[sizeof(protocol::Header)] = (size_t)connection->get_id();
+    buff[sizeof(protocol::Header) + sizeof(size_t)] = (size_t)_connections.size();
+    buff[sizeof(protocol::Header) + 2 * sizeof(size_t)] = '\0';
+}
+
+void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
+{
+    size_t c = 0;
+
+    buff[c] = protocol::Header::GAME_INFO;
+    c += sizeof(protocol::Header);
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+        auto comp = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
+            buff[c] = (uint8_t)1;
+            c += sizeof(uint8_t);
+            buff[c] = comp->getPosition().x;
+            c += sizeof(float);
+            buff[c] = comp->getPosition().y;
+            c += sizeof(float);
+            buff[c] = (size_t)1; // to change, this is the ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)1; // to change, this is status
+            c += sizeof(uint8_t);
+        }
+    }
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
+            buff[c] = (uint8_t)1;
+            c += sizeof(uint8_t);
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x;
+            c += sizeof(float);
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y;
+            c += sizeof(float);
+            buff[c] = (size_t)5; // to change, this is the ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)1; // to change, this is status
+            c += sizeof(uint8_t);
+        }
+    }
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
+            buff[c] = (uint8_t)1;
+            c += sizeof(uint8_t);
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x;
+            c += sizeof(float);
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y;
+            c += sizeof(float);
+            buff[c] = (size_t)7; // to change, this is the ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)1; // to change, this is status
+            c += sizeof(uint8_t);
+        }
+    }
 }
 
 }

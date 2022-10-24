@@ -83,9 +83,10 @@ if os.name == 'nt':
     print("\nBuilding the project...")
     os.system("cmake -S . -B build")
     os.system("cmake --build build")
-    os.system("msbuild build\ALL_BUILD.vcxproj")
+    if os.system("msbuild build\ALL_BUILD.vcxproj") != 0:
+        print("Error while building the project")
+        sys.exit(1)
     print("\nProject built successfully")
-
     sys.exit(0)
 
 elif os.name == 'posix':
