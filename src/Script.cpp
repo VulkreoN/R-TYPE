@@ -25,8 +25,12 @@ namespace R_TYPE {
             selfVel->setX((distance.x + 100) * 0.001);
             selfVel->setY(distance.y * 0.001);
         }
+        if (CurrentFrame.asSeconds() < 1.5f) {
+            selfVel->setX(0);
+            selfVel->setY(0);
+        }
 
-        if (CurrentFrame.asSeconds() > 2) {
+        if (CurrentFrame.asSeconds() > 5) {
             std::cout << "Laser tout droit " << std::endl;
             clock.restart();
             return (true);

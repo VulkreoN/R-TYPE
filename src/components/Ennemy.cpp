@@ -27,6 +27,8 @@ namespace R_TYPE {
             }
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
             if (scripts.jorydeScript(distance, selfVel)) {
+                if (distance.x > 0)
+                    isAlive = false;
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet9.gif", *selfPos, Velocity(-0.1f, 0), false);
                 manager.getCurrentScene().addEntity(shoot);
             }
