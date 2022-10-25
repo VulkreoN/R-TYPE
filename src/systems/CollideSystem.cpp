@@ -5,6 +5,7 @@
 #include "GraphicSystem.hpp"
 #include "Projectiles.hpp"
 #include "Player.hpp"
+#include "Velocity.hpp"
 
 namespace R_TYPE {
 
@@ -28,6 +29,7 @@ namespace R_TYPE {
         // ca seg la dedans quand tu tue tous les ennemy
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
             auto component = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
+            didHitWall(sceneManager, e);
             if (component->shootByPlayer() == false) {
                 didHitPlayer(sceneManager, e);
             } else if (component->shootByPlayer() == true)
@@ -41,6 +43,20 @@ namespace R_TYPE {
                 return;
             }
         }
+    }
+
+    void CollideSystem::didHitWall(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
+    {
+        auto component = Component::castComponent<Projectiles>((*project)[IComponent::Type::PROJECTILES]);
+        auto pos = Component::castComponent<Position>((*project)[IComponent::Type::POSITION]);
+        auto sprite = Component::castComponent<Sprite>((*project)[IComponent::Type::SPRITE]);
+        auto velocity = Component::castComponent<Velocity>((*project)[IComponent::Type::VELOCITY]);
+        
+        sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+        if (pos->getPosition().y > 32)
+            if (isBlack(*pos, box) == false) {
+                component->setIsActive(false);
+            }
     }
 
     void CollideSystem::didHitEnnemi(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
@@ -78,7 +94,7 @@ namespace R_TYPE {
         }
     }
     
-    bool CollideSystem::isBlack(Position pos)
+    bool CollideSystem::isBlack(Position pos, sf::FloatRect box)
     {
         sf::Image imageUp;
         sf::Image imageDown;
@@ -88,8 +104,8 @@ namespace R_TYPE {
 
         imageUp.loadFromFile("assets/sprites_statics/top_wall_lvl1.png");
         imageDown.loadFromFile("assets/sprites_statics/bottom_wall_lvl1.png");
-        for (int a = 0; a < 32; a++) {
-            for (int b = 0; b < 12; b++) {
+        for (int a = 0; a < box.width; a++) {
+            for (int b = 0; b < box.height; b++) {
 
                 realSize.setX(pos.getPosition().x - 100);
                 realSize.setY(pos.getPosition().y);
@@ -117,6 +133,7 @@ namespace R_TYPE {
 
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
+        sf::FloatRect playerBox(0, 0, 32, 12);
 
         if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
@@ -129,7 +146,7 @@ namespace R_TYPE {
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
             if (pos.getPosition().x > posEnnemi->getPosition().x && pos.getPosition().x < posEnnemi->getPosition().x + box.width
             && pos.getPosition().y > posEnnemi->getPosition().y && pos.getPosition().y < posEnnemi->getPosition().y + box.height)  {
-                if (isBlack(pos) == false)
+                if (isBlack(pos, playerBox) == false)
                     return (false);
             }
         }
@@ -142,6 +159,7 @@ namespace R_TYPE {
 
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
+        sf::FloatRect playerBox(0, 0, 32, 12);
 
         if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
@@ -154,7 +172,7 @@ namespace R_TYPE {
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
             if (pos.getPosition().x + 32 > posEnnemi->getPosition().x && pos.getPosition().x + 32 < posEnnemi->getPosition().x + box.width
             && pos.getPosition().y > posEnnemi->getPosition().y && pos.getPosition().y < posEnnemi->getPosition().y + box.height)  {
-                if (isBlack(pos) == false)
+                if (isBlack(pos, playerBox) == false)
                     return (false);
             }
         }
@@ -167,6 +185,7 @@ namespace R_TYPE {
 
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
+        sf::FloatRect playerBox(0, 0, 32, 12);
 
         if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
@@ -181,7 +200,7 @@ namespace R_TYPE {
 
             if (pos.getPosition().x > posEnnemi->getPosition().x && pos.getPosition().x < posEnnemi->getPosition().x + box.width
             && pos.getPosition().y > posEnnemi->getPosition().y && pos.getPosition().y < posEnnemi->getPosition().y + box.height)  {
-                if (isBlack(pos) == false)
+                if (isBlack(pos, playerBox) == false)
                     return (false);
             }
         }
@@ -194,6 +213,7 @@ namespace R_TYPE {
 
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
+        sf::FloatRect playerBox(0, 0, 32, 12);
 
         if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
@@ -206,7 +226,7 @@ namespace R_TYPE {
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
             if (pos.getPosition().x > posEnnemi->getPosition().x && pos.getPosition().x < posEnnemi->getPosition().x + box.width
             && pos.getPosition().y + 15 > posEnnemi->getPosition().y && pos.getPosition().y + 15 < posEnnemi->getPosition().y + box.height)  {
-                if (isBlack(pos) == false)
+                if (isBlack(pos, playerBox) == false)
                     return (false);
             }
         }

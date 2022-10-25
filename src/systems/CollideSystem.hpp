@@ -24,7 +24,8 @@ namespace R_TYPE {
 
             void didHitPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
             void didHitEnnemi(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
-            static bool isBlack(Position pos);
+            void didHitWall(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            static bool isBlack(Position pos, sf::FloatRect box);
         
         private:
             std::vector<std::shared_ptr<IEntity>> _collidables2D;
