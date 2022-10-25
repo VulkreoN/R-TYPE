@@ -35,7 +35,9 @@ namespace R_TYPE {
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
-        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
+        sceneManager.addScene(createSceneLose(), SceneManager::SceneType::LOSE);
+        sceneManager.addScene(createSceneWin(), SceneManager::SceneType::WIN);
+        sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -51,6 +53,9 @@ namespace R_TYPE {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+                if (player->isAlive() == false) {
+                    sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
+                }
                 Position moved(0,0);
                 moved.setX(player->getPosition().x + velocity->getVelocity().x * deltaTime);
                 moved.setY(player->getPosition().y + velocity->getVelocity().y * deltaTime);
@@ -127,6 +132,13 @@ namespace R_TYPE {
         player_e->addComponent(player)
             .addComponent(velocity);
 
+        ButtonCallbacks pause (
+            [](SceneManager &sceneManager) {
+                sceneManager.setCurrentScene(SceneManager::SceneType::PAUSE);
+            },
+            [](SceneManager &) {}
+        );
+
         ButtonCallbacks up (
             [player_e](SceneManager &) {
                 auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
@@ -195,6 +207,7 @@ namespace R_TYPE {
         event_p->addKeyboardEvent(sf::Keyboard::S, down);
         event_p->addKeyboardEvent(sf::Keyboard::D, right);
         event_p->addKeyboardEvent(sf::Keyboard::Space, shoot);
+        event_p->addKeyboardEvent(sf::Keyboard::Escape, pause);
 
         player_e->addComponent(event_p);
         return (player_e);
@@ -224,15 +237,6 @@ namespace R_TYPE {
         entity->addComponent(eventListener);
     }
 
-    std::shared_ptr<Entity> GameSystem::createCamera(int posX, int posY, int rectX, int rectY)
-    {
-        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
-        std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
-        std::shared_ptr<Position> component = std::make_shared<Position>(rectX, rectY);
-
-        
-    }
-
     std::unique_ptr<R_TYPE::IScene> GameSystem::createMainMenu()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createMainMenu, this));
@@ -241,7 +245,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> entity3 = createSprite("assets/menus/quit.png", 350, 410);
         std::shared_ptr<Entity> entity4 = createSprite("assets/menus/play.png", 120, 289);
 
-        createButtonEvent(entity4, SceneManager::SceneType::GAME, sf::Vector2i(230, 240));
+        createButtonEvent(entity4, SceneManager::SceneType::LEVEL1, sf::Vector2i(230, 240));
         createButtonEvent(entity3, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
         createButtonEvent(entity2, SceneManager::SceneType::OPTION, sf::Vector2i(315, 50));
 
@@ -275,7 +279,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> entity3 = createText("PAUSE", 350, 25, 50);
 
         createButtonEvent(entity, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
-        createButtonEvent(entity2, SceneManager::SceneType::GAME, sf::Vector2i(315, 50));
+        createButtonEvent(entity2, SceneManager::SceneType::LEVEL1, sf::Vector2i(315, 50));
 
         scene->addEntity(entity)
               .addEntity(entity2)
@@ -328,6 +332,38 @@ namespace R_TYPE {
                 .addEntity(tower12)
                 .addEntity(tower13)
                 .addEntity(tower14);
+        return (scene);
+    }
+
+    std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneLose()
+    {
+        std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneLose, this));
+        std::shared_ptr<Entity> entity = createText("You Lose", 350, 25, 50);
+        std::shared_ptr<Entity> entity1 = createSprite("assets/menus/backtoMenu.png", 230, 300);
+        std::shared_ptr<Entity> entity2 = createSprite("assets/menus/quit.png", 230, 400);
+
+        createButtonEvent(entity1, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
+        createButtonEvent(entity2, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
+
+        scene->addEntity(entity)
+              .addEntity(entity1)
+              .addEntity(entity2);
+        return (scene);
+    }
+
+    std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneWin()
+    {
+        std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneWin, this));
+        std::shared_ptr<Entity> entity = createText("You Win", 350, 25, 50);
+        std::shared_ptr<Entity> entity1 = createSprite("assets/menus/backtoMenu.png", 230, 300);
+        std::shared_ptr<Entity> entity2 = createSprite("assets/menus/quit.png", 230, 400);
+
+        createButtonEvent(entity1, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
+        createButtonEvent(entity2, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
+
+        scene->addEntity(entity)
+              .addEntity(entity1)
+              .addEntity(entity2);
         return (scene);
     }
 }
