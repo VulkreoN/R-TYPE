@@ -42,6 +42,8 @@ namespace R_TYPE {
             std::unique_ptr<R_TYPE::IScene> createOptionMenu();
             std::unique_ptr<R_TYPE::IScene> createPauseMenu();
             std::unique_ptr<R_TYPE::IScene> createFirstLevel();
+            std::unique_ptr<R_TYPE::IScene> createSceneLose();
+            std::unique_ptr<R_TYPE::IScene> createSceneWin();
         private:
     };
 }

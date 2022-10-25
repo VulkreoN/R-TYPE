@@ -24,11 +24,14 @@ namespace R_TYPE {
 
             static sf::RenderWindow *getWindow() {return (window);};
 
+            void setCamera(SceneManager &manager);
+
         protected:
         private:
             static sf::RenderWindow *window;
             std::unique_ptr<EventSystem> eventSystem;
             sf::View *camera;
+            bool _isInit;
     };
 }
 

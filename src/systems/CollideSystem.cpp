@@ -50,13 +50,19 @@ namespace R_TYPE {
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width
-            && pos->getPosition().y > posEnnemi->getPosition().y && pos->getPosition().y < posEnnemi->getPosition().y + box.height)  {
-                sceneManager.getCurrentScene().removeEntity(e);
-                projectile->setIsActive(false);
-                return;
+
+            if (sprite->getSprite().getRotation() > 0 && 
+            pos->getPosition().x > posEnnemi->getPosition().x - box.width && pos->getPosition().x < posEnnemi->getPosition().x
+            && pos->getPosition().y > posEnnemi->getPosition().y - box.height && pos->getPosition().y < posEnnemi->getPosition().y)  {
+                    projectile->setIsActive(false);
+                    sceneManager.getCurrentScene().removeEntity(e);
+                    return;
+            } else if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width
+                && pos->getPosition().y > posEnnemi->getPosition().y - box.height && pos->getPosition().y < posEnnemi->getPosition().y) {
+                    projectile->setIsActive(false);
+                    sceneManager.getCurrentScene().removeEntity(e);
+                    return;
             }
         }
     }
@@ -71,7 +77,7 @@ namespace R_TYPE {
             sf::FloatRect box = player->getSprite().getGlobalBounds();
             if (pos->getPosition().x > player->getPosition().x && pos->getPosition().x < player->getPosition().x + box.width
             && pos->getPosition().y > player->getPosition().y && pos->getPosition().y < player->getPosition().y + box.height)  {
-                sceneManager.getCurrentScene().removeEntity(e);
+                player->setAlive(false);
                 projectile->setIsActive(false);
                 return;
             }

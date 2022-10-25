@@ -36,15 +36,29 @@ namespace R_TYPE {
         window->setFramerateLimit(60);
         eventSystem->init(manager);
         eventSystem->setWindow(window);
-        camera = new sf::View(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
-        window->setView(*camera);
+        camera = new sf::View(sf::FloatRect(0, 0, 800, 600));
+        _isInit = false;
+    }
+
+    void GraphicSystem::setCamera(SceneManager &manager)
+    {
+        if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1 && _isInit == false) {
+            camera = new sf::View(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
+            window->setView(*camera);
+            _isInit = true;
+        } else if (manager.getCurrentSceneType() != SceneManager::SceneType::LEVEL1 && _isInit == true) {
+            camera = new sf::View(sf::FloatRect(0.f, 0.f, 800.f, 600.f));
+            window->setView(*camera);
+            _isInit = false;
+        }
     }
 
     void GraphicSystem::update(SceneManager &manager, uint64_t deltaTime)
     {
         eventSystem->update(manager, deltaTime);
         window->clear(sf::Color::Black);
-        
+        setCamera(manager);
+
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
@@ -60,11 +74,12 @@ namespace R_TYPE {
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             camera->move(0.25f, 0.f);
             window->setView(*camera);
-        }
-        for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
-            auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
-            player->getSprite().setPosition(player->getPosition());
-            window->draw(player->getSprite());
+        
+            for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+                player->getSprite().setPosition(player->getPosition());
+                window->draw(player->getSprite());
+            }
         }
         window->display();
     }
