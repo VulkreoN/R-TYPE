@@ -40,7 +40,6 @@ namespace R_TYPE {
         CurrentFrame = clock.getElapsedTime();
 
         if (CurrentFrame.asSeconds() > 5) {
-            selfVel->setX(selfVel->getVelocity().x * -1);
             std::cout << "Roquette en cloche" << std::endl;
             clock.restart();
             return (true);

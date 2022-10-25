@@ -6,6 +6,7 @@
 #include "Projectiles.hpp"
 #include "Player.hpp"
 #include "Velocity.hpp"
+#include "Ennemy.hpp"
 
 namespace R_TYPE {
 
@@ -41,6 +42,20 @@ namespace R_TYPE {
             if (component->getIsActive() == false) {
                 sceneManager.getCurrentScene().removeEntity(e);
                 return;
+            }
+        }
+
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+            auto component = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
+            auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+            auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            if (component->getType() == Ennemy::Type::ROBOT_DINO) {
+                if (pos->getPosition().y > 32)
+                    if (isBlack(*pos, box) == false) {
+                        velocity->setX(-velocity->getVelocity().x);
+                    }
             }
         }
     }

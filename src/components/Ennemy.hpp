@@ -28,6 +28,8 @@ namespace R_TYPE {
             sf::Vector2f getDistance(SceneManager &manager, Position selfPos);
 
             Velocity getVelocityTarget(sf::Vector2f distance);
+
+            Type getType() {return (type);};
         private:
             bool isAlive;
             Type type;

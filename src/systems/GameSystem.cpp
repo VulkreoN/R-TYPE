@@ -101,7 +101,7 @@ namespace R_TYPE {
         } else if (type == Ennemy::Type::ROBOT_DINO) {
             component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 2, 29, 24));
             component->getSprite().setScale(0.7, 0.7);
-            velocity = std::make_shared<Velocity>(0.03f, 0);
+            velocity = std::make_shared<Velocity>(-0.03f, 0);
         }
         std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
 
@@ -327,7 +327,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower12 = createEnnemy("ennemy.png", 145, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower13 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower14 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
-
+        std::shared_ptr<Entity> dino1 = createEnnemy("assets/sprites_sheets/r-typesheet10.gif", 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
 
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
@@ -345,7 +345,8 @@ namespace R_TYPE {
                 .addEntity(tower11)
                 .addEntity(tower12)
                 .addEntity(tower13)
-                .addEntity(tower14);
+                .addEntity(tower14)
+                .addEntity(dino1);
         return (scene);
     }
 }
