@@ -35,7 +35,7 @@ namespace R_TYPE {
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
-        sceneManager.setCurrentScene(SceneManager::SceneType::GAME);
+        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)

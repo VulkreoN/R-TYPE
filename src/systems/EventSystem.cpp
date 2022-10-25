@@ -50,8 +50,11 @@ namespace R_TYPE {
         for (auto &script : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto pos = Component::castComponent<Position>((*script)[IComponent::Type::POSITION]);
             auto ennemy = Component::castComponent<Ennemy>((*script)[IComponent::Type::ENNEMY]);
+            float windowPosX = window->getView().getCenter().x - 135;
 
-            ennemy->launchScript(manager, script);
+            if (pos->getPosition().x < windowPosX + 270 && pos->getPosition().x > windowPosX) {
+                ennemy->launchScript(manager, script);
+            }
         }
     }
 
