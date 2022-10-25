@@ -20,8 +20,8 @@ namespace R_TYPE {
             ~Player();
 
             /// @brief Set the position of the player
-            /// @param position Position of the player
-            void setPosition(sf::Vector2f _pos);
+            /// @param pos Position of the player
+            void setPosition(sf::Vector2f pos);
 
             /// @brief Get the position of the player
             sf::Vector2f getPosition();

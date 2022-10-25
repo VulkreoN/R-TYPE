@@ -48,6 +48,16 @@ namespace R_TYPE {
                 pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                 pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
             }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+                Position moved(0,0);
+                moved.setX(player->getPosition().x + velocity->getVelocity().x * deltaTime);
+                moved.setY(player->getPosition().y + velocity->getVelocity().y * deltaTime);
+
+                if (CollideSystem::canMove(moved, sceneManager, velocity->getVelocity()))
+                    player->setPosition(moved.getPosition());
+            }
         }
     }
 
@@ -112,69 +122,72 @@ namespace R_TYPE {
         std::shared_ptr<Position> player_pos = std::make_shared<Position>(posX, posY);
         std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
         std::shared_ptr<Event> event_p = std::make_shared<Event>();
-        std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(sf::Vector2f(0,0));
+        std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0,0);
 
         player_e->addComponent(player)
             .addComponent(velocity);
 
         ButtonCallbacks up (
             [player_e](SceneManager &) {
-                auto comp = (*player_e)[IComponent::Type::VELOCITY];
-                auto velocity = Component::castComponent<Velocity>(comp);
-                velocity = sf::Vector2f(0.05, 0);
+                auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
+                auto velocity = Component::castComponent<Velocity>(comp_v);
+
+                velocity->setY(-0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
-                velocity = sf::Vector2f(0, 0);
+                velocity->setY(0);
             });
 
         ButtonCallbacks left (
             [player_e](SceneManager &) {
-                auto comp = (*player_e)[IComponent::Type::VELOCITY];
-                auto velocity = Component::castComponent<Velocity>(comp);
-                velocity = sf::Vector2f(-0.05, 0);
+                auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
+                auto velocity = Component::castComponent<Velocity>(comp_v);
+
+                velocity->setX(-0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
-                velocity = sf::Vector2f(0, 0);
+                velocity->setX(0);
             });
 
         ButtonCallbacks down (
             [player_e](SceneManager &) {
-                auto comp = (*player_e)[IComponent::Type::VELOCITY];
-                auto velocity = Component::castComponent<Velocity>(comp);
-                velocity = sf::Vector2f(0, 0.05);
+                auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
+                auto velocity = Component::castComponent<Velocity>(comp_v);
+
+                velocity->setY(0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
-                velocity = sf::Vector2f(0, 0);
+                velocity->setY(0);
             });
 
         ButtonCallbacks right (
             [player_e](SceneManager &) {
-                auto comp = (*player_e)[IComponent::Type::VELOCITY];
-                auto velocity = Component::castComponent<Velocity>(comp);
-                velocity = sf::Vector2f(0, -0.05);
+                auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
+                auto velocity = Component::castComponent<Velocity>(comp_v);
+
+                velocity->setX(0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
-                velocity = sf::Vector2f(0, 0);
+                velocity->setX(0);
             });
 
         ButtonCallbacks shoot (
-           [](SceneManager &scene) {
-                auto entity = scene.getCurrentScene()[IEntity::Tags::PLAYER][0];
-                auto comp = (*entity)[IComponent::Type::PLAYER];
+           [player_e](SceneManager &scene) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
                 auto pos = Component::castComponent<Player>(comp);
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
                     ("projectile.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.1f, 0), true);
                 scene.getCurrentScene().addEntity(shoot);
            },
-           [](SceneManager &scene) {
+           [](SceneManager &) {
            });
 
         event_p->addKeyboardEvent(sf::Keyboard::Z, up);
