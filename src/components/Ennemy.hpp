@@ -15,6 +15,7 @@ namespace R_TYPE {
                 TURRET,
                 JORYDE_ALIEN,
                 ROBOT_DINO,
+                SPATIAL,
             };
             Ennemy(Ennemy::Type type);
             ~Ennemy();

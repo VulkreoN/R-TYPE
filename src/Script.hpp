@@ -13,6 +13,7 @@ namespace R_TYPE {
         bool turretScript();
         bool jorydeScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::Velocity> selfVel);
         bool robotScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::Velocity> selfVel);
+        void spatialScript(std::shared_ptr<R_TYPE::Velocity> selfVel);
         private:
             sf::Clock clock;
             sf::Time lastFrame;

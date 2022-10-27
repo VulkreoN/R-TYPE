@@ -37,6 +37,8 @@ namespace R_TYPE {
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet10.gif", *selfPos, Velocity(-0.1f, 0), false);
                 manager.getCurrentScene().addEntity(shoot);
             }
+        } else if (type == Ennemy::Type::SPATIAL) {
+            scripts.spatialScript(selfVel);
         }
     }
 

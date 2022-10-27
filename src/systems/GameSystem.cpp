@@ -35,7 +35,7 @@ namespace R_TYPE {
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
-        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
+        sceneManager.setCurrentScene(SceneManager::SceneType::GAME);
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -102,6 +102,10 @@ namespace R_TYPE {
             component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 2, 29, 24));
             component->getSprite().setScale(0.7, 0.7);
             velocity = std::make_shared<Velocity>(-0.03f, 0);
+        } else if (type == Ennemy::Type::SPATIAL) {
+            component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(5, 6, 20, 23));
+            velocity = std::make_shared<Velocity>(-0.05f, -0.05f);
+            component->getSprite().setScale(0.7, 0.7);
         }
         std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
 
@@ -298,11 +302,12 @@ namespace R_TYPE {
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
         std::shared_ptr<Entity> player = createPlayer(50, 100);
-        std::shared_ptr<Entity> tower1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        // std::shared_ptr<Entity> tower1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::shared_ptr<Entity> tower2 = createEnnemy("assets/sprites_sheets/r-typesheet10.gif", 53, 150, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> tower3 = createEnnemy("assets/sprites_sheets/r-typesheet5.gif", 183, 50, 0.f, Ennemy::Type::SPATIAL);
 
         scene->addEntity(player)
-              .addEntity(tower1)
+              .addEntity(tower3)
               .addEntity(tower2);
         return (scene);
     }
