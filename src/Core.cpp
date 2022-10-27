@@ -1,3 +1,6 @@
+#include <iostream>
+#include <chrono>
+#include <thread>
 #include "Core.hpp"
 #include "GameSystem.hpp"
 #include "EventSystem.hpp"
@@ -5,11 +8,6 @@
 #include "CollideSystem.hpp"
 #include "ServerSystem.hpp"
 #include "ClientSystem.hpp"
-#include <iostream>
-#include <chrono>
-#include <thread>
-
-#define UPDATE_DELTA 17
 
 namespace R_TYPE {
 

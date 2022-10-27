@@ -103,7 +103,7 @@ namespace R_TYPE {
                 if (pos.getPosition().x < 100)
                     return(true);
 
-                if (pos.getPosition().y < 80)
+                if (pos.getPosition().y + b < 79)
                     get = imageUp.getPixel(realSize.getPosition().x + a, realSize.getPosition().y + b);
                 else if (pos.getPosition().y > 127) {
                     realSize.setY(pos.getPosition().y - 127);
@@ -117,9 +117,15 @@ namespace R_TYPE {
         return (true);
     }
 
-    bool CollideSystem::canMoveLeft(Position pos, SceneManager &sceneManger)
+    bool CollideSystem::canMove(Position pos, SceneManager &sceneManger, Position toCheck)
     {
         Position real(0, 0);
+        Position toAdd(0, 0);
+
+        if (toCheck.getPosition().x > 0)
+            toAdd.setX(32);
+        if (toCheck.getPosition().y > 0)
+            toAdd.setY(15);
 
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
@@ -133,8 +139,8 @@ namespace R_TYPE {
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            if (pos.getPosition().x > posEnnemi->getPosition().x && pos.getPosition().x < posEnnemi->getPosition().x + box.width
-            && pos.getPosition().y > posEnnemi->getPosition().y && pos.getPosition().y < posEnnemi->getPosition().y + box.height)  {
+            if (pos.getPosition().x + toAdd.getPosition().x > posEnnemi->getPosition().x && pos.getPosition().x + toAdd.getPosition().x < posEnnemi->getPosition().x + box.width
+            && pos.getPosition().y + toAdd.getPosition().y > posEnnemi->getPosition().y && pos.getPosition().y + toAdd.getPosition().y < posEnnemi->getPosition().y + box.height)  {
                 if (isBlack(pos) == false)
                     return (false);
             }
@@ -142,6 +148,7 @@ namespace R_TYPE {
         return true;
     }
 
+    /*
     bool CollideSystem::canMoveRight(Position pos, SceneManager &sceneManger)
     {
         Position real(0, 0);
@@ -217,7 +224,7 @@ namespace R_TYPE {
             }
         }
         return true;
-    }
+    }*/
 
     void CollideSystem::destroy()
     {
