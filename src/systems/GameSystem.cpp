@@ -42,7 +42,7 @@ namespace R_TYPE {
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
     {
-        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1 || sceneManager.getCurrentSceneType() == SceneManager::SceneType::GAME) {
+        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
