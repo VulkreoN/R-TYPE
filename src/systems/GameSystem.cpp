@@ -71,6 +71,19 @@ namespace R_TYPE {
                 if (CollideSystem::canMove(moved, sceneManager, velocity->getVelocity()))
                     player->setPosition(moved.getPosition());
             }
+
+            // delete all entity if they are out of the screen
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
+
+                int min = GraphicSystem::getWindow()->getView().getCenter().x - 135;
+                int max = GraphicSystem::getWindow()->getView().getCenter().x + 135;
+
+                if (pos->getPosition().x < min || pos->getPosition().x > max) {
+                    proj->setIsActive(false);
+                }
+            }
         }
     }
 
@@ -354,7 +367,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower13 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower14 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
-        std::shared_ptr<Entity> spatial1 = createEnnemy("assets/sprites_sheets/r-typesheet5.gif", 183, 50, 0.f, Ennemy::Type::SPATIAL);
+        std::shared_ptr<Entity> spatial1 = createEnnemy("assets/sprites_sheets/r-typesheet5.gif", 250, 50, 0.f, Ennemy::Type::SPATIAL);
         std::shared_ptr<Entity> dino1 = createEnnemy("assets/sprites_sheets/r-typesheet10.gif", 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
 
         scene-> addEntity(top_wall)
