@@ -101,7 +101,8 @@ namespace R_TYPE {
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
 
             if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
-                projectile->setIsActive(false);
+                if (projectile->getType() != Projectiles::Type::CHARGED)
+                    projectile->setIsActive(false);
                 sceneManager.getCurrentScene().removeEntity(e);
                 return;
             }

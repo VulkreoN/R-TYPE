@@ -81,7 +81,7 @@ namespace R_TYPE {
                     player->setPosition(moved.getPosition());
             }
 
-            // delete all entity if they are out of the screen
+            // delete all projectiles if they are out of the screen
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
                 auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
@@ -101,11 +101,11 @@ namespace R_TYPE {
         std::cout << "Game System destroyed" << std::endl;
     }
 
-    std::shared_ptr<Entity> GameSystem::createSprite(std::string path, int posX, int posY)
+    std::shared_ptr<Entity> GameSystem::createSprite(std::string path, int posX, int posY, sf::IntRect rect)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
-        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2);
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2, 0, rect);
 
         entity->addComponent(component)
                 .addComponent(component2);
@@ -163,21 +163,17 @@ namespace R_TYPE {
         return(entities);
     }
 
-    std::shared_ptr<Entity> GameSystem::createProjectiles(std::string path, Position pos, Velocity velocity, bool byPlayer)
+    std::shared_ptr<Entity> GameSystem::createProjectiles(std::string path, Position pos, Velocity velocity, bool byPlayer, sf::IntRect rect)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
-        std::shared_ptr<Sprite> component;
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2, 0, rect);;
         std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
         std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(velocity);
 
-        if (path == "assets/sprites_sheets/r-typesheet9.gif") {
-            component = std::make_shared<Sprite>(path, *component2, 0, sf::IntRect(18, 59, 15, 15));
-        } else if (path == "assets/sprites_sheets/r-typesheet10.gif") {
-            component = std::make_shared<Sprite>(path, *component2, 0, sf::IntRect(191, 63, 6, 12));
+        if (path == "assets/sprites_sheets/r-typesheet10.gif")
             component3->setType(Projectiles::Type::ROCKET);
-        } else 
-            component = std::make_shared<Sprite>(path, *component2);
+        
         component->getSprite().setScale(0.7, 0.7);
 
         entity->addComponent(component)
@@ -202,6 +198,8 @@ namespace R_TYPE {
             [](SceneManager &sceneManager) {
                 sceneManager.setCurrentScene(SceneManager::SceneType::PAUSE);
             },
+            [](SceneManager &) {},
+            [](SceneManager &) {},
             [](SceneManager &) {}
         );
 
@@ -216,7 +214,10 @@ namespace R_TYPE {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
                 velocity->setY(0);
-            });
+            },
+            [](SceneManager &) {},
+            [](SceneManager &) {});
+            
 
         ButtonCallbacks left (
             [player_e](SceneManager &) {
@@ -229,7 +230,9 @@ namespace R_TYPE {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
                 velocity->setX(0);
-            });
+            },
+            [](SceneManager &) {},
+            [](SceneManager &) {});
 
         ButtonCallbacks down (
             [player_e](SceneManager &) {
@@ -242,7 +245,9 @@ namespace R_TYPE {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
                 velocity->setY(0);
-            });
+            },
+            [](SceneManager &) {},
+            [](SceneManager &) {});
 
         ButtonCallbacks right (
             [player_e](SceneManager &) {
@@ -255,18 +260,39 @@ namespace R_TYPE {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
                 velocity->setX(0);
-            });
+            },
+            [](SceneManager &) {},
+            [](SceneManager &) {});
 
         ButtonCallbacks shoot (
-           [player_e](SceneManager &scene) {
+            [](SceneManager &) {},
+            [player_e](SceneManager &scene) {
                 auto comp = (*player_e)[IComponent::Type::PLAYER];
-                auto pos = Component::castComponent<Player>(comp);
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                    ("projectile.png", Position(pos->getPosition().x + 32, pos->getPosition().y + 5), Velocity(0.5f, 0), true);
-                scene.getCurrentScene().addEntity(shoot);
-           },
-           [](SceneManager &) {
-           });
+                auto player = Component::castComponent<Player>(comp);
+
+                if (player->clock.getElapsedTime().asSeconds() > 2) {
+                    std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
+                        ("assets/sprites_sheets/r-typesheet1.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                        Velocity(0.5f, 0), true, sf::IntRect(233, 120, 31, 11));
+                    auto comp = (*shoot)[IComponent::Type::PROJECTILES];
+                    auto projectiles = Component::castComponent<Projectiles>(comp);
+                    projectiles->setType(Projectiles::Type::CHARGED);
+                    scene.getCurrentScene().addEntity(shoot);
+                } else {
+                    std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
+                        ("assets/sprites_sheets/r-typesheet1.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                        Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
+
+                    scene.getCurrentScene().addEntity(shoot);
+                }
+            },
+            [](SceneManager &) {},
+            [player_e](SceneManager &) {
+                auto comp = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp);
+
+                player->clock.restart();
+            });
 
         event_p->addKeyboardEvent(sf::Keyboard::Z, up);
         event_p->addKeyboardEvent(sf::Keyboard::Q, left);
@@ -388,7 +414,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower13 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower14 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
-        std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy("assets/sprites_sheets/r-typesheet5.gif", 300, 150, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy("assets/sprites_sheets/r-typesheet5.gif", 300, 100, 0.f, Ennemy::Type::SPATIAL);
         std::shared_ptr<Entity> dino1 = createEnnemy("assets/sprites_sheets/r-typesheet10.gif", 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
 
         scene-> addEntity(top_wall)

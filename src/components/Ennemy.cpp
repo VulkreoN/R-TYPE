@@ -29,12 +29,12 @@ namespace R_TYPE {
             if (scripts.jorydeScript(distance, selfVel)) {
                 if (distance.x > 0)
                     isAlive = false;
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet9.gif", *selfPos, Velocity(-0.1f, 0), false);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet9.gif", *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::ROBOT_DINO) {
             if (scripts.robotScript(distance, selfVel)) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet10.gif", *selfPos, Velocity(0, -0.1f), false);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet10.gif", *selfPos, Velocity(0, -0.1f), false, sf::IntRect(191, 63, 6, 12));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::SPATIAL) {

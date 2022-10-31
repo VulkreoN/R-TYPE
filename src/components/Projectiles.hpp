@@ -12,6 +12,7 @@ namespace R_TYPE {
                 LASER,
                 ROCKET,
                 BASIC,
+                CHARGED,
             };
             Projectiles(bool _byPlayer);
             ~Projectiles();

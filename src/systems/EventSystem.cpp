@@ -77,6 +77,15 @@ namespace R_TYPE {
                 it.second.released(manager);
                 wasPressed = false;
             }
+            if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
+                if (wasPressed == true) {
+                    it.second.down(manager);
+                }
+            }
+            if (it.second.released && event.type == sf::Event::KeyReleased && event.key.code == it.first) {
+                if (wasPressed == false)
+                    it.second.up(manager);
+            }
         }
     }
 
