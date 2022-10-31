@@ -56,7 +56,7 @@ namespace R_TYPE {
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
                 float windowPosX = GraphicSystem::getWindow()->getView().getCenter().x - 135;
 
-                if (pos->getPosition().x < windowPosX + 270 && pos->getPosition().x > windowPosX) {
+                if (pos->getPosition().x < windowPosX + 270 ) {
                     pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
                 }
@@ -254,7 +254,7 @@ namespace R_TYPE {
                 auto comp = (*player_e)[IComponent::Type::PLAYER];
                 auto pos = Component::castComponent<Player>(comp);
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                    ("projectile.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.1f, 0), true);
+                    ("projectile.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.5f, 0), true);
                 scene.getCurrentScene().addEntity(shoot);
            },
            [](SceneManager &) {

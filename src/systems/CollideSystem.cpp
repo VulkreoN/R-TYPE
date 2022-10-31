@@ -43,6 +43,9 @@ namespace R_TYPE {
                 return;
             }
         }
+        for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+            collideEnnemyPlayer(sceneManager, player);
+        }
 
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto component = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
@@ -50,11 +53,26 @@ namespace R_TYPE {
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+
             if (component->getType() == Ennemy::Type::ROBOT_DINO) {
                 if (pos->getPosition().y > 32)
                     if (isBlack(*pos, box) == false) {
                         velocity->setX(-velocity->getVelocity().x);
                     }
+            }
+        }
+    }
+
+    void CollideSystem::collideEnnemyPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player)
+    {
+        auto component = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            sf::FloatRect playerBox = component->getSprite().getGlobalBounds();
+
+            if (box.intersects(playerBox)) {
+                component->setAlive(false);
             }
         }
     }
