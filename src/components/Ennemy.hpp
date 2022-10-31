@@ -26,9 +26,9 @@ namespace R_TYPE {
             /// @brief Launch the good script with the type of the ennemy
             void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy);
 
-            sf::Vector2f getDistance(SceneManager &manager, Position selfPos);
+            static sf::Vector2f getDistance(SceneManager &manager, Position selfPos);
 
-            Velocity getVelocityTarget(sf::Vector2f distance);
+            static Velocity getVelocityTarget(sf::Vector2f distance);
 
             Type getType() {return (type);};
         private:

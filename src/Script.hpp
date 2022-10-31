@@ -18,6 +18,7 @@ namespace R_TYPE {
             sf::Clock clock;
             sf::Time lastFrame;
             sf::Time CurrentFrame;
+            int repeat;
     };
 }
 

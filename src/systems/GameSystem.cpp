@@ -46,9 +46,15 @@ namespace R_TYPE {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                auto projectile = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
 
                 pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                 pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+                if (projectile->getType() == Projectiles::Type::ROCKET && pos->getPosition().y < 100) {
+                    velocity->setX(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().x); 
+                    velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
+                    projectile->setType(Projectiles::Type::BASIC);
+                }
             }
 
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
@@ -56,7 +62,7 @@ namespace R_TYPE {
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
                 float windowPosX = GraphicSystem::getWindow()->getView().getCenter().x - 135;
 
-                if (pos->getPosition().x < windowPosX + 270 ) {
+                if (pos->getPosition().x < windowPosX + 270) {
                     pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
                 }
@@ -162,15 +168,17 @@ namespace R_TYPE {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
         std::shared_ptr<Sprite> component;
+        std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
+        std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(velocity);
+
         if (path == "assets/sprites_sheets/r-typesheet9.gif") {
             component = std::make_shared<Sprite>(path, *component2, 0, sf::IntRect(18, 59, 15, 15));
         } else if (path == "assets/sprites_sheets/r-typesheet10.gif") {
             component = std::make_shared<Sprite>(path, *component2, 0, sf::IntRect(191, 63, 6, 12));
+            component3->setType(Projectiles::Type::ROCKET);
         } else 
             component = std::make_shared<Sprite>(path, *component2);
         component->getSprite().setScale(0.7, 0.7);
-        std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(velocity);
-        std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
 
         entity->addComponent(component)
                 .addComponent(component2)

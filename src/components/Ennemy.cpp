@@ -34,7 +34,7 @@ namespace R_TYPE {
             }
         } else if (type == Ennemy::Type::ROBOT_DINO) {
             if (scripts.robotScript(distance, selfVel)) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet10.gif", *selfPos, Velocity(-0.1f, 0), false);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet10.gif", *selfPos, Velocity(0, -0.1f), false);
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::SPATIAL) {
