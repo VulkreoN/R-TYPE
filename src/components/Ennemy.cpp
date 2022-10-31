@@ -52,8 +52,8 @@ namespace R_TYPE {
 
             auto target = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
 
-            distance2.x = target->getPosition().x - selfPos.getPosition().x;
-            distance2.y = target->getPosition().y - selfPos.getPosition().y;
+            distance2.x = target->getPosition().x + 15 - selfPos.getPosition().x;
+            distance2.y = target->getPosition().y + 6 - selfPos.getPosition().y;
             if (distance2.x + distance2.y < distance.x + distance.y || distance.x == 0)
                 distance = distance2;
         }
@@ -75,9 +75,9 @@ namespace R_TYPE {
         if ((distance.x * -1) > distance.y && distance.x < 0) {
             velo.setX(-0.1f);
             velo.setY(distance.y * 100 / (distance.x * -1) * 0.001);
-        } else if ((distance.y * -1) > distance.x && distance.y) {
-            velo.setY(-0.1f);
-            velo.setX(distance.x * 100 / (distance.y * -1) * 0.001);
+        } else if ((distance.y * -1) < distance.x && distance.y > 0 && distance.x < 0) {
+            velo.setY(0.1f);
+            velo.setX(-distance.x * 100 / (distance.y * -1) * 0.001);
         }
 
         if (distance.x > distance.y && distance.y > 0) {
