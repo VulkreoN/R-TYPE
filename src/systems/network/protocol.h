@@ -13,14 +13,7 @@
         enum Header {
             PING,
             GAME_INFO,
-            PLAYER_ACTION,
             START_GAME
-        };
-
-        enum Action {
-            FIRE,
-            MOVE,
-            BOTH
         };
 
     }

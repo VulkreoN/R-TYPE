@@ -74,4 +74,9 @@ namespace R_TYPE {
             return _components.at(type);
         return null;
     }
+
+    size_t Entity::get_id()
+    {
+        return (_id);
+    }
 }

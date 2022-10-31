@@ -30,6 +30,11 @@
 
                 int _ping_cooldown;
                 asio::ip::udp::endpoint _server_endpoint;
+
+                size_t _id;
+
+                // functions to create messages to send
+                void create_event_msg(char *buff);
         };
 
     }

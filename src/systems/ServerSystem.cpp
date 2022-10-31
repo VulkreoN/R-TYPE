@@ -99,13 +99,13 @@ void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
         if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
             buff[c] = (uint8_t)1;
             c += sizeof(uint8_t);
-            buff[c] = comp->getPosition().x;
+            buff[c] = comp->getPosition().x; // entity's X crd
             c += sizeof(float);
-            buff[c] = comp->getPosition().y;
+            buff[c] = comp->getPosition().y; // entity's Y crd
             c += sizeof(float);
-            buff[c] = (size_t)1; // to change, this is the ID
+            buff[c] = e->get_id(); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)1; // to change, this is status
+            buff[c] = (uint8_t)1; // to change, entity's status
             c += sizeof(uint8_t);
         }
     }
@@ -113,13 +113,13 @@ void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
         if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
             buff[c] = (uint8_t)1;
             c += sizeof(uint8_t);
-            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x;
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x; // entity's X crd
             c += sizeof(float);
-            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y;
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y; // entity's Y crd
             c += sizeof(float);
-            buff[c] = (size_t)5; // to change, this is the ID
+            buff[c] = e->get_id(); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)1; // to change, this is status
+            buff[c] = (uint8_t)1; // to change, entity's status
             c += sizeof(uint8_t);
         }
     }
@@ -127,13 +127,13 @@ void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
         if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
             buff[c] = (uint8_t)1;
             c += sizeof(uint8_t);
-            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x;
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x; // entity's X crd
             c += sizeof(float);
-            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y;
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y; // entity's Y crd
             c += sizeof(float);
-            buff[c] = (size_t)7; // to change, this is the ID
+            buff[c] = e->get_id(); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)1; // to change, this is status
+            buff[c] = (uint8_t)1; // to change, entity's status
             c += sizeof(uint8_t);
         }
     }

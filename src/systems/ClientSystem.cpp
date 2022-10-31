@@ -12,6 +12,7 @@ namespace R_TYPE {
 ClientSystem::ClientSystem(std::string ip, size_t port) : _server_endpoint(asio::ip::make_address(ip), port)
 {
     std::cout << "Client Network System created" << std::endl;
+    _id = 0;
 }
 
 ClientSystem::~ClientSystem()
@@ -45,6 +46,7 @@ void ClientSystem::handle_incomming_message()
     // here, handle the recienved message stored in _buffer
     if ((protocol::Header)_buffer[0] == protocol::Header::START_GAME) {
         std::cout << "Starting game, ID: " << (size_t)_buffer[sizeof(protocol::Header)] << " and there are : " << (size_t)_buffer[sizeof(protocol::Header) + sizeof(size_t)] << " players." << std::endl;
+        _id = (size_t)_buffer[sizeof(protocol::Header)];
     }
     if ((protocol::Header)_buffer[0] == protocol::Header::GAME_INFO) {
         std::cout << "Game Info is being sent, here are the entities to display :" << std::endl;
@@ -63,13 +65,29 @@ void ClientSystem::broadcast(SceneManager &manager)
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
     switch (manager.getCurrentSceneType()) {
         case SceneManager::SceneType::GAME:
-            buff[0] = protocol::Header::PLAYER_ACTION;
+            create_event_msg(buff);
             break;
         default :
             buff[0] = protocol::Header::PING;
             break;
     }
     _socket.send_to(asio::buffer(buff), _server_endpoint);
+}
+
+void ClientSystem::create_event_msg(char *buff)
+{
+    int c = 0;
+
+    buff[c] = protocol::Header::GAME_INFO;
+    c += sizeof(protocol::Header);
+    buff[c] = (float) 25; // x crds of player
+    c += sizeof(float);
+    buff[c] = (float) 50; // y crds of player
+    c += sizeof(float);
+    /*
+    for (player_projectile in player_projectiles)
+        send : x crds, y crds, id, type... etc.
+    */
 }
 
 }
