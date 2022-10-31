@@ -30,6 +30,7 @@
                 void broadcast(SceneManager &) final;
 
                 int _broadcast_cooldown;
+                SceneManager::SceneType clientScene;
                 std::vector<std::unique_ptr<Connection>> _connections;
 
                 // functions to create messages to send

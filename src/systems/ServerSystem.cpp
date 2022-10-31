@@ -53,12 +53,14 @@ void ServerSystem::handle_incomming_message()
     if (new_client)
         _connections.push_back(std::make_unique<Connection> (_edp_buff, _connections.size() + 1));
     // here, handle the recienved message stored in _buffer
+    clientScene = static_cast<SceneManager::SceneType>((int)_buffer[sizeof(protocol::Header)]);
 }
 
 void ServerSystem::broadcast(SceneManager &manager)
 {
     char buff[1024];
 
+    manager.setCurrentScene(clientScene);
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
     if (true /* not game start */) {
         switch (manager.getCurrentSceneType()) {

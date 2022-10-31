@@ -27,6 +27,7 @@
             private:
                 void handle_incomming_message() final;
                 void broadcast(SceneManager &) final;
+                void createMessage(char *buff, SceneManager &manager);
 
                 int _ping_cooldown;
                 asio::ip::udp::endpoint _server_endpoint;

@@ -59,17 +59,26 @@ void ClientSystem::handle_incomming_message()
 void ClientSystem::broadcast(SceneManager &manager)
 {
     char buff[1024];
+    size_t c = 0;
 
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
     switch (manager.getCurrentSceneType()) {
-        case SceneManager::SceneType::GAME:
-            buff[0] = protocol::Header::PLAYER_ACTION;
+        case SceneManager::SceneType::LEVEL1:
+            buff[c] = protocol::Header::PLAYER_ACTION;
+            c += sizeof(protocol::Header);
             break;
         default :
-            buff[0] = protocol::Header::PING;
+            buff[c] = protocol::Header::PING;
+            c += sizeof(protocol::Header);
             break;
     }
+    buff[c] = static_cast<int>(manager.getCurrentSceneType());
     _socket.send_to(asio::buffer(buff), _server_endpoint);
+}
+
+void ClientSystem::createMessage(char *buff, SceneManager &manager)
+{
+
 }
 
 }
