@@ -146,7 +146,7 @@ namespace R_TYPE {
 
                 if (pos.getPosition().y + b < 79)
                     get = imageUp.getPixel(realSize.getPosition().x + a, realSize.getPosition().y + b);
-                else if (pos.getPosition().y > 127) {
+                else if (pos.getPosition().y + b > 127) {
                     realSize.setY(pos.getPosition().y - 127);
                     get = imageDown.getPixel(realSize.getPosition().x + a, realSize.getPosition().y + b);
                 }

@@ -262,7 +262,7 @@ namespace R_TYPE {
                 auto comp = (*player_e)[IComponent::Type::PLAYER];
                 auto pos = Component::castComponent<Player>(comp);
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                    ("projectile.png", Position(pos->getPosition().x + 20, pos->getPosition().y +10), Velocity(0.5f, 0), true);
+                    ("projectile.png", Position(pos->getPosition().x + 32, pos->getPosition().y + 5), Velocity(0.5f, 0), true);
                 scene.getCurrentScene().addEntity(shoot);
            },
            [](SceneManager &) {
