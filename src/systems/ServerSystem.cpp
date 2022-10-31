@@ -48,8 +48,13 @@ void ServerSystem::handle_incomming_message()
     bool new_client = true;
 
     for (size_t i = 0; i < _connections.size(); i++)
-        if (_connections[i]->get_endpoint() == _edp_buff)
+        if (_connections[i]->get_endpoint() == _edp_buff) {
             new_client = false;
+            if ((protocol::Header)_buffer[0] == protocol::Header::GAME_INFO) {
+                std::cout << "Recieving info for player : " << _connections[i]->get_id() << ", new crds : x = " << (float)_buffer[sizeof(protocol::Header)]
+                    << ", y = " << (float)_buffer[sizeof(protocol::Header) + sizeof(float)] << std::endl;
+            }
+        }
     if (new_client)
         _connections.push_back(std::make_unique<Connection> (_edp_buff, _connections.size() + 1));
     // here, handle the recienved message stored in _buffer
