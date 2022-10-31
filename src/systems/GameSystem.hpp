@@ -36,6 +36,7 @@ namespace R_TYPE {
             std::shared_ptr<Entity> createEnnemy(std::string path, int posX, int posY, float angle, Ennemy::Type type);
             void createButtonEvent(std::shared_ptr<Entity> &entity, SceneManager::SceneType goTo, sf::Vector2i click);
             std::shared_ptr<Entity> createCamera(int posX, int posY, int rectX, int rectY);
+            std::vector<std::shared_ptr<IEntity>>  createWavesEnnemy(std::string path, int posX, int posY, float angle, Ennemy::Type type);
 
             std::unique_ptr<R_TYPE::IScene> createSceneTest();
             std::unique_ptr<R_TYPE::IScene> createMainMenu();

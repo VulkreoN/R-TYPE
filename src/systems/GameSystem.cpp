@@ -54,9 +54,12 @@ namespace R_TYPE {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                float windowPosX = GraphicSystem::getWindow()->getView().getCenter().x - 135;
 
-                pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
-                pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+                if (pos->getPosition().x < windowPosX + 270 && pos->getPosition().x > windowPosX) {
+                    pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+                    pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+                }
             }
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
@@ -142,6 +145,16 @@ namespace R_TYPE {
                 .addComponent(compoment3)
                 .addComponent(velocity);
         return(entity);
+    }
+
+    std::vector<std::shared_ptr<IEntity>> GameSystem::createWavesEnnemy(std::string path, int posX, int posY, float angle, Ennemy::Type type)
+    {
+        std::vector<std::shared_ptr<IEntity>> entities;
+        for (int i = 0; i < 5; i++) {
+            entities.push_back(createEnnemy(path, posX, posY, angle, type));
+            posX += 10;
+        }
+        return(entities);
     }
 
     std::shared_ptr<Entity> GameSystem::createProjectiles(std::string path, Position pos, Velocity velocity, bool byPlayer)
@@ -367,7 +380,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower13 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower14 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
-        std::shared_ptr<Entity> spatial1 = createEnnemy("assets/sprites_sheets/r-typesheet5.gif", 250, 50, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy("assets/sprites_sheets/r-typesheet5.gif", 300, 150, 0.f, Ennemy::Type::SPATIAL);
         std::shared_ptr<Entity> dino1 = createEnnemy("assets/sprites_sheets/r-typesheet10.gif", 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
 
         scene-> addEntity(top_wall)
@@ -389,7 +402,7 @@ namespace R_TYPE {
                 .addEntity(tower14)
                 .addEntity(dino1)
                 .addEntity(joryde1)
-                .addEntity(spatial1);
+                .addEntities(spatial1);
         return (scene);
     }
 
