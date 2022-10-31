@@ -82,7 +82,7 @@ namespace R_TYPE {
                     it.second.down(manager);
                 }
             }
-            if (it.second.released && event.type == sf::Event::KeyReleased && event.key.code == it.first) {
+            if (!sf::Keyboard::isKeyPressed(it.first) ) {
                 if (wasPressed == false)
                     it.second.up(manager);
             }
