@@ -7,19 +7,19 @@
 namespace R_TYPE {
     class Bonus : public Component {
         public:
-            enum class Type {
+            enum class BonusType {
                 SPEED,
                 DOUBLE,
                 LASER_DIAG,
                 LASER,
                 NONE,
             };
-            Bonus(Type type);
+            Bonus(BonusType type);
             ~Bonus();
         
-            Type getType() {return (type);};
+            BonusType getType() {return (type);};
         private:
-            Type type;
+            BonusType type;
     };
 }
 

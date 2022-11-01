@@ -44,16 +44,20 @@ namespace R_TYPE {
             /// @param attacking State
             void setAttacking(bool attacking);
 
-            void addBonus(Bonus::Type bonus);
+            /// @brief Add a bonus to the player
+            /// @param _bonus Bonus to add
+            void addBonus(Bonus::BonusType bonus);
 
-            bool hasBonus(Bonus::Type bonus);
+            /// @brief if the player has the bonus
+            /// @param bonus Bonus to check
+            bool hasBonus(Bonus::BonusType bonus);
 
             sf::Clock clock;
             sf::Time chargedTime;
         private:
             int8_t _id;
             std::unique_ptr<Sprite> _spritesheet;
-            std::vector<Bonus::Type> bonus;
+            std::vector<Bonus::BonusType> bonus;
             Position _pos;
             bool _attacking;
             bool _alive;

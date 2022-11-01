@@ -12,7 +12,7 @@ namespace R_TYPE {
     {
         isAlive = true;
         type = _type;
-        isLooting = Bonus::Type::NONE;
+        isLooting = Bonus::BonusType::NONE;
     }
 
     void Ennemy::launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy)

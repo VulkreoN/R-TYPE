@@ -33,11 +33,11 @@ namespace R_TYPE {
 
             Type getType() {return (type);};
 
-            Bonus::Type getLoot() {return (isLooting);};
-            void setLoot(Bonus::Type loot) {isLooting = loot;};
+            Bonus::BonusType getLoot() {return (isLooting);};
+            void setLoot(Bonus::BonusType loot) {isLooting = loot;};
         private:
             bool isAlive;
-            Bonus::Type isLooting;
+            Bonus::BonusType isLooting;
             Type type;
             Script scripts;
     };

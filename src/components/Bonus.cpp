@@ -1,7 +1,7 @@
 #include "Bonus.hpp"
 
 namespace R_TYPE {
-    Bonus::Bonus(Type type):
+    Bonus::Bonus(BonusType type):
     Component(IComponent::Type::BONUS)
     {
         type = type;

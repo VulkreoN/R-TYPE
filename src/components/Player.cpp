@@ -6,6 +6,8 @@
 */
 
 #include "Player.hpp"
+#include <iostream>
+#include "Bonus.hpp"
 
 namespace R_TYPE {
     Player::Player(Position position): Component(Component::Type::PLAYER),
@@ -53,15 +55,15 @@ namespace R_TYPE {
         _attacking = attacking;
     }
 
-    void Player::addBonus(Bonus::Type bonus)
+    void Player::addBonus(Bonus::BonusType _bonus)
     {
-        this->bonus.push_back(bonus);
+        bonus.push_back(_bonus);
     }
 
-    bool Player::hasBonus(Bonus::Type bonus)
+    bool Player::hasBonus(Bonus::BonusType _bonus)
     {
-        for (auto &it : this->bonus) {
-            if (it == bonus)
+        for (auto &it : bonus) {
+            if ((int)it - 48 == (int)_bonus)
                 return true;
         }
         return false;

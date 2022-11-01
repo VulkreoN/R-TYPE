@@ -144,7 +144,7 @@ namespace R_TYPE {
             if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
                 if (projectile->getType() != Projectiles::Type::CHARGED)
                     projectile->setIsActive(false);
-                if (ennemy->getLoot() != Bonus::Type::NONE) {
+                if (ennemy->getLoot() != Bonus::BonusType::NONE) {
                     auto bonus = GameSystem::createBonus("assets/sprites_sheets/bonus.png", posEnnemi->getPosition(), ennemy->getLoot());
                     sceneManager.getCurrentScene().addEntity(bonus);
                 }

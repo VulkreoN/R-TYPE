@@ -113,18 +113,18 @@ namespace R_TYPE {
         return(entity);
     }
 
-    std::shared_ptr<Entity> GameSystem::createBonus(std::string path, Position pos, Bonus::Type type, sf::IntRect rect)
+    std::shared_ptr<Entity> GameSystem::createBonus(std::string path, Position pos, Bonus::BonusType type, sf::IntRect rect)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
         std::shared_ptr<Sprite> component;
         std::shared_ptr<Bonus> component3 = std::make_shared<Bonus>(type);
 
-        if (type == Bonus::Type::DOUBLE)
+        if (type == Bonus::BonusType::DOUBLE)
             rect.left = 32;
-        else if (type == Bonus::Type::LASER_DIAG)
+        else if (type == Bonus::BonusType::LASER_DIAG)
             rect.left = 60;
-        else if (type == Bonus::Type::LASER)
+        else if (type == Bonus::BonusType::LASER)
             rect.left = 89;
         component = std::make_shared<Sprite>(path, *component2, 0, rect);
 
@@ -156,7 +156,7 @@ namespace R_TYPE {
         if (type == Ennemy::Type::TURRET) {
             component = std::make_shared<Sprite>(path, *component2, angle);
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
-            component3->setLoot(Bonus::Type::SPEED);
+            component3->setLoot(Bonus::BonusType::SPEED);
             component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 14, 47, 42));
             component->getSprite().setScale(0.5, 0.5);
         } else if (type == Ennemy::Type::ROBOT_DINO) {
@@ -229,9 +229,14 @@ namespace R_TYPE {
         ButtonCallbacks up (
             [player_e](SceneManager &) {
                 auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
                 auto velocity = Component::castComponent<Velocity>(comp_v);
+                auto player = Component::castComponent<Player>(comp_p);
 
-                velocity->setY(-0.05f);
+                if (player->hasBonus(Bonus::BonusType::SPEED)) {
+                    velocity->setY(-0.07f);
+                } else 
+                    velocity->setY(-0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
@@ -245,9 +250,14 @@ namespace R_TYPE {
         ButtonCallbacks left (
             [player_e](SceneManager &) {
                 auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
                 auto velocity = Component::castComponent<Velocity>(comp_v);
+                auto player = Component::castComponent<Player>(comp_p);
 
-                velocity->setX(-0.05f);
+                if (player->hasBonus(Bonus::BonusType::SPEED) == true)
+                    velocity->setX(-0.07f);
+                else 
+                    velocity->setX(-0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
@@ -260,9 +270,14 @@ namespace R_TYPE {
         ButtonCallbacks down (
             [player_e](SceneManager &) {
                 auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
                 auto velocity = Component::castComponent<Velocity>(comp_v);
+                auto player = Component::castComponent<Player>(comp_p);
 
-                velocity->setY(0.05f);
+                if (player->hasBonus(Bonus::BonusType::SPEED) == true)
+                    velocity->setY(0.07f);
+                else 
+                    velocity->setY(0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
@@ -275,9 +290,14 @@ namespace R_TYPE {
         ButtonCallbacks right (
             [player_e](SceneManager &) {
                 auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
                 auto velocity = Component::castComponent<Velocity>(comp_v);
+                auto player = Component::castComponent<Player>(comp_p);
 
-                velocity->setX(0.05f);
+                if (player->hasBonus(Bonus::BonusType::SPEED) == true)
+                    velocity->setX(0.07f);
+                else 
+                    velocity->setX(0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
