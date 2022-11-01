@@ -101,11 +101,11 @@ namespace R_TYPE {
         std::cout << "Game System destroyed" << std::endl;
     }
 
-    std::shared_ptr<Entity> GameSystem::createSprite(std::string path, int posX, int posY, sf::IntRect rect)
+    std::shared_ptr<Entity> GameSystem::createSprite(int name, int posX, int posY)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
-        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2, 0, rect);
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(name, *component2);
 
         entity->addComponent(component)
                 .addComponent(component2);
@@ -123,24 +123,25 @@ namespace R_TYPE {
         return(entity);
     }
 
-    std::shared_ptr<Entity> GameSystem::createEnnemy(std::string path, int posX, int posY, float angle, Ennemy::Type type)
+    std::shared_ptr<Entity> GameSystem::createEnnemy(int name, int posX, int posY, float angle, Ennemy::Type type)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
         std::shared_ptr<Sprite> component;
+
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
 
         if (type == Ennemy::Type::TURRET) {
-            component = std::make_shared<Sprite>(path, *component2, angle);
+            component = std::make_shared<Sprite>(name, *component2, angle);
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
-            component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 14, 47, 42));
+            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 14, 47, 42));
             component->getSprite().setScale(0.5, 0.5);
         } else if (type == Ennemy::Type::ROBOT_DINO) {
-            component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 2, 29, 24));
+            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 2, 29, 24));
             component->getSprite().setScale(0.7, 0.7);
             velocity = std::make_shared<Velocity>(-0.03f, 0);
         } else if (type == Ennemy::Type::SPATIAL) {
-            component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(5, 6, 20, 23));
+            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(5, 6, 20, 23));
             velocity = std::make_shared<Velocity>(-0.05f, -0.05f);
             component->getSprite().setScale(0.7, 0.7);
         }
@@ -167,7 +168,7 @@ namespace R_TYPE {
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
-        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(path, *component2, 0, rect);;
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(name, *component2, 0, rect);;
         std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
         std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(velocity);
 
@@ -272,7 +273,7 @@ namespace R_TYPE {
 
                 if (player->clock.getElapsedTime().asSeconds() > 1) {
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                        ("assets/sprites_sheets/r-typesheet1.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                        (54, Position(player->getPosition().x + 32, player->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(233, 120, 31, 11));
                     auto comp = (*shoot)[IComponent::Type::PROJECTILES];
                     auto projectiles = Component::castComponent<Projectiles>(comp);
@@ -280,7 +281,7 @@ namespace R_TYPE {
                     scene.getCurrentScene().addEntity(shoot);
                 } else {
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                        ("assets/sprites_sheets/r-typesheet1.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                        (54, Position(player->getPosition().x + 32, player->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
 
                     scene.getCurrentScene().addEntity(shoot);
@@ -334,10 +335,10 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createMainMenu()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createMainMenu, this));
-        std::shared_ptr<Entity> entity = createSprite("assets/menus/mnu.jpg", 0, 0);
-        std::shared_ptr<Entity> entity2 = createSprite("assets/menus/option1.png", 350, 350);
-        std::shared_ptr<Entity> entity3 = createSprite("assets/menus/quit.png", 350, 410);
-        std::shared_ptr<Entity> entity4 = createSprite("assets/menus/play.png", 120, 289);
+        std::shared_ptr<Entity> entity = createSprite(45, 0, 0);
+        std::shared_ptr<Entity> entity2 = createSprite(50, 350, 350);
+        std::shared_ptr<Entity> entity3 = createSprite(51, 350, 410);
+        std::shared_ptr<Entity> entity4 = createSprite(52, 120, 289);
 
         createButtonEvent(entity4, SceneManager::SceneType::LEVEL1, sf::Vector2i(230, 240));
         createButtonEvent(entity3, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
@@ -353,8 +354,8 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createOptionMenu()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createOptionMenu, this));
-        std::shared_ptr<Entity> entity = createSprite("assets/menus/mnu.jpg", 0, 0);
-        std::shared_ptr<Entity> entity2 = createSprite("assets/menus/return.png", 230, 500);
+        std::shared_ptr<Entity> entity = createSprite(45, 0, 0);
+        std::shared_ptr<Entity> entity2 = createSprite(46, 230, 500);
         std::shared_ptr<Entity> entity3 = createText("OPTION", 350, 250, 50);
 
         createButtonEvent(entity2, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
@@ -368,8 +369,8 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createPauseMenu()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createOptionMenu, this));
-        std::shared_ptr<Entity> entity = createSprite("assets/menus/backtoMenu.png", 230, 300);
-        std::shared_ptr<Entity> entity2 = createSprite("assets/menus/return.png", 230, 400);
+        std::shared_ptr<Entity> entity = createSprite(47, 230, 300);
+        std::shared_ptr<Entity> entity2 = createSprite(46, 230, 400);
         std::shared_ptr<Entity> entity3 = createText("PAUSE", 350, 25, 50);
 
         createButtonEvent(entity, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
@@ -398,23 +399,23 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createFirstLevel()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createFirstLevel, this));
-        std::shared_ptr<Entity> top_wall = createSprite("assets/sprites_statics/top_wall_lvl1.png", 100, 0);
-        std::shared_ptr<Entity> bottom_wall = createSprite("assets/sprites_statics/bottom_wall_lvl1.png", 100, 127);
+        std::shared_ptr<Entity> top_wall = createSprite(48, 100, 0);
+        std::shared_ptr<Entity> bottom_wall = createSprite(49, 100, 127);
         std::shared_ptr<Entity> player = createPlayer(50, 100);
-        std::shared_ptr<Entity> tower1 = createEnnemy("ennemy.png", 333, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower2 = createEnnemy("ennemy.png", 385, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower3 = createEnnemy("ennemy.png", 428, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower4 = createEnnemy("ennemy.png", 529, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower5 = createEnnemy("ennemy.png", 573, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower6 = createEnnemy("ennemy.png", 720, 43, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower7 = createEnnemy("ennemy.png", 772, 43, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower8 = createEnnemy("ennemy.png", 823, 43, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower9 = createEnnemy("ennemy.png", 702, 163, 0.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower10 = createEnnemy("ennemy.png", 754, 163, 0.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower11 = createEnnemy("ennemy.png", 806, 163, 0.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower12 = createEnnemy("ennemy.png", 145, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower13 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower14 = createEnnemy("ennemy.png", 957, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower1 = createEnnemy(55, 333, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower2 = createEnnemy(55, 385, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower3 = createEnnemy(55, 428, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower4 = createEnnemy(55, 529, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower5 = createEnnemy(55, 573, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower6 = createEnnemy(55, 720, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower7 = createEnnemy(55, 772, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower8 = createEnnemy(55, 823, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower9 = createEnnemy(55, 702, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower10 = createEnnemy(55, 754, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower11 = createEnnemy(55, 806, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower12 = createEnnemy(55, 145, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower13 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower14 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy("assets/sprites_sheets/r-typesheet5.gif", 300, 100, 0.f, Ennemy::Type::SPATIAL);
         std::shared_ptr<Entity> dino1 = createEnnemy("assets/sprites_sheets/r-typesheet10.gif", 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
