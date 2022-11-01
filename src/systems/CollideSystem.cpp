@@ -30,6 +30,7 @@ namespace R_TYPE {
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
             auto component = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
             didHitWall(sceneManager, e);
+            didHitProj(sceneManager, e);
             if (component->shootByPlayer() == false) {
                 didHitPlayer(sceneManager, e);
             } else if (component->shootByPlayer() == true)
@@ -89,6 +90,27 @@ namespace R_TYPE {
             if (isBlack(*pos, box) == false) {
                 component->setIsActive(false);
             }
+    }
+
+    void CollideSystem::didHitProj(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
+    {
+        auto pos = Component::castComponent<Position>((*project)[IComponent::Type::POSITION]);
+        auto projectile = Component::castComponent<Projectiles>((*project)[IComponent::Type::PROJECTILES]);
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
+            auto posProj = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            
+
+            if (box.contains(pos->getPosition().x, pos->getPosition().y) && pos != posProj) {
+                if (projectile->getType() != Projectiles::Type::CHARGED)
+                    projectile->setIsActive(false);
+                if (proj->getType() != Projectiles::Type::CHARGED)
+                    proj->setIsActive(false);
+                return;
+            }
+        }
     }
 
     void CollideSystem::didHitEnnemi(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
