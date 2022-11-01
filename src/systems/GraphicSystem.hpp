@@ -28,6 +28,8 @@ namespace R_TYPE {
             static sf::RenderWindow *getWindow() {return (window);};
             static std::vector<sf::Texture> getTextures() {return (_textures);};
 
+            void setCamera(SceneManager &manager);
+
         protected:
         private:
             static sf::RenderWindow *window;
@@ -35,6 +37,7 @@ namespace R_TYPE {
             sf::View *camera;
             static std::vector<sf::Texture> _textures;
             std::vector<std::string> _pathTextures;
+            bool _isInit;
     };
 }
 

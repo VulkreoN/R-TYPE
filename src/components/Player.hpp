@@ -9,19 +9,19 @@
     #define PLAYER_HPP_
 
     #include "Sprite.hpp"
+    #include "Velocity.hpp"
 
 namespace R_TYPE {
     class Player : public Component {
         public:
             /// @brief Init Player class
             /// @param position Position of the player
-            /// @param id Id of the player 1 to 4
-            Player(Position position, int8_t id = 1);
+            Player(Position position);
             ~Player();
 
             /// @brief Set the position of the player
-            /// @param position Position of the player
-            void setPosition(sf::Vector2f _pos);
+            /// @param pos Position of the player
+            void setPosition(sf::Vector2f pos);
 
             /// @brief Get the position of the player
             sf::Vector2f getPosition();
@@ -43,6 +43,8 @@ namespace R_TYPE {
             /// @param attacking State
             void setAttacking(bool attacking);
 
+            sf::Clock clock;
+            sf::Time chargedTime;
         private:
             int8_t _id;
             std::unique_ptr<Sprite> _spritesheet;
