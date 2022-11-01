@@ -111,6 +111,10 @@ elif os.name == 'posix':
     if os.system("vcpkg --version") != 0:
         print("\n\nvcpkg is not installed")
         print("installing vcpkg...")
+        os.system("git clone https://github.com/Microsoft/vcpkg.git"))
+        os.system("./vcpkg/bootstrap-vcpkg.sh")
+        print("\n\nvcpkg installed")
+
     else :
         print("vcpkg is installed\n")
     # install dependencies with vcpkg
@@ -118,9 +122,9 @@ elif os.name == 'posix':
     # get ports list
     # os.system("git clone https://github.com/microsoft/vcpkg.git vcpkg_tmp")
     # os.system("vcpkg install sfml --overlay-ports=vcpkg_tmp/ports/alsa")
-    os.system("vcpkg install sfml")
-    os.system("vcpkg install asio")
-    os.system("vcpkg install boost")
+    os.system("./vcpkg/vcpkg install sfml")
+    os.system("./vcpkg/vcpkg install asio")
+    os.system("./vcpkg/vcpkg install boost")
     # os.system("rm -rf vcpkg_tmp")
     print("Dependencies installed successfully\n")
     # building the project
