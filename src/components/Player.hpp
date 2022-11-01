@@ -43,6 +43,8 @@ namespace R_TYPE {
             /// @param attacking State
             void setAttacking(bool attacking);
 
+            sf::Clock clock;
+            sf::Time chargedTime;
         private:
             int8_t _id;
             std::unique_ptr<Sprite> _spritesheet;

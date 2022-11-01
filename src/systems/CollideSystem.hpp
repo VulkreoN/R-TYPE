@@ -20,8 +20,11 @@ namespace R_TYPE {
             static bool canMove(Position pos, SceneManager &sceneManger, Position toCheck);
 
             void didHitPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            void collideEnnemyPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player);
             void didHitEnnemi(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
-            static bool isBlack(Position pos);
+            void didHitProj(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            void didHitWall(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            static bool isBlack(Position pos, sf::FloatRect box);
         
         private:
             std::vector<std::shared_ptr<IEntity>> _collidables2D;
