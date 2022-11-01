@@ -1,13 +1,19 @@
 #include "Bonus.hpp"
+#include <iostream>
 
 namespace R_TYPE {
-    Bonus::Bonus(BonusType type):
+    Bonus::Bonus(BonusType _type):
     Component(IComponent::Type::BONUS)
     {
-        type = type;
+        type = _type;
     }
 
     Bonus::~Bonus()
     {
+    }
+
+    Bonus::BonusType Bonus::getType()
+    {
+        return type;
     }
 }

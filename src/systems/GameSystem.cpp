@@ -160,6 +160,7 @@ namespace R_TYPE {
             component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 14, 47, 42));
             component->getSprite().setScale(0.5, 0.5);
         } else if (type == Ennemy::Type::ROBOT_DINO) {
+            component3->setLoot(Bonus::BonusType::LASER_DIAG);
             component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 2, 29, 24));
             component->getSprite().setScale(0.7, 0.7);
             velocity = std::make_shared<Velocity>(-0.03f, 0);
@@ -325,7 +326,16 @@ namespace R_TYPE {
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
                         ("assets/sprites_sheets/r-typesheet1.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
-
+                    if (player->hasBonus(Bonus::BonusType::LASER_DIAG) == true) {
+                        std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
+                            ("assets/sprites_sheets/r-typesheet2.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                            Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
+                        std::shared_ptr<Entity> shoot3 = GameSystem::createProjectiles
+                            ("assets/sprites_sheets/r-typesheet2.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                            Velocity(0.25f, 0.25f), true, sf::IntRect(242, 183, 15, 17));
+                        scene.getCurrentScene().addEntity(shoot2);
+                        scene.getCurrentScene().addEntity(shoot3);
+                    }
                     scene.getCurrentScene().addEntity(shoot);
                 }
             },

@@ -57,7 +57,7 @@ namespace R_TYPE {
         private:
             int8_t _id;
             std::unique_ptr<Sprite> _spritesheet;
-            std::vector<Bonus::BonusType> bonus;
+            std::map<Bonus::BonusType, bool> bonus;
             Position _pos;
             bool _attacking;
             bool _alive;

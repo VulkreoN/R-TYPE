@@ -14,6 +14,10 @@ namespace R_TYPE {
     _id(0), _pos(position), _attacking(false), _alive(true)
     {
         _spritesheet = std::make_unique<Sprite>("assets/player/player.png", _pos, 0, sf::IntRect(66, 0, 32, 12));
+        bonus.insert(std::make_pair(Bonus::BonusType::SPEED, false));
+        bonus.insert(std::make_pair(Bonus::BonusType::LASER_DIAG, false));
+        bonus.insert(std::make_pair(Bonus::BonusType::LASER, false));
+        bonus.insert(std::make_pair(Bonus::BonusType::DOUBLE, false));
     }
 
     Player::~Player()
@@ -57,13 +61,17 @@ namespace R_TYPE {
 
     void Player::addBonus(Bonus::BonusType _bonus)
     {
-        bonus.push_back(_bonus);
+        for (auto &it : bonus) {
+            if (it.first == _bonus && it.second == false) {
+                it.second = true;
+            }
+        }
     }
 
     bool Player::hasBonus(Bonus::BonusType _bonus)
     {
         for (auto &it : bonus) {
-            if ((int)it - 48 == (int)_bonus)
+            if (it.second == true && it.first == _bonus)
                 return true;
         }
         return false;

@@ -121,7 +121,7 @@ namespace R_TYPE {
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
             
 
-            if (box.contains(pos->getPosition().x, pos->getPosition().y) && pos != posProj) {
+            if (box.contains(pos->getPosition().x, pos->getPosition().y) && pos != posProj && projectile->shootByPlayer() != proj->shootByPlayer()) {
                 if (projectile->getType() != Projectiles::Type::CHARGED)
                     projectile->setIsActive(false);
                 if (proj->getType() != Projectiles::Type::CHARGED)
