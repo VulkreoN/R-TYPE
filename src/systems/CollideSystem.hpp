@@ -17,14 +17,14 @@ namespace R_TYPE {
             void update(SceneManager &sceneManager, uint64_t deltaTime) final;
             void destroy() final;
 
-            static bool canMoveLeft(Position pos, SceneManager &sceneManger);
-            static bool canMoveRight(Position pos, SceneManager &sceneManger);
-            static bool canMoveUp(Position pos, SceneManager &sceneManger);
-            static bool canMoveDown(Position pos, SceneManager &sceneManger);
+            static bool canMove(Position pos, SceneManager &sceneManger, Position toCheck);
 
             void didHitPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            void collideEnnemyPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player);
             void didHitEnnemi(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
-            static bool isBlack(Position pos);
+            void didHitProj(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            void didHitWall(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            static bool isBlack(Position pos, sf::FloatRect box);
         
         private:
             std::vector<std::shared_ptr<IEntity>> _collidables2D;

@@ -18,7 +18,7 @@ namespace R_TYPE {
     }
 
     Velocity::Velocity(sf::Vector2f _velocity):
-    Component(Component::Type::POSITION)
+    Component(Component::Type::VELOCITY)
     {
         velocity = _velocity;
         _isInitialized = true;

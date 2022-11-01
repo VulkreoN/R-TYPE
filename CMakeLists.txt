@@ -23,6 +23,7 @@ target_sources(${PROJECT_NAME}
 
         src/Core.cpp
         src/SceneManager.cpp
+        src/AnimationManager.cpp
         src/Entity.cpp
         src/Scene.cpp
         src/ButtonCallback.cpp
@@ -38,6 +39,7 @@ target_sources(${PROJECT_NAME}
         src/components/Event.cpp
         src/components/Ennemy.cpp
         src/components/Projectiles.cpp
+        src/components/Animation.cpp
 
         src/systems/EventSystem.cpp
         src/systems/GraphicSystem.cpp

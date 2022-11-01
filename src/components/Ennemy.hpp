@@ -14,6 +14,8 @@ namespace R_TYPE {
             enum class Type {
                 TURRET,
                 JORYDE_ALIEN,
+                ROBOT_DINO,
+                SPATIAL,
             };
             Ennemy(Ennemy::Type type);
             ~Ennemy();
@@ -22,9 +24,13 @@ namespace R_TYPE {
             bool IsAlive() {return (isAlive);};
 
             /// @brief Launch the good script with the type of the ennemy
-            void launchScript(SceneManager &manager, Position selfPos);
+            void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy);
 
-            Velocity getVelocityTarget(sf::Vector2f distance);
+            static sf::Vector2f getDistance(SceneManager &manager, Position selfPos);
+
+            static Velocity getVelocityTarget(sf::Vector2f distance);
+
+            Type getType() {return (type);};
         private:
             bool isAlive;
             Type type;
