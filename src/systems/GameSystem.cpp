@@ -270,7 +270,7 @@ namespace R_TYPE {
                 auto comp = (*player_e)[IComponent::Type::PLAYER];
                 auto player = Component::castComponent<Player>(comp);
 
-                if (player->clock.getElapsedTime().asSeconds() > 2) {
+                if (player->clock.getElapsedTime().asSeconds() > 1) {
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
                         ("assets/sprites_sheets/r-typesheet1.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(233, 120, 31, 11));
@@ -286,7 +286,9 @@ namespace R_TYPE {
                     scene.getCurrentScene().addEntity(shoot);
                 }
             },
-            [](SceneManager &) {},
+            [](SceneManager &) {
+                // here animation of charging
+            },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::PLAYER];
                 auto player = Component::castComponent<Player>(comp);
