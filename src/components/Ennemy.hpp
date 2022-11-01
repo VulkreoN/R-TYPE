@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "Position.hpp"
 #include "Velocity.hpp"
+#include "Bonus.hpp"
 
 namespace R_TYPE {
     class Ennemy : public Component {
@@ -31,8 +32,12 @@ namespace R_TYPE {
             static Velocity getVelocityTarget(sf::Vector2f distance);
 
             Type getType() {return (type);};
+
+            Bonus::Type getLoot() {return (isLooting);};
+            void setLoot(Bonus::Type loot) {isLooting = loot;};
         private:
             bool isAlive;
+            Bonus::Type isLooting;
             Type type;
             Script scripts;
     };

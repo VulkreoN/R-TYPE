@@ -15,6 +15,7 @@ namespace R_TYPE {
             ENNEMY,
             SCRIPT,
             PROJECTILES,
+            BONUS,
 
             HITBOX,
             PLAYER,

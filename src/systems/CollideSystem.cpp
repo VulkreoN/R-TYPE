@@ -1,4 +1,5 @@
 #include "CollideSystem.hpp"
+#include "GameSystem.hpp"
 #include "SceneManager.hpp"
 #include "Component.hpp"
 #include "Sprite.hpp"
@@ -46,6 +47,7 @@ namespace R_TYPE {
         }
         for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             collideEnnemyPlayer(sceneManager, player);
+            collideBonusPlayer(sceneManager, player);
         }
 
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
@@ -74,6 +76,22 @@ namespace R_TYPE {
 
             if (box.intersects(playerBox)) {
                 component->setAlive(false);
+            }
+        }
+    }
+
+    void CollideSystem::collideBonusPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player)
+    {
+        auto component = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::BONUS]) {
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto bonus = Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS]);
+            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            sf::FloatRect playerBox = component->getSprite().getGlobalBounds();
+
+            if (box.intersects(playerBox)) {
+                component->addBonus(bonus->getType());
+                sceneManager.getCurrentScene().removeEntity(e);
             }
         }
     }
@@ -120,11 +138,16 @@ namespace R_TYPE {
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
 
             if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
                 if (projectile->getType() != Projectiles::Type::CHARGED)
                     projectile->setIsActive(false);
+                if (ennemy->getLoot() != Bonus::Type::NONE) {
+                    auto bonus = GameSystem::createBonus("assets/sprites_sheets/bonus.png", posEnnemi->getPosition(), ennemy->getLoot());
+                    sceneManager.getCurrentScene().addEntity(bonus);
+                }
                 sceneManager.getCurrentScene().removeEntity(e);
                 return;
             }

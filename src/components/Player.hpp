@@ -10,6 +10,7 @@
 
     #include "Sprite.hpp"
     #include "Velocity.hpp"
+    #include "Bonus.hpp"
 
 namespace R_TYPE {
     class Player : public Component {
@@ -43,11 +44,16 @@ namespace R_TYPE {
             /// @param attacking State
             void setAttacking(bool attacking);
 
+            void addBonus(Bonus::Type bonus);
+
+            bool hasBonus(Bonus::Type bonus);
+
             sf::Clock clock;
             sf::Time chargedTime;
         private:
             int8_t _id;
             std::unique_ptr<Sprite> _spritesheet;
+            std::vector<Bonus::Type> bonus;
             Position _pos;
             bool _attacking;
             bool _alive;

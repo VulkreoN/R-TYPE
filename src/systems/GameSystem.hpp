@@ -28,6 +28,7 @@ namespace R_TYPE {
             void destroy() final;
 
             static std::shared_ptr<Entity> createProjectiles(std::string path, Position pos, Velocity velocity, bool byPlayer, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
+            static std::shared_ptr<Entity> createBonus(std::string path, Position pos, Bonus::Type type, sf::IntRect rect = sf::IntRect(3, 1, 16, 16));
         protected:
 
             std::shared_ptr<Entity> createSprite(std::string path, int posX, int posY, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));

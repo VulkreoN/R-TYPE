@@ -16,6 +16,7 @@
 #include "CollideSystem.hpp"
 #include "Text.hpp"
 #include "Projectiles.hpp"
+#include "Bonus.hpp"
 
 namespace R_TYPE {
     GameSystem::GameSystem()
@@ -112,6 +113,27 @@ namespace R_TYPE {
         return(entity);
     }
 
+    std::shared_ptr<Entity> GameSystem::createBonus(std::string path, Position pos, Bonus::Type type, sf::IntRect rect)
+    {
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
+        std::shared_ptr<Sprite> component;
+        std::shared_ptr<Bonus> component3 = std::make_shared<Bonus>(type);
+
+        if (type == Bonus::Type::DOUBLE)
+            rect.left = 32;
+        else if (type == Bonus::Type::LASER_DIAG)
+            rect.left = 60;
+        else if (type == Bonus::Type::LASER)
+            rect.left = 89;
+        component = std::make_shared<Sprite>(path, *component2, 0, rect);
+
+        entity->addComponent(component)
+                .addComponent(component2)
+                .addComponent(component3);
+        return(entity);
+    }
+
     std::shared_ptr<Entity> GameSystem::createText(std::string text, int posX, int posY, int size)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
@@ -129,10 +151,12 @@ namespace R_TYPE {
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
         std::shared_ptr<Sprite> component;
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
+        std::shared_ptr<Ennemy> component3 = std::make_shared<Ennemy>(type);
 
         if (type == Ennemy::Type::TURRET) {
             component = std::make_shared<Sprite>(path, *component2, angle);
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
+            component3->setLoot(Bonus::Type::SPEED);
             component = std::make_shared<Sprite>(path, *component2, angle, sf::IntRect(1, 14, 47, 42));
             component->getSprite().setScale(0.5, 0.5);
         } else if (type == Ennemy::Type::ROBOT_DINO) {
@@ -144,11 +168,10 @@ namespace R_TYPE {
             velocity = std::make_shared<Velocity>(-0.05f, -0.05f);
             component->getSprite().setScale(0.7, 0.7);
         }
-        std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
 
         entity->addComponent(component)
                 .addComponent(component2)
-                .addComponent(compoment3)
+                .addComponent(component3)
                 .addComponent(velocity);
         return(entity);
     }

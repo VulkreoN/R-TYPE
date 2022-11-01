@@ -52,4 +52,19 @@ namespace R_TYPE {
     {
         _attacking = attacking;
     }
+
+    void Player::addBonus(Bonus::Type bonus)
+    {
+        this->bonus.push_back(bonus);
+    }
+
+    bool Player::hasBonus(Bonus::Type bonus)
+    {
+        for (auto &it : this->bonus) {
+            if (it == bonus)
+                return true;
+        }
+        return false;
+    }
+
 }

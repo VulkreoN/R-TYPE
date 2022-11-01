@@ -20,6 +20,7 @@ namespace R_TYPE {
             PLAYER,
             UI,
             ENNEMY,
+            BONUS,
         };
 
         virtual ~IEntity() = default;
