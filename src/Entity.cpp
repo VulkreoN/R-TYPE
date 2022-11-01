@@ -3,7 +3,15 @@
 
 #include "Entity.hpp"
 
+size_t next_id = 10;
+
 namespace R_TYPE {
+    Entity::Entity()
+    {
+        _id = next_id;
+        next_id++;
+    }
+
     const std::map<Entity::Tags, std::vector<std::vector<IComponent::Type>>> Entity::entityTags = {
         {IEntity::Tags::SPRITE_2D,
          {{IComponent::Type::SPRITE, IComponent::Type::POSITION}}},
