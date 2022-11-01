@@ -8,7 +8,7 @@ namespace R_TYPE {
     {
         sf::Vector2f pos(position.getPosition());
 
-        sprite.setTexture(GraphicSystem::getTextures()[name-1]);
+        sprite.setTexture(*GraphicSystem::getTextures()[name - 1]);
         if (rect.height != 0 && rect.width != 0)
             sprite.setTextureRect(rect);
         sprite.setPosition(pos);
