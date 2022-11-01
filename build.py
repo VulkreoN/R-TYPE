@@ -111,7 +111,7 @@ elif os.name == 'posix':
     if os.system("vcpkg --version") != 0:
         print("\n\nvcpkg is not installed")
         print("installing vcpkg...")
-        os.system("git clone https://github.com/Microsoft/vcpkg.git"))
+        os.system("git clone https://github.com/Microsoft/vcpkg.git")git clone git clone 
         os.system("./vcpkg/bootstrap-vcpkg.sh")
         print("\n\nvcpkg installed")
 
