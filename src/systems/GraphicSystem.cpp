@@ -17,7 +17,8 @@
 namespace R_TYPE {
 
     sf::RenderWindow *GraphicSystem::window;
-    std::vector<sf::Texture> GraphicSystem::_textures;
+    std::vector<std::shared_ptr<sf::Texture>> GraphicSystem::_textures;
+    bool EventSystem::isInit;
 
     GraphicSystem::GraphicSystem()
     {
@@ -38,8 +39,8 @@ namespace R_TYPE {
 
         window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
         window->setFramerateLimit(60);
-        eventSystem->init(manager);
-        eventSystem->setWindow(window);
+        // eventSystem->init(manager);
+        // eventSystem->setWindow(window);
         camera = new sf::View(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
         window->setView(*camera);
         input_file.open("assets/sprites_sheets/pathText.txt");
@@ -48,12 +49,18 @@ namespace R_TYPE {
             while(ss_line){
                 std::string element;
                 ss_line >> element;
-                _pathTextures.push_back(element);
+                if (element != "")
+                    _pathTextures.push_back(element);
             }
         }
-        for (int i = 0; i != _textures.size(); i++)
-            if (!_textures[i].loadFromFile(_pathTextures[i]))
-                std::cerr << "error load texture path\n";
+        for (int i = 0; i != _pathTextures.size(); i++) {
+            sf::Texture texture;
+            texture.loadFromFile(_pathTextures[i]);
+            _textures.push_back(std::make_shared<sf::Texture>(texture));
+            // if (!_textures[i].loadFromFile(_pathTextures[i]))
+            //     std::cerr << "error load texture path\n";
+        }
+        _isInit = false;
     }
 
     void GraphicSystem::setCamera(SceneManager &manager)
@@ -71,6 +78,11 @@ namespace R_TYPE {
 
     void GraphicSystem::update(SceneManager &manager, uint64_t deltaTime)
     {
+        if (EventSystem::isInit == false) {
+            eventSystem->init(manager);
+            eventSystem->setWindow(window);
+            EventSystem::isInit = true;
+        }
         eventSystem->update(manager, deltaTime);
         window->clear(sf::Color::Black);
         setCamera(manager);

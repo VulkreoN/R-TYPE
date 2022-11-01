@@ -26,7 +26,7 @@ namespace R_TYPE {
             void destroy() final;
 
             static sf::RenderWindow *getWindow() {return (window);};
-            static std::vector<sf::Texture> getTextures() {return (_textures);};
+            static std::vector<std::shared_ptr<sf::Texture>> getTextures() {return (_textures);};
 
             void setCamera(SceneManager &manager);
 
@@ -35,7 +35,7 @@ namespace R_TYPE {
             static sf::RenderWindow *window;
             std::unique_ptr<EventSystem> eventSystem;
             sf::View *camera;
-            static std::vector<sf::Texture> _textures;
+            static std::vector<std::shared_ptr<sf::Texture>> _textures;
             std::vector<std::string> _pathTextures;
             bool _isInit;
     };
