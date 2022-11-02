@@ -328,7 +328,7 @@ namespace R_TYPE {
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
                     if (player->hasBonus(Bonus::BonusType::LASER_DIAG) == true) {
                         std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
-                            ("assets/sprites_sheets/r-typesheet2.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                            ("assets/sprites_sheets/r-typesheet2.gif", Position(player->getPosition().x + 32, player->getPosition().y - 5), 
                             Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
                         std::shared_ptr<Entity> shoot3 = GameSystem::createProjectiles
                             ("assets/sprites_sheets/r-typesheet2.gif", Position(player->getPosition().x + 32, player->getPosition().y + 5), 
