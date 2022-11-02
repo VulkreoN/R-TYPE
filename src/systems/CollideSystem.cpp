@@ -42,7 +42,7 @@ namespace R_TYPE {
 
             if (component->getIsActive() == false) {
                 sceneManager.getCurrentScene().removeEntity(e);
-                return;
+                break;
             }
         }
         for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
@@ -104,10 +104,9 @@ namespace R_TYPE {
         auto velocity = Component::castComponent<Velocity>((*project)[IComponent::Type::VELOCITY]);
         
         sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-        if (pos->getPosition().y > 32)
-            if (isBlack(*pos, box) == false) {
+        if (pos->getPosition().y > 10)
+            if (isBlack(*pos, box) == false)
                 component->setIsActive(false);
-            }
     }
 
     void CollideSystem::didHitProj(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
