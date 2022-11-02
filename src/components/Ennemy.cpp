@@ -50,7 +50,7 @@ namespace R_TYPE {
         for (auto &player : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             sf::Vector2f distance2 = {0, 0};
 
-            auto target = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
+            auto target = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
 
             distance2.x = target->getPosition().x + 15 - selfPos.getPosition().x;
             distance2.y = target->getPosition().y + 6 - selfPos.getPosition().y;

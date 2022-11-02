@@ -4,16 +4,9 @@
 
 namespace R_TYPE {
     Sprite::Sprite(int name, Position position, float angle, sf::IntRect rect):
-    Component(Component::Type::SPRITE)
+    Component(Component::Type::SPRITE), name(name), position(position), angle(angle), rect(rect)
     {
-        sf::Vector2f pos(position.getPosition());
-
-        sprite.setTexture(*GraphicSystem::getTextures()[name - 1]);
-        if (rect.height != 0 && rect.width != 0)
-            sprite.setTextureRect(rect);
-        sprite.setPosition(pos);
-        sprite.setRotation(angle);
-        size = sprite.getTexture()->getSize();
+        isInit = false;
     }
 
     Sprite::~Sprite()
