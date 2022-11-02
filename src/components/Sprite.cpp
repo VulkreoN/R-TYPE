@@ -1,15 +1,14 @@
 #include "Sprite.hpp"
 #include <iostream>
+#include "GraphicSystem.hpp"
 
 namespace R_TYPE {
-    Sprite::Sprite(std::string pathTexture, Position position, float angle, sf::IntRect rect):
+    Sprite::Sprite(int name, Position position, float angle, sf::IntRect rect):
     Component(Component::Type::SPRITE)
     {
         sf::Vector2f pos(position.getPosition());
 
-        if (!texture.loadFromFile(pathTexture))
-            std::cerr << "error load texture path\n";
-        sprite.setTexture(texture);
+        sprite.setTexture(*GraphicSystem::getTextures()[name - 1]);
         if (rect.height != 0 && rect.width != 0)
             sprite.setTextureRect(rect);
         sprite.setPosition(pos);

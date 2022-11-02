@@ -12,7 +12,7 @@ namespace R_TYPE {
             /// @param pathTexture Path to the texture file
             /// @param position Position of the sprite
             /// @param rect Rectangle of the texture
-            Sprite(std::string pathTexture, Position position, float angle = 0, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
+            Sprite(int name, Position position, float angle = 0, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
             ~Sprite();
 
             /// @brief Getter sprite
@@ -27,7 +27,6 @@ namespace R_TYPE {
         private:
             sf::Sprite sprite;
             sf::Vector2u size;
-            sf::Texture texture;
     };
 }
 

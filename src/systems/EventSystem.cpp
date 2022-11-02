@@ -19,6 +19,7 @@ namespace R_TYPE {
     EventSystem::EventSystem()
     {
         std::cout << "Event System create" << std::endl;
+        isInit = false;
     }
 
     EventSystem::~EventSystem()
@@ -27,6 +28,7 @@ namespace R_TYPE {
 
     void EventSystem::init(SceneManager &manager)
     {
+        std::cout << "Event System init" << std::endl;
         for (auto &index : manager.getSceneTypeList()) {
             for (auto &entity : manager.getScene(index)[IEntity::Tags::CALLABLE]) {
                 auto listener = Component::castComponent<Event>((*entity)[IComponent::Type::EVENT]);
@@ -50,8 +52,11 @@ namespace R_TYPE {
         for (auto &script : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto pos = Component::castComponent<Position>((*script)[IComponent::Type::POSITION]);
             auto ennemy = Component::castComponent<Ennemy>((*script)[IComponent::Type::ENNEMY]);
+            float windowPosX = window->getView().getCenter().x - 135;
 
-            ennemy->launchScript(manager, *pos);
+            if (pos->getPosition().x < windowPosX + 270 && pos->getPosition().x > windowPosX) {
+                ennemy->launchScript(manager, script);
+            }
         }
     }
 
@@ -73,6 +78,15 @@ namespace R_TYPE {
             if (it.second.released && event.type == sf::Event::KeyReleased && event.key.code == it.first) {
                 it.second.released(manager);
                 wasPressed = false;
+            }
+            if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
+                if (wasPressed == true) {
+                    it.second.down(manager);
+                }
+            }
+            if (!sf::Keyboard::isKeyPressed(it.first) ) {
+                if (wasPressed == false)
+                    it.second.up(manager);
             }
         }
     }

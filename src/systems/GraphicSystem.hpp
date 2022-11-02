@@ -8,8 +8,11 @@
 #ifndef GRAPHICSYSTEM_HPP_
 #define GRAPHICSYSTEM_HPP_
 
-#include "ISystem.hpp"
 #include <SFML/Graphics.hpp>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include "ISystem.hpp"
 #include "EventSystem.hpp"
 
 namespace R_TYPE {
@@ -23,6 +26,7 @@ namespace R_TYPE {
             void destroy() final;
 
             static sf::RenderWindow *getWindow() {return (window);};
+            static std::vector<std::shared_ptr<sf::Texture>> getTextures() {return (_textures);};
 
             void setCamera(SceneManager &manager);
 
@@ -31,6 +35,8 @@ namespace R_TYPE {
             static sf::RenderWindow *window;
             std::unique_ptr<EventSystem> eventSystem;
             sf::View *camera;
+            static std::vector<std::shared_ptr<sf::Texture>> _textures;
+            std::vector<std::string> _pathTextures;
             bool _isInit;
     };
 }
