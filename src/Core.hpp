@@ -26,9 +26,12 @@ namespace R_TYPE {
             ~Core();
             /// @brief Game loop
             void mainLoop();
+
+            static bool getIsServeur() {return(isServeur);};
         private:
             SceneManager _sceneManager;
             std::map<SystemType, std::unique_ptr<ISystem>> _systems;
+            static bool isServeur;
     };
 }
 

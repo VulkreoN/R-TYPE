@@ -27,6 +27,7 @@ namespace R_TYPE {
 
             static sf::RenderWindow *getWindow() {return (window);};
             static std::vector<std::shared_ptr<sf::Texture>> getTextures() {return (_textures);};
+            void initAllSprites(SceneManager &manager);
 
             void setCamera(SceneManager &manager);
 

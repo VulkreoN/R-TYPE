@@ -63,6 +63,34 @@ namespace R_TYPE {
         _isInit = false;
     }
 
+    void GraphicSystem::initAllSprites(SceneManager &manager)
+    {
+        for (auto &scene : manager.getScenes()) {
+            // for (auto &entity : (*scene.second)[IEntity::Tags::PLAYER]) {
+            //     auto sprite = Component::castComponent<Player>((*entity)[IComponent::Type::PLAYER]);
+            //     sprite->getSprite().setTexture(*_textures[0]);
+            //     sprite->getSprite().setTextureRect(sprite->getSprite().getTextureRect());
+            //     sprite->getSprite().setOrigin(sprite->getSprite().getTextureRect().width / 2, sprite->getSprite().getTextureRect().height / 2);
+            //     sprite->getSprite().setPosition(sprite->getSprite().getPosition().x, sprite->getSprite().getPosition().y);
+            //     sprite->getSprite().setRotation(sprite->getSprite().getRotation());
+            // }
+
+
+            for (auto &entity : (*scene.second)[IEntity::Tags::SPRITE_2D]) { 
+                auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
+                if (sprite->isInit == true)
+                    continue;
+                sprite->getSprite().setTexture(*_textures[sprite->getName() - 1]);
+                if (sprite->getRect() != sf::IntRect(0, 0, 0, 0)) {
+                    sprite->getSprite().setTextureRect(sprite->getRect());
+                }
+                sprite->getSprite().setPosition(sprite->getPosition().getPosition().x, sprite->getPosition().getPosition().y);
+                sprite->getSprite().setRotation(sprite->getAngle());
+                sprite->isInit = true;
+            }
+        }
+    }
+
     void GraphicSystem::setCamera(SceneManager &manager)
     {
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1 && _isInit == false) {
@@ -78,6 +106,7 @@ namespace R_TYPE {
 
     void GraphicSystem::update(SceneManager &manager, uint64_t deltaTime)
     {
+        initAllSprites(manager);
         if (EventSystem::isInit == false) {
             eventSystem->init(manager);
             eventSystem->setWindow(window);
