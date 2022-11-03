@@ -16,6 +16,7 @@ namespace R_TYPE {
             SCRIPT,
             PROJECTILES,
             BONUS,
+            NONO,
 
             HITBOX,
             PLAYER,

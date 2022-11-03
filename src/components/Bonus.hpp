@@ -10,14 +10,11 @@ namespace R_TYPE {
             enum class BonusType {
                 NONE = 0,
                 SPEED = 1,
-                LASER_DIAG = 2,
-                NONO_LE_ROBOT = 3,
+                NONO_LE_ROBOT = 2,
+                UPGRADE = 3,
                 // appparait avec un bonus 
                 // peut se faire ejecter avec un button et tire en meme temps que le joueur
                 // se fait attirer par le joueur
-
-                DOUBLE = 4,
-                LASER = 5,
             };
             Bonus(BonusType type);
             ~Bonus();

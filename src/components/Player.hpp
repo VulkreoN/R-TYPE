@@ -52,6 +52,11 @@ namespace R_TYPE {
             /// @param bonus Bonus to check
             bool hasBonus(Bonus::BonusType bonus);
 
+            void setBonus(Bonus::BonusType _bonus, bool state) {bonus[_bonus] = state;};
+
+            void setNono(bool nono) {_hasNono = nono;};
+            bool getNono() {return _hasNono;};
+
             sf::Clock clock;
             sf::Time chargedTime;
         private:
@@ -61,6 +66,7 @@ namespace R_TYPE {
             Position _pos;
             bool _attacking;
             bool _alive;
+            bool _hasNono;
     };
 }
 

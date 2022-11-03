@@ -21,6 +21,7 @@ namespace R_TYPE {
             UI,
             ENNEMY,
             BONUS,
+            NONO,
         };
 
         virtual ~IEntity() = default;

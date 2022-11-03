@@ -48,6 +48,7 @@ namespace R_TYPE {
         for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             collideEnnemyPlayer(sceneManager, player);
             collideBonusPlayer(sceneManager, player);
+            collideNonoPlayer(sceneManager, player);
         }
 
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
@@ -92,8 +93,49 @@ namespace R_TYPE {
             sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
 
             if (box.intersects(playerBox)) {
-                component->addBonus(bonus->getType());
+                if (bonus->getType() == Bonus::BonusType::SPEED || bonus->getType() == Bonus::BonusType::NONO_LE_ROBOT)
+                    component->addBonus(bonus->getType());
+                else
+                    addUpddateNono(sceneManager, player);
                 sceneManager.getCurrentScene().removeEntity(e);
+            }
+        }
+    }
+
+    void CollideSystem::addUpddateNono(SceneManager &SceneManager, std::shared_ptr<IEntity> player)
+    {
+        auto pos = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
+        for (auto &e : SceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+
+            if (nono->getPosPlayer() == pos) {
+                nono->nextUpgrade();
+            }
+        }
+    }
+
+    void CollideSystem::collideNonoPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player)
+    {
+        auto component = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
+        auto spritePlayer = Component::castComponent<Sprite>((*player)[IComponent::Type::SPRITE]);
+        auto posPlayer = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+            auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
+
+            if (box.intersects(playerBox)) {
+                pos->setX(posPlayer->getPosition().x + playerBox.width);
+                pos->setY(posPlayer->getPosition().y);
+                nono->isSnap = true;
+                nono->setPosPlayer(posPlayer);
+                velocity->setX(0);
+                velocity->setY(0);
+                component->setNono(true);
             }
         }
     }

@@ -41,6 +41,7 @@ target_sources(${PROJECT_NAME}
         src/components/Projectiles.cpp
         src/components/Bonus.cpp
         src/components/Animation.cpp
+        src/components/Nono.cpp
 
         src/systems/EventSystem.cpp
         src/systems/GraphicSystem.cpp

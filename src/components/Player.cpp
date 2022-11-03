@@ -15,10 +15,9 @@ namespace R_TYPE {
     {
         _spritesheet = std::make_unique<Sprite>(53, _pos, 0, sf::IntRect(66, 0, 32, 12));
         bonus.insert(std::make_pair(Bonus::BonusType::SPEED, false));
-        bonus.insert(std::make_pair(Bonus::BonusType::LASER_DIAG, false));
-        bonus.insert(std::make_pair(Bonus::BonusType::LASER, false));
-        bonus.insert(std::make_pair(Bonus::BonusType::DOUBLE, false));
-        _spritesheet = std::make_unique<Sprite>(53, _pos, 0, sf::IntRect(66, 0, 32, 12));
+        bonus.insert(std::make_pair(Bonus::BonusType::UPGRADE, false));
+        bonus.insert(std::make_pair(Bonus::BonusType::NONO_LE_ROBOT, false));
+        _hasNono = false;
     }
 
     Player::~Player()

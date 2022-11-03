@@ -16,6 +16,7 @@
 #include "CollideSystem.hpp"
 #include "Text.hpp"
 #include "Projectiles.hpp"
+#include "Nono.hpp"
 #include "Core.hpp"
 
 namespace R_TYPE {
@@ -96,6 +97,11 @@ namespace R_TYPE {
                     position->setX(moved.getPosition().x);
                     position->setY(moved.getPosition().y);
                 }
+                if (player->hasBonus(Bonus::BonusType::NONO_LE_ROBOT) && player->getNono() == false) {
+                    player->setBonus(Bonus::BonusType::NONO_LE_ROBOT, false);
+                    std::shared_ptr<Entity> entity = createNono(2, *position);
+                    sceneManager.getCurrentScene().addEntity(entity);
+                }
             }
 
             // delete all projectiles if they are out of the screen
@@ -110,6 +116,22 @@ namespace R_TYPE {
                     proj->setIsActive(false);
                 }
             }
+
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+
+                if (nono->isSnap == false) {
+                    velocity->setX(nono->getVelocityTarget(nono->getDistance(sceneManager, pos->getPosition())).getVelocity().x);
+                    velocity->setY(nono->getVelocityTarget(nono->getDistance(sceneManager, pos->getPosition())).getVelocity().y);
+                    pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+                    pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+                } else {
+                    pos->setX(nono->getPosPlayer()->getPosition().x + 33);
+                    pos->setY(nono->getPosPlayer()->getPosition().y + 5);
+                }
+            }
         }
     }
 
@@ -118,11 +140,29 @@ namespace R_TYPE {
         std::cout << "Game System destroyed" << std::endl;
     }
 
-    std::shared_ptr<Entity> GameSystem::createSprite(int name, int posX, int posY)
+    std::shared_ptr<Entity> GameSystem::createNono(int name, Position pos)
+    {
+        int posX = pos.getPosition().x;
+        int posY = pos.getPosition().y;
+        std::shared_ptr<Entity> entity = createSprite(2, posX - 100, posY, sf::IntRect(279, 35, 19, 15));
+        auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
+        sprite->getSprite().setScale(0.7, 0.7);
+        std::shared_ptr<Nono> comp = std::make_shared<Nono>();
+
+        // TODO: add velocity to player
+        std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
+
+        entity->addComponent(velocity)
+            .addComponent(comp);
+
+        return entity;
+    }
+
+    std::shared_ptr<Entity> GameSystem::createSprite(int name, int posX, int posY, sf::IntRect rect)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
-        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(name, *component2);
+        std::shared_ptr<Sprite> component = std::make_shared<Sprite>(name, *component2, 0, rect);
 
         entity->addComponent(component)
                 .addComponent(component2);
@@ -136,11 +176,9 @@ namespace R_TYPE {
         std::shared_ptr<Sprite> component;
         std::shared_ptr<Bonus> component3 = std::make_shared<Bonus>(type);
 
-        if (type == Bonus::BonusType::DOUBLE)
-            rect.left = 32;
-        else if (type == Bonus::BonusType::LASER_DIAG)
+        if (type == Bonus::BonusType::UPGRADE)
             rect.left = 60;
-        else if (type == Bonus::BonusType::LASER)
+        else if (type == Bonus::BonusType::NONO_LE_ROBOT)
             rect.left = 89;
         component = std::make_shared<Sprite>(name, *component2, 0, rect);
 
@@ -173,11 +211,11 @@ namespace R_TYPE {
         if (type == Ennemy::Type::TURRET) {
             component = std::make_shared<Sprite>(name, *component2, angle);
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
-            component3->setLoot(Bonus::BonusType::SPEED);
+            component3->setLoot(Bonus::BonusType::NONO_LE_ROBOT);
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 14, 47, 42));
             component->getSprite().setScale(0.5, 0.5);
         } else if (type == Ennemy::Type::ROBOT_DINO) {
-            component3->setLoot(Bonus::BonusType::LASER_DIAG);
+            component3->setLoot(Bonus::BonusType::UPGRADE);
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 2, 29, 24));
             component->getSprite().setScale(0.7, 0.7);
             velocity = std::make_shared<Velocity>(-0.03f, 0);
@@ -348,7 +386,7 @@ namespace R_TYPE {
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
                         (1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
-                    if (player->hasBonus(Bonus::BonusType::LASER_DIAG) == true) {
+                    if (Nono::getNonoSnap(scene, player_e).getUpgrade() == 1) {
                         std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
                             (2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
                             Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
