@@ -23,19 +23,19 @@ namespace R_TYPE {
 
         if (type == Ennemy::Type::TURRET) {
             if (scripts.turretScript()) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("projectile.png", *selfPos, getVelocityTarget(distance), false);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(54, *selfPos, getVelocityTarget(distance), false);
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
             if (scripts.jorydeScript(distance, selfVel)) {
                 if (distance.x > 0)
                     isAlive = false;
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet9.gif", *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(9, *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::ROBOT_DINO) {
             if (scripts.robotScript(distance, selfVel)) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles("assets/sprites_sheets/r-typesheet10.gif", *selfPos, Velocity(0, -0.1f), false, sf::IntRect(191, 63, 6, 12));
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(10, *selfPos, Velocity(0, -0.1f), false, sf::IntRect(191, 63, 6, 12));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::SPATIAL) {
@@ -51,7 +51,7 @@ namespace R_TYPE {
         for (auto &player : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             sf::Vector2f distance2 = {0, 0};
 
-            auto target = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
+            auto target = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
 
             distance2.x = target->getPosition().x + 15 - selfPos.getPosition().x;
             distance2.y = target->getPosition().y + 6 - selfPos.getPosition().y;

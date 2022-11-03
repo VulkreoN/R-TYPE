@@ -1,20 +1,12 @@
 #include "Sprite.hpp"
 #include <iostream>
+#include "GraphicSystem.hpp"
 
 namespace R_TYPE {
-    Sprite::Sprite(std::string pathTexture, Position position, float angle, sf::IntRect rect):
-    Component(Component::Type::SPRITE)
+    Sprite::Sprite(int name, Position position, float angle, sf::IntRect rect):
+    Component(Component::Type::SPRITE), name(name), position(position), angle(angle), rect(rect)
     {
-        sf::Vector2f pos(position.getPosition());
-
-        if (!texture.loadFromFile(pathTexture))
-            std::cerr << "error load texture path\n";
-        sprite.setTexture(texture);
-        if (rect.height != 0 && rect.width != 0)
-            sprite.setTextureRect(rect);
-        sprite.setPosition(pos);
-        sprite.setRotation(angle);
-        size = sprite.getTexture()->getSize();
+        isInit = false;
     }
 
     Sprite::~Sprite()

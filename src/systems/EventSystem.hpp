@@ -23,6 +23,7 @@ namespace R_TYPE {
             void destroy() final;
 
             void setWindow(sf::RenderWindow *_window) {window = _window;};
+            static bool isInit;
 
         protected:
         private:

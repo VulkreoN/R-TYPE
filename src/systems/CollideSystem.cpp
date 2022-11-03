@@ -69,10 +69,11 @@ namespace R_TYPE {
     void CollideSystem::collideEnnemyPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player)
     {
         auto component = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
+        auto spritePlayer = Component::castComponent<Sprite>((*player)[IComponent::Type::SPRITE]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            sf::FloatRect playerBox = component->getSprite().getGlobalBounds();
+            sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
 
             if (box.intersects(playerBox)) {
                 component->setAlive(false);
@@ -83,11 +84,12 @@ namespace R_TYPE {
     void CollideSystem::collideBonusPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player)
     {
         auto component = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
+        auto spritePlayer = Component::castComponent<Sprite>((*player)[IComponent::Type::SPRITE]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::BONUS]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto bonus = Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS]);
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            sf::FloatRect playerBox = component->getSprite().getGlobalBounds();
+            sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
 
             if (box.intersects(playerBox)) {
                 component->addBonus(bonus->getType());
@@ -144,7 +146,7 @@ namespace R_TYPE {
                 if (projectile->getType() != Projectiles::Type::CHARGED)
                     projectile->setIsActive(false);
                 if (ennemy->getLoot() != Bonus::BonusType::NONE) {
-                    auto bonus = GameSystem::createBonus("assets/sprites_sheets/bonus.png", posEnnemi->getPosition(), ennemy->getLoot());
+                    auto bonus = GameSystem::createBonus(56, posEnnemi->getPosition(), ennemy->getLoot());
                     sceneManager.getCurrentScene().addEntity(bonus);
                 }
                 sceneManager.getCurrentScene().removeEntity(e);
@@ -159,8 +161,9 @@ namespace R_TYPE {
         auto projectile = Component::castComponent<Projectiles>((*project)[IComponent::Type::PROJECTILES]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
 
-            sf::FloatRect box = player->getSprite().getGlobalBounds();
+            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
             
             if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
                 projectile->setIsActive(false);

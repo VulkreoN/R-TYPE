@@ -19,6 +19,7 @@ namespace R_TYPE {
     EventSystem::EventSystem()
     {
         std::cout << "Event System create" << std::endl;
+        isInit = false;
     }
 
     EventSystem::~EventSystem()
@@ -27,6 +28,7 @@ namespace R_TYPE {
 
     void EventSystem::init(SceneManager &manager)
     {
+        std::cout << "Event System init" << std::endl;
         for (auto &index : manager.getSceneTypeList()) {
             for (auto &entity : manager.getScene(index)[IEntity::Tags::CALLABLE]) {
                 auto listener = Component::castComponent<Event>((*entity)[IComponent::Type::EVENT]);

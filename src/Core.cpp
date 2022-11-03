@@ -11,12 +11,15 @@
 
 namespace R_TYPE {
 
+    bool Core::isServeur;
+
     Core::Core(size_t port)
     {
         std::cout << "Core init\n";
         _systems[SystemType::GAME] = std::make_unique<GameSystem>();
         // _systems[SystemType::EVENT] = std::make_unique<EventSystem>();
         _systems[SystemType::NETWORK] = std::make_unique<ServerSystem>(port);
+        isServeur = true;
     }
 
     Core::Core(std::string ip, size_t port)
@@ -27,6 +30,7 @@ namespace R_TYPE {
         // _systems[SystemType::EVENT] = std::make_unique<EventSystem>();
         _systems[SystemType::COLLIDE] = std::make_unique<CollideSystem>();
         _systems[SystemType::NETWORK] = std::make_unique<ClientSystem>(ip, port);
+        isServeur = false;
     }
 
     Core::~Core()

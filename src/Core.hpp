@@ -12,11 +12,11 @@ namespace R_TYPE {
         public:
             ///@brief Types of systems: systems init and destroy calls are effectued by ascending order
             enum class SystemType {
+                GRAPHIC,
                 GAME,
                 EVENT,
                 NETWORK,
                 AUDIO,
-                GRAPHIC,
                 PARTICLE,
                 /// sub-system of game system
                 COLLIDE,
@@ -26,9 +26,12 @@ namespace R_TYPE {
             ~Core();
             /// @brief Game loop
             void mainLoop();
+
+            static bool getIsServeur() {return(isServeur);};
         private:
             SceneManager _sceneManager;
             std::map<SystemType, std::unique_ptr<ISystem>> _systems;
+            static bool isServeur;
     };
 }
 
