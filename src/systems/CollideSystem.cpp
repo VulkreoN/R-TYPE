@@ -34,6 +34,9 @@ namespace R_TYPE {
             didHitProj(sceneManager, e);
             if (component->shootByPlayer() == false) {
                 didHitPlayer(sceneManager, e);
+
+                // ça seg quand il est detruit et que tu tire
+                // didHitNono(sceneManager, e);
             } else if (component->shootByPlayer() == true)
                 didHitEnnemi(sceneManager, e);
         }
@@ -210,6 +213,24 @@ namespace R_TYPE {
             if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
                 projectile->setIsActive(false);
                 player->setAlive(false);
+                return;
+            }
+        }
+    }
+
+    void CollideSystem::didHitNono(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
+    {
+        auto pos = Component::castComponent<Position>((*project)[IComponent::Type::POSITION]);
+        auto projectile = Component::castComponent<Projectiles>((*project)[IComponent::Type::PROJECTILES]);
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
+            auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+
+            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            
+            if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
+                projectile->setIsActive(false);
+                sceneManager.getCurrentScene().removeEntity(e);
                 return;
             }
         }

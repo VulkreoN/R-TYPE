@@ -75,20 +75,20 @@ namespace R_TYPE {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-                // float windowPosX = GraphicSystem::getWindow()->getView().getCenter().x - 135;
+                float windowPosX = GraphicSystem::getWindow()->getView().getCenter().x - 135;
 
-                // if (pos->getPosition().x < windowPosX + 270) {
+                if (pos->getPosition().x < windowPosX + 270) {
                     pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
-                // }
+                }
             }
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
                 auto position = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-                if (player->isAlive() == false) {
+                if (player->isAlive() == false)
                     sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
-                }
+
                 Position moved(0,0);
                 moved.setX(position->getPosition().x + velocity->getVelocity().x * deltaTime);
                 moved.setY(position->getPosition().y + velocity->getVelocity().y * deltaTime);
@@ -97,11 +97,15 @@ namespace R_TYPE {
                     position->setX(moved.getPosition().x);
                     position->setY(moved.getPosition().y);
                 }
-                if (player->hasBonus(Bonus::BonusType::NONO_LE_ROBOT) && player->getNono() == false) {
-                    player->setBonus(Bonus::BonusType::NONO_LE_ROBOT, false);
+                if (player->hasBonus(Bonus::BonusType::NONO_LE_ROBOT) && player->nonoLaunched == false) {
+                    // player->setBonus(Bonus::BonusType::NONO_LE_ROBOT, false);
+                    player->nonoLaunched = true;
                     std::shared_ptr<Entity> entity = createNono(2, *position);
                     sceneManager.getCurrentScene().addEntity(entity);
                 }
+
+                if (player->hasBonus(Bonus::BonusType::NONO_LE_ROBOT))
+                    updateNono(sceneManager, deltaTime);
             }
 
             // delete all projectiles if they are out of the screen
@@ -116,21 +120,24 @@ namespace R_TYPE {
                     proj->setIsActive(false);
                 }
             }
+        }
+    }
 
-            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
-                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
-                auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+    void GameSystem::updateNono(SceneManager &sceneManager, uint64_t deltaTime)
+    {
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
+            auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+            auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
 
-                if (nono->isSnap == false) {
-                    velocity->setX(nono->getVelocityTarget(nono->getDistance(sceneManager, pos->getPosition())).getVelocity().x);
-                    velocity->setY(nono->getVelocityTarget(nono->getDistance(sceneManager, pos->getPosition())).getVelocity().y);
-                    pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
-                    pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
-                } else {
-                    pos->setX(nono->getPosPlayer()->getPosition().x + 33);
-                    pos->setY(nono->getPosPlayer()->getPosition().y + 5);
-                }
+            if (nono->isSnap == false) {
+                velocity->setX(nono->getVelocityTarget(nono->getDistance(sceneManager, pos->getPosition())).getVelocity().x);
+                velocity->setY(nono->getVelocityTarget(nono->getDistance(sceneManager, pos->getPosition())).getVelocity().y);
+                pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+                pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+            } else {
+                pos->setX(nono->getPosPlayer()->getPosition().x + 33);
+                pos->setY(nono->getPosPlayer()->getPosition().y + 5);
             }
         }
     }

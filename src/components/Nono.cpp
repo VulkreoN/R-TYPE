@@ -72,7 +72,7 @@ namespace R_TYPE {
         auto playerComp = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
         auto pos = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
 
-        if (playerComp->getNono() == false)
+        if (playerComp->nonoLaunched == false && playerComp->getNono() == false)
             return (Nono());
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);

@@ -21,6 +21,7 @@ namespace R_TYPE {
             static bool canMove(Position pos, SceneManager &sceneManger, Position toCheck);
 
             void didHitPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
+            void didHitNono(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
             void collideEnnemyPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player);
             void collideBonusPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player);
             void collideNonoPlayer(SceneManager &sceneManager, std::shared_ptr<IEntity> player);
