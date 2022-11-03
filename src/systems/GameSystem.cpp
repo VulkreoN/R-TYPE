@@ -350,10 +350,10 @@ namespace R_TYPE {
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
                     if (player->hasBonus(Bonus::BonusType::LASER_DIAG) == true) {
                         std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
-                            (2, Position(player->getPosition().x + 32, player->getPosition().y - 5), 
+                            (2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
                             Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
                         std::shared_ptr<Entity> shoot3 = GameSystem::createProjectiles
-                            (2, Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                            (2, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
                             Velocity(0.25f, 0.25f), true, sf::IntRect(242, 183, 15, 17));
                         scene.getCurrentScene().addEntity(shoot2);
                         scene.getCurrentScene().addEntity(shoot3);

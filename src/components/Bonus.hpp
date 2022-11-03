@@ -11,8 +11,13 @@ namespace R_TYPE {
                 NONE = 0,
                 SPEED = 1,
                 LASER_DIAG = 2,
-                DOUBLE = 3,
-                LASER = 4,
+                NONO_LE_ROBOT = 3,
+                // appparait avec un bonus 
+                // peut se faire ejecter avec un button et tire en meme temps que le joueur
+                // se fait attirer par le joueur
+
+                DOUBLE = 4,
+                LASER = 5,
             };
             Bonus(BonusType type);
             ~Bonus();
