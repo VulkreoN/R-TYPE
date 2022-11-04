@@ -25,6 +25,7 @@ namespace R_TYPE {
 
             void disableNonoPlayer(SceneManager &manager);
             bool isSnap;
+            bool unKillable;
         private:
             int upgrade;
             std::shared_ptr<Position> posPlayer;

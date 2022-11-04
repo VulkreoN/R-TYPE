@@ -138,6 +138,7 @@ namespace R_TYPE {
                 pos->setX(posPlayer->getPosition().x + playerBox.width);
                 pos->setY(posPlayer->getPosition().y);
                 nono->isSnap = true;
+                nono->unKillable = false;
                 nono->setPosPlayer(posPlayer);
                 velocity->setX(0);
                 velocity->setY(0);
@@ -231,7 +232,7 @@ namespace R_TYPE {
 
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
             
-            if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
+            if (box.contains(pos->getPosition().x, pos->getPosition().y) && nono->unKillable == false) {
                 projectile->setIsActive(false);
                 nono->disableNonoPlayer(sceneManager);
                 sceneManager.getCurrentScene().removeEntity(e);

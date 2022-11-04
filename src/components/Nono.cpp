@@ -6,12 +6,13 @@ namespace R_TYPE {
     Component(Component::Type::NONO)
     {
         upgrade = 0;
+        isSnap = false;
+        unKillable = true;
     }
 
     Nono::~Nono()
     {
         upgrade = 0;
-        isSnap = false;
     }
 
     void Nono::nextUpgrade()
