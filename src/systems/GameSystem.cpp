@@ -389,23 +389,21 @@ namespace R_TYPE {
                     projectiles->setType(Projectiles::Type::CHARGED);
                     scene.getCurrentScene().addEntity(shoot);
                 } else {
-                    std::cout << "here" << std::endl;
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
                         (1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
                     scene.getCurrentScene().addEntity(shoot);
-                    // if (Nono::getNonoSnap(scene, player_e).getUpgrade() == 1) {
-                    //     std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
-                    //         (2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
-                    //         Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
-                    //     std::shared_ptr<Entity> shoot3 = GameSystem::createProjectiles
-                    //         (2, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
-                    //         Velocity(0.25f, 0.25f), true, sf::IntRect(242, 183, 15, 17));
-                    //     scene.getCurrentScene().addEntity(shoot2);
-                    //     scene.getCurrentScene().addEntity(shoot3);
-                    // }
+                    if (player->getLevelNono() == 1) {
+                        std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
+                            (2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
+                            Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
+                        std::shared_ptr<Entity> shoot3 = GameSystem::createProjectiles
+                            (2, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
+                            Velocity(0.25f, 0.25f), true, sf::IntRect(242, 183, 15, 17));
+                        scene.getCurrentScene().addEntity(shoot2);
+                        scene.getCurrentScene().addEntity(shoot3);
+                    }
                 }
-                std::cout << "here 2" << std::endl;
             },
             [](SceneManager &) {
                 // here animation of charging

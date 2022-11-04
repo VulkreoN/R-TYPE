@@ -18,6 +18,7 @@ namespace R_TYPE {
         bonus.insert(std::make_pair(Bonus::BonusType::UPGRADE, false));
         bonus.insert(std::make_pair(Bonus::BonusType::NONO_LE_ROBOT, false));
         _hasNono = false;
+        levelNono = 0;
     }
 
     Player::~Player()

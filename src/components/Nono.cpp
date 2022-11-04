@@ -67,25 +67,6 @@ namespace R_TYPE {
         return (velo);
     }
 
-    Nono Nono::getNonoSnap(SceneManager &manager, std::shared_ptr<Entity> player)
-    {
-        auto playerComp = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
-        auto pos = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
-
-        try {
-            for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
-                auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
-                auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
-
-                if (nono->getPosPlayer() == pos) {
-                    return (*nono);
-                }
-            }
-        } catch (std::exception &e) {
-            return (Nono());
-        }
-    }
-
     void Nono::disableNonoPlayer(SceneManager &manager)
     {
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
@@ -94,6 +75,7 @@ namespace R_TYPE {
 
             if (getPosPlayer() == pos) {
                 player->setNono(false);
+                player->setLevelNono(0);
             }
         }
     }

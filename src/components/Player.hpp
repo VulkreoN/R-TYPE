@@ -57,6 +57,9 @@ namespace R_TYPE {
             void setNono(bool nono) {_hasNono = nono;};
             bool getNono() {return _hasNono;};
 
+            void setLevelNono(int level) {levelNono = level;};
+            int getLevelNono() {return levelNono;};
+
             sf::Clock clock;
             sf::Time chargedTime;
         private:
@@ -67,6 +70,7 @@ namespace R_TYPE {
             bool _attacking;
             bool _alive;
             bool _hasNono;
+            int levelNono;
     };
 }
 

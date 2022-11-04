@@ -98,8 +98,10 @@ namespace R_TYPE {
             if (box.intersects(playerBox)) {
                 if (bonus->getType() == Bonus::BonusType::SPEED || bonus->getType() == Bonus::BonusType::NONO_LE_ROBOT)
                     component->addBonus(bonus->getType());
-                else
+                else {
                     addUpddateNono(sceneManager, player);
+                    component->setLevelNono(component->getLevelNono() + 1);
+                }
                 sceneManager.getCurrentScene().removeEntity(e);
             }
         }
@@ -231,6 +233,7 @@ namespace R_TYPE {
             
             if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
                 projectile->setIsActive(false);
+                nono->disableNonoPlayer(sceneManager);
                 sceneManager.getCurrentScene().removeEntity(e);
                 return;
             }
