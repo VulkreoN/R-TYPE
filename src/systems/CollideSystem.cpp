@@ -36,7 +36,7 @@ namespace R_TYPE {
                 didHitPlayer(sceneManager, e);
 
                 // ça seg quand il est detruit et que tu tire
-                // didHitNono(sceneManager, e);
+                didHitNono(sceneManager, e);
             } else if (component->shootByPlayer() == true)
                 didHitEnnemi(sceneManager, e);
         }
@@ -105,14 +105,15 @@ namespace R_TYPE {
         }
     }
 
-    void CollideSystem::addUpddateNono(SceneManager &SceneManager, std::shared_ptr<IEntity> player)
+    void CollideSystem::addUpddateNono(SceneManager &sceneManager, std::shared_ptr<IEntity> player)
     {
         auto pos = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
-        for (auto &e : SceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
+        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
 
             if (nono->getPosPlayer() == pos) {
+                nono->disableNonoPlayer(sceneManager);
                 nono->nextUpgrade();
             }
         }

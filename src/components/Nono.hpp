@@ -24,6 +24,7 @@ namespace R_TYPE {
             std::shared_ptr<Position> getPosPlayer() {return posPlayer;};
 
             static Nono getNonoSnap(SceneManager &manager, std::shared_ptr<Entity> player);
+            void disableNonoPlayer(SceneManager &manager);
             bool isSnap;
         private:
             int upgrade;

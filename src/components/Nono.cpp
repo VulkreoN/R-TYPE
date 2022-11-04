@@ -72,14 +72,28 @@ namespace R_TYPE {
         auto playerComp = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
         auto pos = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
 
-        if (playerComp->nonoLaunched == false && playerComp->getNono() == false)
-            return (Nono());
-        for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
-            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
-            auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+        try {
+            for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
+                auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+                auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
 
-            if (nono->getPosPlayer() == pos) {
-                return (*nono);
+                if (nono->getPosPlayer() == pos) {
+                    return (*nono);
+                }
+            }
+        } catch (std::exception &e) {
+            return (Nono());
+        }
+    }
+
+    void Nono::disableNonoPlayer(SceneManager &manager)
+    {
+        for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+            auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+            auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+
+            if (getPosPlayer() == pos) {
+                player->setNono(false);
             }
         }
     }

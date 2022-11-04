@@ -97,15 +97,15 @@ namespace R_TYPE {
                     position->setX(moved.getPosition().x);
                     position->setY(moved.getPosition().y);
                 }
-                if (player->hasBonus(Bonus::BonusType::NONO_LE_ROBOT) && player->nonoLaunched == false) {
-                    // player->setBonus(Bonus::BonusType::NONO_LE_ROBOT, false);
-                    player->nonoLaunched = true;
+                if (player->getNono() == true) {
+                    updateNono(sceneManager, deltaTime);
+                }
+                if (player->hasBonus(Bonus::BonusType::NONO_LE_ROBOT) && player->getNono() == false) {
+                    player->setBonus(Bonus::BonusType::NONO_LE_ROBOT, false);
+                    player->setNono(true);
                     std::shared_ptr<Entity> entity = createNono(2, *position);
                     sceneManager.getCurrentScene().addEntity(entity);
                 }
-
-                if (player->hasBonus(Bonus::BonusType::NONO_LE_ROBOT))
-                    updateNono(sceneManager, deltaTime);
             }
 
             // delete all projectiles if they are out of the screen
@@ -129,19 +129,18 @@ namespace R_TYPE {
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
             auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
-
             if (nono->isSnap == false) {
                 velocity->setX(nono->getVelocityTarget(nono->getDistance(sceneManager, pos->getPosition())).getVelocity().x);
                 velocity->setY(nono->getVelocityTarget(nono->getDistance(sceneManager, pos->getPosition())).getVelocity().y);
                 pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                 pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
-            } else {
+            } else if (nono->isSnap == true) {
                 pos->setX(nono->getPosPlayer()->getPosition().x + 33);
                 pos->setY(nono->getPosPlayer()->getPosition().y + 5);
             }
         }
     }
-
+ 
     void GameSystem::destroy()
     {
         std::cout << "Game System destroyed" << std::endl;
@@ -390,21 +389,23 @@ namespace R_TYPE {
                     projectiles->setType(Projectiles::Type::CHARGED);
                     scene.getCurrentScene().addEntity(shoot);
                 } else {
+                    std::cout << "here" << std::endl;
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
                         (1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
-                    if (Nono::getNonoSnap(scene, player_e).getUpgrade() == 1) {
-                        std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
-                            (2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
-                            Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
-                        std::shared_ptr<Entity> shoot3 = GameSystem::createProjectiles
-                            (2, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
-                            Velocity(0.25f, 0.25f), true, sf::IntRect(242, 183, 15, 17));
-                        scene.getCurrentScene().addEntity(shoot2);
-                        scene.getCurrentScene().addEntity(shoot3);
-                    }
                     scene.getCurrentScene().addEntity(shoot);
+                    // if (Nono::getNonoSnap(scene, player_e).getUpgrade() == 1) {
+                    //     std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
+                    //         (2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
+                    //         Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
+                    //     std::shared_ptr<Entity> shoot3 = GameSystem::createProjectiles
+                    //         (2, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
+                    //         Velocity(0.25f, 0.25f), true, sf::IntRect(242, 183, 15, 17));
+                    //     scene.getCurrentScene().addEntity(shoot2);
+                    //     scene.getCurrentScene().addEntity(shoot3);
+                    // }
                 }
+                std::cout << "here 2" << std::endl;
             },
             [](SceneManager &) {
                 // here animation of charging

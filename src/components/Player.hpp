@@ -59,7 +59,6 @@ namespace R_TYPE {
 
             sf::Clock clock;
             sf::Time chargedTime;
-            bool nonoLaunched = false;
         private:
             int8_t _id;
             std::unique_ptr<Sprite> _spritesheet;

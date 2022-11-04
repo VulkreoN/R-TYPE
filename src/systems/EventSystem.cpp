@@ -77,6 +77,9 @@ namespace R_TYPE {
             }
             if (it.second.released && event.type == sf::Event::KeyReleased && event.key.code == it.first) {
                 it.second.released(manager);
+                std::cout << "released coucou" << std::endl;
+                if (it.first == sf::Keyboard::Space)
+                    std::cout << "here 3" << std::endl;
                 wasPressed = false;
             }
             if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
