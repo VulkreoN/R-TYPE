@@ -221,7 +221,7 @@ namespace R_TYPE {
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 14, 47, 42));
             component->getSprite().setScale(0.5, 0.5);
         } else if (type == Ennemy::Type::ROBOT_DINO) {
-            component3->setLoot(Bonus::BonusType::UPGRADE);
+            component3->setLoot(Bonus::BonusType::NONO_LE_ROBOT);
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 2, 29, 24));
             component->getSprite().setScale(0.7, 0.7);
             velocity = std::make_shared<Velocity>(-0.03f, 0);
@@ -537,6 +537,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> joryde1 = createEnnemy(9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
         std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> joryde2 = createEnnemy(9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
 
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
@@ -557,6 +558,7 @@ namespace R_TYPE {
                 .addEntity(tower14)
                 .addEntity(dino1)
                 .addEntity(joryde1)
+                .addEntity(joryde2)
                 .addEntities(spatial1);
         return (scene);
     }

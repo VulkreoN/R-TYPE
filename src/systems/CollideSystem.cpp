@@ -96,9 +96,9 @@ namespace R_TYPE {
             sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
 
             if (box.intersects(playerBox)) {
-                if (bonus->getType() == Bonus::BonusType::SPEED || bonus->getType() == Bonus::BonusType::NONO_LE_ROBOT)
+                if (bonus->getType() == Bonus::BonusType::SPEED || component->getNono() == false)
                     component->addBonus(bonus->getType());
-                else {
+                else if (component->getNono() == true){
                     addUpddateNono(sceneManager, player);
                     component->setLevelNono(component->getLevelNono() + 1);
                 }
