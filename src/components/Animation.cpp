@@ -8,11 +8,14 @@
 #include "Animation.hpp"
 
 namespace R_TYPE {
-    Animation::Animation(int id, State state, sf::IntRect rect): Component(Component::Type::ANIMATION)
+    Animation::Animation(State state, sf::IntRect rect, int y, int x, int xMax, bool doAction): Component(IComponent::Type::ANIMATION)
     {
-        _id = id;
         _state = state;
         _rect = rect;
+        _y = y;
+        _x = x;
+        _xMax = xMax;
+        _doActions = doAction;
     }
 
     Animation::~Animation()

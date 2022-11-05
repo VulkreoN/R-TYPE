@@ -9,7 +9,7 @@
 
 namespace R_TYPE {
     Player::Player(Position position): Component(Component::Type::PLAYER),
-    _id(0), _pos(position), _attacking(false), _alive(true)
+    _id(0), _pos(position), _attacking(false), _alive(true), _state(Animation::State::IDLE)
     {
         _spritesheet = std::make_unique<Sprite>(53, _pos, 0, sf::IntRect(66, 0, 32, 12));
     }
@@ -51,5 +51,15 @@ namespace R_TYPE {
     void Player::setAttacking(bool attacking)
     {
         _attacking = attacking;
+    }
+
+    void Player::setState(Animation::State state)
+    {
+        _state = state;
+    }
+
+    Animation::State Player::getState()
+    {
+        return _state;
     }
 }

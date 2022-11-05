@@ -134,6 +134,7 @@ namespace R_TYPE {
         
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+                amanager.update_player(e, deltaTime);
                 player->getSprite().setPosition(player->getPosition());
                 window->draw(player->getSprite());
             }

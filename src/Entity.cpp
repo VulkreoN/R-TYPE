@@ -28,7 +28,7 @@ namespace R_TYPE {
 
         IComponent::Type type = component->getType();
         _componentsType.push_back(type);
-        _components[type] = component;
+        _components[type].push_back(component);
         for (auto &tag : entityTags) {
             if (this->hasTag(tag.first))
                 continue;
@@ -61,7 +61,8 @@ namespace R_TYPE {
         return *this;
     }
 
-    std::map<IComponent::Type, std::shared_ptr<IComponent>> &Entity::getComponents() {
+    std::map<IComponent::Type, std::vector<std::shared_ptr<IComponent>>> &Entity::getComponents() {
+        return (_components);
     }
 
     std::shared_ptr<IComponent> &Entity::operator[](IComponent::Type type)
@@ -71,7 +72,21 @@ namespace R_TYPE {
         if (type >= IComponent::Type::TYPE_NB)
             throw std::invalid_argument("Entity: Component type not found");
         if (_components.find(type) != _components.end())
-            return _components.at(type);
+            return _components[type].at(0);
         return null;
+    }
+
+    std::vector<std::shared_ptr<IComponent>> Entity::getFilteredComponents(IComponent::Type components)
+    {
+        std::vector<std::shared_ptr<IComponent>> res;
+
+        for (auto &c : _components) {
+            if (c.first == components) {
+                for (auto &cc : c.second)
+                    res.push_back(cc);
+            }
+        }
+        return res;
+
     }
 }

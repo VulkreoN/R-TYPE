@@ -21,12 +21,16 @@ namespace R_TYPE {
                 MOVE,
                 TRACK,
                 SHOOT,
+                UP_PRESS,
+                UP_DOWN,
+                DOWN_DOWN,
+                DOWN_PRESS,
             };
             /// @brief Init Animation class
             /// @param id identifier of the entity
             /// @param state State of the Animation
             /// @param rect Rectangle of the texture
-            Animation(int id, State state, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
+            Animation(State state, sf::IntRect rect, int y, int x, int xMax, bool doAction);
             ~Animation();
 
             /// @brief Getter Animation
@@ -57,7 +61,6 @@ namespace R_TYPE {
 
             bool getDoActions();
         private:
-            int _id;
             State _state;
             sf::IntRect _rect;
             int _y;

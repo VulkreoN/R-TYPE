@@ -10,6 +10,7 @@
 
     #include "Sprite.hpp"
     #include "Velocity.hpp"
+    #include "Animation.hpp"
 
 namespace R_TYPE {
     class Player : public Component {
@@ -43,6 +44,10 @@ namespace R_TYPE {
             /// @param attacking State
             void setAttacking(bool attacking);
 
+            void setState(Animation::State state);
+
+            Animation::State getState();
+
             sf::Clock clock;
             sf::Time chargedTime;
         private:
@@ -51,6 +56,7 @@ namespace R_TYPE {
             Position _pos;
             bool _attacking;
             bool _alive;
+            Animation::State _state;
     };
 }
 

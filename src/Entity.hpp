@@ -25,7 +25,7 @@ namespace R_TYPE {
             * @brief Get entity's components
             * @return Returns a reference of the entity's components vector
             */
-            std::map<IComponent::Type, std::shared_ptr<IComponent>> &getComponents();
+            std::map<IComponent::Type, std::vector<std::shared_ptr<IComponent>>> &getComponents();
             /**
              * @brief Get entity's tags
              * @return Returns a reference of the entity's tags vector
@@ -39,10 +39,12 @@ namespace R_TYPE {
              */
             std::shared_ptr<IComponent> &operator[](IComponent::Type type);
 
+            std::vector<std::shared_ptr<IComponent>> Entity::getFilteredComponents(IComponent::Type components);
+
             bool hasTag(Tags tag) const;
         private:
             std::vector<Tags> _tags;
-            std::map<IComponent::Type, std::shared_ptr<IComponent>> _components;
+            std::map<IComponent::Type, std::vector<std::shared_ptr<IComponent>>> _components;
             std::vector<IComponent::Type> _componentsType;
     };
 }

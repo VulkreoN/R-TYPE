@@ -20,6 +20,7 @@ namespace R_TYPE {
             PLAYER,
             UI,
             ENNEMY,
+            ANIMATED,
         };
 
         virtual ~IEntity() = default;
@@ -34,7 +35,7 @@ namespace R_TYPE {
          * @brief Get entity's components
          * @return Returns a reference of the entity's components vector
          */
-        virtual std::map<IComponent::Type, std::shared_ptr<IComponent>> &getComponents() = 0;
+        virtual std::map<IComponent::Type, std::vector<std::shared_ptr<IComponent>>> &getComponents() = 0;
         /**
          * @brief Get entity's tags
          * @return Returns a reference of the entity's tags vector
@@ -49,6 +50,8 @@ namespace R_TYPE {
         virtual bool hasTag(Tags tag) const = 0;
 
         virtual std::shared_ptr<IComponent> &operator[](IComponent::Type type) = 0;
+
+        virtual std::vector<std::shared_ptr<IComponent>> getFilteredComponents(IComponent::Type components, std::shared_ptr<IEntity> entity) = 0;
     };
 }
 #endif /* IENTITY_HPP */

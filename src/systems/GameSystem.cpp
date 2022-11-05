@@ -206,14 +206,25 @@ namespace R_TYPE {
         std::shared_ptr<Entity> player_e = std::make_shared<Entity>();
         std::shared_ptr<Position> player_pos = std::make_shared<Position>(posX, posY);
         std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
-        std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(name, *player_pos, 0, sf::IntRect(66, 0, 32, 12));
+        std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(name, *player_pos, 0, sf::IntRect(66, 0, 33, 15));
         std::shared_ptr<Event> event_p = std::make_shared<Event>();
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0,0);
+        std::shared_ptr<Animation> anim_idle = std::make_shared<Animation>(Animation::State::IDLE, sprite->getRect(), 0, 2, 0, false);
+        std::shared_ptr<Animation> anim_up_pressed = std::make_shared<Animation>(Animation::State::UP_PRESS, sprite->getRect(), 0, 3, 0, false);
+        std::shared_ptr<Animation> anim_down_down = std::make_shared<Animation>(Animation::State::DOWN_DOWN, sprite->getRect(), 0, 0, 0, false);
+        std::shared_ptr<Animation> anim_up_down = std::make_shared<Animation>(Animation::State::DOWN_PRESS, sprite->getRect(), 0, 1, 0, false);
+        std::shared_ptr<Animation> anim_down_pressed = std::make_shared<Animation>(Animation::State::UP_DOWN, sprite->getRect(), 0, 4, 0, false);
+
 
         player_e->addComponent(player)
             .addComponent(velocity)
             .addComponent(sprite)
-            .addComponent(player_pos);
+            .addComponent(player_pos)
+            .addComponent(anim_idle)
+            .addComponent(anim_up_pressed)
+            .addComponent(anim_down_down)
+            .addComponent(anim_up_down)
+            .addComponent(anim_down_pressed);
 
         ButtonCallbacks pause (
             [](SceneManager &sceneManager) {
@@ -228,16 +239,30 @@ namespace R_TYPE {
             [player_e](SceneManager &) {
                 auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp_v);
-
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp_p);
+                player->setState(Animation::State::UP_PRESS);
                 velocity->setY(-0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp_p);
+                player->setState(Animation::State::UP_PRESS);
                 velocity->setY(0);
             },
-            [](SceneManager &) {},
-            [](SceneManager &) {});
+            [player_e](SceneManager &) {
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp_p);
+                player->setState(Animation::State::UP_DOWN);
+            },
+            [player_e](SceneManager &) {
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp_p);
+                player->setState(Animation::State::IDLE);
+                std::cout << "IDLE" << std::endl;
+            });
             
 
         ButtonCallbacks left (
@@ -407,7 +432,7 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> player = createPlayer(53, 50, 100);
+        std::shared_ptr<Entity> player = createPlayer(42, 50, 100);
         // std::shared_ptr<Entity> tower1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::shared_ptr<Entity> tower2 = createEnnemy(10, 53, 150, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> tower3 = createEnnemy(5, 183, 50, 0.f, Ennemy::Type::SPATIAL);
@@ -423,7 +448,7 @@ namespace R_TYPE {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createFirstLevel, this));
         std::shared_ptr<Entity> top_wall = createSprite(48, 100, 0);
         std::shared_ptr<Entity> bottom_wall = createSprite(49, 100, 127);
-        std::shared_ptr<Entity> player = createPlayer(53, 50, 100);
+        std::shared_ptr<Entity> player = createPlayer(42, 50, 100);
         std::shared_ptr<Entity> tower1 = createEnnemy(55, 333, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower2 = createEnnemy(55, 385, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower3 = createEnnemy(55, 428, 19, 180.f, Ennemy::Type::TURRET);

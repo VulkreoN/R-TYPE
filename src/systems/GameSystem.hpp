@@ -15,6 +15,7 @@
 #include "Ennemy.hpp"
 #include <SFML/System.hpp>
 #include "Velocity.hpp"
+#include "Animation.hpp"
 
 namespace R_TYPE {
 

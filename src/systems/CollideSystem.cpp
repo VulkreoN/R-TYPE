@@ -195,7 +195,7 @@ namespace R_TYPE {
 
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
-        sf::FloatRect playerBox(0, 0, 32, 12);
+        sf::FloatRect playerBox(0, 0, 33, 15);
 
         if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
