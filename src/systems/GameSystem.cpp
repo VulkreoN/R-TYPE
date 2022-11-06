@@ -16,6 +16,7 @@
 #include "CollideSystem.hpp"
 #include "Text.hpp"
 #include "Projectiles.hpp"
+#include "Core.hpp"
 
 namespace R_TYPE {
     GameSystem::GameSystem()
@@ -42,6 +43,19 @@ namespace R_TYPE {
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
     {
+        if (Core::getIsServeur() == false)
+            updateClient(sceneManager, deltaTime);
+        else
+            updateServeur(sceneManager, deltaTime);
+    }
+
+    void GameSystem::updateServeur(SceneManager &sceneManager, uint64_t deltaTime)
+    {
+        std::cout << "updateServeur GameSystem" << std::endl;
+    }
+
+    void GameSystem::updateClient(SceneManager &sceneManager, uint64_t deltaTime)
+    {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
@@ -60,25 +74,28 @@ namespace R_TYPE {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-                float windowPosX = GraphicSystem::getWindow()->getView().getCenter().x - 135;
+                // float windowPosX = GraphicSystem::getWindow()->getView().getCenter().x - 135;
 
-                if (pos->getPosition().x < windowPosX + 270) {
+                // if (pos->getPosition().x < windowPosX + 270) {
                     pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
-                }
+                // }
             }
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+                auto position = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
                 if (player->isAlive() == false) {
                     sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
                 }
                 Position moved(0,0);
-                moved.setX(player->getPosition().x + velocity->getVelocity().x * deltaTime);
-                moved.setY(player->getPosition().y + velocity->getVelocity().y * deltaTime);
+                moved.setX(position->getPosition().x + velocity->getVelocity().x * deltaTime);
+                moved.setY(position->getPosition().y + velocity->getVelocity().y * deltaTime);
 
-                if (CollideSystem::canMove(moved, sceneManager, velocity->getVelocity()))
-                    player->setPosition(moved.getPosition());
+                if (CollideSystem::canMove(moved, sceneManager, velocity->getVelocity())) {
+                    position->setX(moved.getPosition().x);
+                    position->setY(moved.getPosition().y);
+                }
             }
 
             // delete all projectiles if they are out of the screen
@@ -184,16 +201,19 @@ namespace R_TYPE {
         return (entity);
     }
 
-    std::shared_ptr<Entity> GameSystem::createPlayer(int posX, int posY)
+    std::shared_ptr<Entity> GameSystem::createPlayer(int name, int posX, int posY)
     {
         std::shared_ptr<Entity> player_e = std::make_shared<Entity>();
         std::shared_ptr<Position> player_pos = std::make_shared<Position>(posX, posY);
         std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
+        std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(name, *player_pos, 0, sf::IntRect(66, 0, 32, 12));
         std::shared_ptr<Event> event_p = std::make_shared<Event>();
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0,0);
 
         player_e->addComponent(player)
-            .addComponent(velocity);
+            .addComponent(velocity)
+            .addComponent(sprite)
+            .addComponent(player_pos);
 
         ButtonCallbacks pause (
             [](SceneManager &sceneManager) {
@@ -268,12 +288,14 @@ namespace R_TYPE {
         ButtonCallbacks shoot (
             [](SceneManager &) {},
             [player_e](SceneManager &scene) {
-                auto comp = (*player_e)[IComponent::Type::PLAYER];
-                auto player = Component::castComponent<Player>(comp);
+                auto comp = (*player_e)[IComponent::Type::POSITION];
+                auto compo = (*player_e)[IComponent::Type::PLAYER];
+                auto pos = Component::castComponent<Position>(comp);
+                auto player = Component::castComponent<Player>(compo);
 
                 if (player->clock.getElapsedTime().asSeconds() > 1) {
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                        (1, Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                        (1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(233, 120, 31, 11));
                     auto comp = (*shoot)[IComponent::Type::PROJECTILES];
                     auto projectiles = Component::castComponent<Projectiles>(comp);
@@ -281,7 +303,7 @@ namespace R_TYPE {
                     scene.getCurrentScene().addEntity(shoot);
                 } else {
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                        (1, Position(player->getPosition().x + 32, player->getPosition().y + 5), 
+                        (1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
 
                     scene.getCurrentScene().addEntity(shoot);
@@ -385,7 +407,7 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneTest()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
-        std::shared_ptr<Entity> player = createPlayer(50, 100);
+        std::shared_ptr<Entity> player = createPlayer(53, 50, 100);
         // std::shared_ptr<Entity> tower1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::shared_ptr<Entity> tower2 = createEnnemy(10, 53, 150, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> tower3 = createEnnemy(5, 183, 50, 0.f, Ennemy::Type::SPATIAL);
@@ -401,7 +423,7 @@ namespace R_TYPE {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createFirstLevel, this));
         std::shared_ptr<Entity> top_wall = createSprite(48, 100, 0);
         std::shared_ptr<Entity> bottom_wall = createSprite(49, 100, 127);
-        std::shared_ptr<Entity> player = createPlayer(50, 100);
+        std::shared_ptr<Entity> player = createPlayer(53, 50, 100);
         std::shared_ptr<Entity> tower1 = createEnnemy(55, 333, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower2 = createEnnemy(55, 385, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower3 = createEnnemy(55, 428, 19, 180.f, Ennemy::Type::TURRET);

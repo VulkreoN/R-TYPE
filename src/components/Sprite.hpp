@@ -24,9 +24,20 @@ namespace R_TYPE {
             void setRect(sf::IntRect rect);
 
             void setAngle(float angle);
+
+            int getName() const {return (name);};
+            Position getPosition() const {return (position);};
+            float getAngle() const {return (angle);};
+            sf::IntRect getRect() const {return (rect);};
+
+            bool isInit;
         private:
             sf::Sprite sprite;
             sf::Vector2u size;
+            int name;
+            Position position;
+            float angle;
+            sf::IntRect rect;
     };
 }
 
