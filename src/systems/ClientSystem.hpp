@@ -35,6 +35,8 @@
 
                 // functions to create messages to send
                 void create_event_msg(char *buff);
+
+                std::vector<std::unique_ptr<char *>> _message_queue;
         };
 
     }

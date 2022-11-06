@@ -36,7 +36,7 @@
 
                 // buffers for reading
                 asio::ip::udp::endpoint _edp_buff;
-                char _buffer[1024];
+                char _buffer[MAX_MSG_LENGTH];
             private:
         };
 

@@ -62,9 +62,9 @@ void ServerSystem::handle_incomming_message()
 
 void ServerSystem::broadcast(SceneManager &manager)
 {
-    char buff[1024];
+    char buff[MAX_MSG_LENGTH];
 
-    for (int i = 0; i < 1024; buff[i] = '\0', i++);
+    for (int i = 0; i < MAX_MSG_LENGTH; buff[i] = '\0', i++);
     if (true /* not game start */) {
         switch (manager.getCurrentSceneType()) {
             case SceneManager::SceneType::LEVEL1:

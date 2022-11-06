@@ -43,10 +43,10 @@ namespace R_TYPE {
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
     {
-        if (Core::getIsServeur() == false)
+        //if (Core::getIsServeur() == false)
             updateClient(sceneManager, deltaTime);
-        else
-            updateServeur(sceneManager, deltaTime);
+        //else
+        //    updateServeur(sceneManager, deltaTime);
     }
 
     void GameSystem::updateServeur(SceneManager &sceneManager, uint64_t deltaTime)

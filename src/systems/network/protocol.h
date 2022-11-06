@@ -10,6 +10,8 @@
 
     namespace protocol {
 
+        #define MAX_MSG_LENGTH  1024
+
         enum Header {
             PING,
             GAME_INFO,

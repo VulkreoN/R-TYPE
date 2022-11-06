@@ -36,6 +36,14 @@ namespace R_TYPE {
             std::map<IEntity::Tags, std::vector<std::shared_ptr<IEntity>>> getTaggedEntities(std::vector<IEntity::Tags> tags);
 
             /**
+             * @brief retrieves the entities for a given id
+             *
+             * @param id to filter by
+             * @return std::vector<std::shared_ptr<IEntity>>&
+             */
+            std::vector<std::shared_ptr<IEntity>> get_by_id(size_t id);
+
+            /**
              * @brief retrieves the entities for a given tag
              *
              * @param tag to filter by
