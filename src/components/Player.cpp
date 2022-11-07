@@ -19,6 +19,7 @@ namespace R_TYPE {
         bonus.insert(std::make_pair(Bonus::BonusType::NONO_LE_ROBOT, false));
         _hasNono = false;
         levelNono = 0;
+        _speed = 0;
     }
 
     Player::~Player()
@@ -67,6 +68,8 @@ namespace R_TYPE {
                 it.second = true;
             }
         }
+        if (_bonus == Bonus::BonusType::SPEED)
+            _speed += 1;
     }
 
     bool Player::hasBonus(Bonus::BonusType _bonus)

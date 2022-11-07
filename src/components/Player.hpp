@@ -60,6 +60,9 @@ namespace R_TYPE {
             void setLevelNono(int level) {levelNono = level;};
             int getLevelNono() {return levelNono;};
 
+            void setSpeed(int speed) {_speed = speed;};
+            int getSpeed() {return _speed;};
+
             sf::Clock clock;
             sf::Time chargedTime;
         private:
@@ -71,6 +74,7 @@ namespace R_TYPE {
             bool _alive;
             bool _hasNono;
             int levelNono;
+            int _speed;
     };
 }
 

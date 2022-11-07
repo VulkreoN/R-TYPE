@@ -211,7 +211,7 @@ namespace R_TYPE {
         return(entity);
     }
 
-    std::shared_ptr<Entity> GameSystem::createEnnemy(int name, int posX, int posY, float angle, Ennemy::Type type)
+    std::shared_ptr<Entity> GameSystem::createEnnemy(int name, int posX, int posY, float angle, Ennemy::Type type, Bonus::BonusType bonusType)
     {
         std::shared_ptr<Entity> entity = std::make_shared<Entity>();
         std::shared_ptr<Position> component2 = std::make_shared<Position>(posX, posY);
@@ -223,11 +223,9 @@ namespace R_TYPE {
         if (type == Ennemy::Type::TURRET) {
             component = std::make_shared<Sprite>(name, *component2, angle);
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
-            component3->setLoot(Bonus::BonusType::NONO_LE_ROBOT);
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 14, 47, 42));
             component->getSprite().setScale(0.5, 0.5);
         } else if (type == Ennemy::Type::ROBOT_DINO) {
-            component3->setLoot(Bonus::BonusType::NONO_LE_ROBOT);
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 2, 29, 24));
             component->getSprite().setScale(0.7, 0.7);
             velocity = std::make_shared<Velocity>(-0.03f, 0);
@@ -236,6 +234,7 @@ namespace R_TYPE {
             velocity = std::make_shared<Velocity>(-0.05f, -0.05f);
             component->getSprite().setScale(0.7, 0.7);
         }
+        component3->setLoot(bonusType);
 
         entity->addComponent(component)
                 .addComponent(component2)
@@ -306,10 +305,11 @@ namespace R_TYPE {
                 auto velocity = Component::castComponent<Velocity>(comp_v);
                 auto player = Component::castComponent<Player>(comp_p);
 
-                if (player->hasBonus(Bonus::BonusType::SPEED)) {
-                    velocity->setY(-0.07f);
-                } else 
-                    velocity->setY(-0.05f);
+                velocity->setY(-0.05f - (0.01 * player->getSpeed()));
+                // if (player->hasBonus(Bonus::BonusType::SPEED)) {
+                //     velocity->setY(-0.05f - (0.01 * player->getSpeed()));
+                // } else 
+                //     velocity->setY(-0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
@@ -327,10 +327,7 @@ namespace R_TYPE {
                 auto velocity = Component::castComponent<Velocity>(comp_v);
                 auto player = Component::castComponent<Player>(comp_p);
 
-                if (player->hasBonus(Bonus::BonusType::SPEED) == true)
-                    velocity->setX(-0.07f);
-                else 
-                    velocity->setX(-0.05f);
+                velocity->setX(-0.05f - (0.01 * player->getSpeed()));
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
@@ -347,10 +344,7 @@ namespace R_TYPE {
                 auto velocity = Component::castComponent<Velocity>(comp_v);
                 auto player = Component::castComponent<Player>(comp_p);
 
-                if (player->hasBonus(Bonus::BonusType::SPEED) == true)
-                    velocity->setY(0.07f);
-                else 
-                    velocity->setY(0.05f);
+                velocity->setY(0.05f + (0.01 * player->getSpeed()));
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
@@ -367,10 +361,7 @@ namespace R_TYPE {
                 auto velocity = Component::castComponent<Velocity>(comp_v);
                 auto player = Component::castComponent<Player>(comp_p);
 
-                if (player->hasBonus(Bonus::BonusType::SPEED) == true)
-                    velocity->setX(0.07f);
-                else 
-                    velocity->setX(0.05f);
+                velocity->setX(0.05f + (0.01 * player->getSpeed()));
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
@@ -548,10 +539,11 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower12 = createEnnemy(55, 145, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower13 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower14 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> joryde1 = createEnnemy(9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde1 = createEnnemy(9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
         std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
-        std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
-        std::shared_ptr<Entity> joryde2 = createEnnemy(9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::SPEED);
+        std::shared_ptr<Entity> joryde2 = createEnnemy(9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
+
 
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
