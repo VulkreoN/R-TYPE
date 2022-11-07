@@ -104,9 +104,9 @@ void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
         if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
             buff[c] = (uint8_t)1;
             c += sizeof(uint8_t);
-            buff[c] = comp->getPosition().x; // entity's X crd
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x; // entity's X crd
             c += sizeof(float);
-            buff[c] = comp->getPosition().y; // entity's Y crd
+            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y; // entity's Y crd
             c += sizeof(float);
             buff[c] = e->get_id(); // entity's ID
             c += sizeof(size_t);
