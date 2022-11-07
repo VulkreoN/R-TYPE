@@ -12,12 +12,11 @@ namespace R_TYPE {
 
     Nono::~Nono()
     {
-        upgrade = 0;
     }
 
     void Nono::nextUpgrade()
     {
-        upgrade++;
+        upgrade += 1;
     }
 
     sf::Vector2f Nono::getDistance(SceneManager &manager, Position selfPos) 

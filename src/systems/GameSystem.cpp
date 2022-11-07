@@ -136,7 +136,12 @@ namespace R_TYPE {
                 pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
             } else if (nono->isSnap == true) {
                 pos->setX(nono->getPosPlayer()->getPosition().x + 33);
-                pos->setY(nono->getPosPlayer()->getPosition().y + 5);
+                if (nono->getUpgrade() == 0)
+                    pos->setY(nono->getPosPlayer()->getPosition().y + 5);
+                else if (nono->getUpgrade() == 1)
+                    pos->setY(nono->getPosPlayer()->getPosition().y);
+                else if (nono->getUpgrade() == 2)
+                    pos->setY(nono->getPosPlayer()->getPosition().y - 10);
             }
         }
     }
@@ -150,7 +155,7 @@ namespace R_TYPE {
     {
         int posX = pos.getPosition().x;
         int posY = pos.getPosition().y;
-        std::shared_ptr<Entity> entity = createSprite(2, posX - 100, posY, sf::IntRect(279, 35, 19, 15));
+        std::shared_ptr<Entity> entity = createSprite(name, posX - 100, posY, sf::IntRect(279, 35, 19, 15));
         auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
         sprite->getSprite().setScale(0.7, 0.7);
         std::shared_ptr<Nono> comp = std::make_shared<Nono>();

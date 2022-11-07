@@ -112,11 +112,20 @@ namespace R_TYPE {
         auto pos = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto pos1 = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
 
-            if (nono->getPosPlayer() == pos) {
-                nono->disableNonoPlayer(sceneManager);
+            std::cout << "pos " << pos->getPosition().x << " " << pos->getPosition().y << std::endl;
+            std::cout << "posPlayer " << nono->getPosPlayer()->getPosition().x << " " << nono->getPosPlayer()->getPosition().y << std::endl;
+            if (nono->getPosPlayer()->getPosition().x == pos->getPosition().x && nono->getPosPlayer()->getPosition().y == pos->getPosition().y) {
+                // nono->disableNonoPlayer(sceneManager);
                 nono->nextUpgrade();
+            }
+            std::cout << nono->getUpgrade() << std::endl;
+            if (nono->getUpgrade() == 1) {
+                sprite->setRect(sf::IntRect(120, 69, 28, 21));
+            } else if (nono->getUpgrade() == 2) {
+                sprite->setRect(sf::IntRect(270, 342, 28, 31));
             }
         }
     }
@@ -133,7 +142,6 @@ namespace R_TYPE {
             auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
             sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
-
             if (box.intersects(playerBox)) {
                 pos->setX(posPlayer->getPosition().x + playerBox.width);
                 pos->setY(posPlayer->getPosition().y);
