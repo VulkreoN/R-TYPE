@@ -141,7 +141,7 @@ namespace R_TYPE {
                 else if (nono->getUpgrade() == 1)
                     pos->setY(nono->getPosPlayer()->getPosition().y);
                 else if (nono->getUpgrade() == 2)
-                    pos->setY(nono->getPosPlayer()->getPosition().y - 10);
+                    pos->setY(nono->getPosPlayer()->getPosition().y);
             }
         }
     }

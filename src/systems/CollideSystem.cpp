@@ -115,13 +115,10 @@ namespace R_TYPE {
             auto pos1 = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
 
-            std::cout << "pos " << pos->getPosition().x << " " << pos->getPosition().y << std::endl;
-            std::cout << "posPlayer " << nono->getPosPlayer()->getPosition().x << " " << nono->getPosPlayer()->getPosition().y << std::endl;
             if (nono->getPosPlayer()->getPosition().x == pos->getPosition().x && nono->getPosPlayer()->getPosition().y == pos->getPosition().y) {
                 // nono->disableNonoPlayer(sceneManager);
                 nono->nextUpgrade();
             }
-            std::cout << nono->getUpgrade() << std::endl;
             if (nono->getUpgrade() == 1) {
                 sprite->setRect(sf::IntRect(120, 69, 28, 21));
             } else if (nono->getUpgrade() == 2) {
