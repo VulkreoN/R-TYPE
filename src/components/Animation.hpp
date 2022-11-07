@@ -25,6 +25,8 @@ namespace R_TYPE {
                 UP_DOWN,
                 DOWN_DOWN,
                 DOWN_PRESS,
+                LEFT,
+                RIGHT,
             };
             /// @brief Init Animation class
             /// @param id identifier of the entity

@@ -23,22 +23,23 @@ namespace R_TYPE {
         if (type == Ennemy::Type::TURRET) {
             if (scripts.turretScript()) {
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(54, *selfPos, getVelocityTarget(distance), false);
+                
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
-            if (scripts.jorydeScript(distance, selfVel)) {
+            if (scripts.jorydeScript(distance, ennemy)) {
                 if (distance.x > 0)
                     isAlive = false;
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(9, *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::ROBOT_DINO) {
-            if (scripts.robotScript(distance, selfVel)) {
+            if (scripts.robotScript(distance, ennemy)) {
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(10, *selfPos, Velocity(0, -0.1f), false, sf::IntRect(191, 63, 6, 12));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::SPATIAL) {
-            scripts.spatialScript(selfVel);
+            scripts.spatialScript(ennemy);
         }
     }
 
@@ -93,5 +94,15 @@ namespace R_TYPE {
     Ennemy::~Ennemy()
     {
 
+    }
+
+    void Ennemy::setState(Animation::State state)
+    {
+        _state = state;
+    }
+
+    Animation::State Ennemy::getState()
+    {
+        return _state;
     }
 }

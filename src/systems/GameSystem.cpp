@@ -149,10 +149,19 @@ namespace R_TYPE {
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
 
         if (type == Ennemy::Type::TURRET) {
-            component = std::make_shared<Sprite>(name, *component2, angle);
+            if (angle == 0)
+                component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 2, 15, 14));
+            else
+                component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(87, 2, 15, 14));
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
-            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 14, 47, 42));
-            component->getSprite().setScale(0.5, 0.5);
+            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(0, 0, 55, 56));
+            component->getSprite().setScale(0.8, 0.8);
+            std::shared_ptr<Animation> anim_left = std::make_shared<Animation>(Animation::State::LEFT, component->getRect(), 0, 1, 0, false);
+            std::shared_ptr<Animation> anim_right = std::make_shared<Animation>(Animation::State::RIGHT, component->getRect(), 0, 2, 0, false);
+            std::shared_ptr<Animation> anim_idle = std::make_shared<Animation>(Animation::State::IDLE, component->getRect(), 0, 0, 0, false);
+            entity->addComponent(anim_idle)
+                    .addComponent(anim_left)
+                    .addComponent(anim_right);
         } else if (type == Ennemy::Type::ROBOT_DINO) {
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 2, 29, 24));
             component->getSprite().setScale(0.7, 0.7);

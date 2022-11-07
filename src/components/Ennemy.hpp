@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "Position.hpp"
 #include "Velocity.hpp"
+#include "Animation.hpp"
 
 namespace R_TYPE {
     class Ennemy : public Component {
@@ -31,10 +32,15 @@ namespace R_TYPE {
             static Velocity getVelocityTarget(sf::Vector2f distance);
 
             Type getType() {return (type);};
+
+            void setState(Animation::State state);
+
+            Animation::State getState();
         private:
             bool isAlive;
             Type type;
             Script scripts;
+            Animation::State _state;
     };
 }
 

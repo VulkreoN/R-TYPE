@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include "Position.hpp"
 #include "Velocity.hpp"
+#include "Entity.hpp"
+#include "Animation.hpp"
 
 namespace R_TYPE {
 
@@ -11,9 +13,9 @@ namespace R_TYPE {
         public: 
 
         bool turretScript();
-        bool jorydeScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::Velocity> selfVel);
-        bool robotScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::Velocity> selfVel);
-        void spatialScript(std::shared_ptr<R_TYPE::Velocity> selfVel);
+        bool jorydeScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
+        bool robotScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
+        void spatialScript(std::shared_ptr<R_TYPE::IEntity> ennemy);
         private:
             sf::Clock clock;
             sf::Time lastFrame;
