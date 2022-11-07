@@ -14,7 +14,8 @@
             PING,
             GAME_INFO,
             PLAYER_ACTION,
-            START_GAME
+            START_GAME,
+            EVENT
         };
 
         enum Action {

@@ -8,6 +8,7 @@
 #include "Position.hpp"
 #include "Player.hpp"
 #include "ServerSystem.hpp"
+#include "EventSystem.hpp"
 #include "network/protocol.h"
 
 namespace R_TYPE {
@@ -16,17 +17,19 @@ ServerSystem::ServerSystem(size_t port) : NetworkSystem(port)
 {
     std::cout << "Server Network System created" << std::endl;
     _broadcast_cooldown = 0;
+    eventSystem = std::make_unique<EventSystem>(std::unique_ptr<NetworkSystem>(this));
 }
 
 ServerSystem::~ServerSystem()
 {
 }
 
-void ServerSystem::init(SceneManager &/*manager*/)
+void ServerSystem::init(SceneManager &manager)
 {
     std::cout << "Server Network System initiating" << std::endl;
     read_setup();
     _threadContext = std::thread([this]() { _context.run(); });
+    eventSystem->init(manager);
 }
 
 void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
@@ -36,6 +39,9 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
         _broadcast_cooldown = 0;
         broadcast(manager);
     }
+    eventSystem->update(manager, deltaTime);
+    _keys.clear();
+    _mouseButtons.clear();
 }
 
 void ServerSystem::destroy()
@@ -46,6 +52,8 @@ void ServerSystem::destroy()
 void ServerSystem::handle_incomming_message()
 {
     bool new_client = true;
+    bool isKey = false;
+    size_t c = 0;
 
     for (size_t i = 0; i < _connections.size(); i++)
         if (_connections[i]->get_endpoint() == _edp_buff)
@@ -53,14 +61,22 @@ void ServerSystem::handle_incomming_message()
     if (new_client)
         _connections.push_back(std::make_unique<Connection> (_edp_buff, _connections.size() + 1));
     // here, handle the recienved message stored in _buffer
-    clientScene = static_cast<SceneManager::SceneType>((int)_buffer[sizeof(protocol::Header)]);
+    if ((protocol::Header)_buffer[c] == protocol::Header::EVENT) {
+        c += sizeof(protocol::Header);
+        isKey = (bool)_buffer[c];
+        c += sizeof(bool);
+        if (isKey) {
+            _keys.push_back(std::pair((int)_buffer[c], static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
+        } else {
+            _mouseButtons.push_back(std::pair((int)_buffer[c], static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
+        }
+    }
 }
 
 void ServerSystem::broadcast(SceneManager &manager)
 {
     char buff[1024];
 
-    manager.setCurrentScene(clientScene);
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
     if (true /* not game start */) {
         switch (manager.getCurrentSceneType()) {
@@ -140,5 +156,16 @@ void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
         }
     }
 }
+
+const std::vector<std::pair<int, NetworkSystem::ButtonState>> &ServerSystem::getKeys() const
+{
+    return _keys;
+}
+
+const std::vector<std::pair<int, NetworkSystem::ButtonState>> &ServerSystem::getMouse() const
+{
+    return _mouseButtons;
+}
+
 
 }

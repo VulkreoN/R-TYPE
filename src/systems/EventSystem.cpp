@@ -5,19 +5,23 @@
 ** EventSystem
 */
 
+#include <iostream>
 #include "EventSystem.hpp"
 #include "GraphicSystem.hpp"
 #include "SceneManager.hpp"
-#include <iostream>
 #include "Ennemy.hpp"
 #include "Position.hpp"
+#include "ClientSystem.hpp"
+#include "ServerSystem.hpp"
+#include "Core.hpp"
 
 namespace R_TYPE {
 
     std::map<int, std::vector<std::shared_ptr<Event>>> EventSystem::_event;
 
-    EventSystem::EventSystem()
+    EventSystem::EventSystem(std::unique_ptr<NetworkSystem> network)
     {
+        _network = std::move(network);
         std::cout << "Event System create" << std::endl;
         isInit = false;
     }
@@ -38,7 +42,7 @@ namespace R_TYPE {
         }
     }
 
-    void EventSystem::update(SceneManager &manager, uint64_t deltaTime)
+    void EventSystem::updateClient(SceneManager &manager, uint64_t deltaTime)
     {
         sf::Event event;
         while (window->pollEvent(event)) {
@@ -60,6 +64,58 @@ namespace R_TYPE {
         }
     }
 
+    void EventSystem::update(SceneManager &manager, uint64_t deltaTime)
+    {
+        if (Core::getIsServeur())
+            updateServer(manager, deltaTime);
+        else
+            updateClient(manager, deltaTime);
+    }
+
+    void EventSystem::updateServer(SceneManager &manager, uint64_t deltaTime)
+    {
+        for (auto &current : dynamic_cast<ServerSystem &>(*_network).getKeys()) {
+            for (auto &listener : _event[(int)manager.getCurrentSceneType()]) {
+                auto call = listener->getKeyboardMap()[static_cast<sf::Keyboard::Key>(current.first)];
+                switch (current.second) {
+                    case NetworkSystem::ButtonState::PRESSED:
+                        if (call.pressed) {
+                            call.pressed(manager);
+                        }
+                        break;
+                    case NetworkSystem::ButtonState::DOWN:
+                        if (call.down)
+                            call.down(manager);
+                        break;
+                    case NetworkSystem::ButtonState::UP:
+                        if (call.up)
+                            call.up(manager);
+                        break;
+                    case NetworkSystem::ButtonState::RELEASED:
+                        if (call.released)
+                            call.released(manager);
+                        break;
+                }
+            }
+        }
+
+        for (auto &current : dynamic_cast<ServerSystem &>(*_network).getMouse()) {
+            for (auto &listener : _event[(int)manager.getCurrentSceneType()]) {
+                auto call = listener->getMouseMappings()[static_cast<sf::Mouse::Button>(current.first)];
+                switch (current.second) {
+                    case NetworkSystem::ButtonState::PRESSED:
+                        if (call._pressed)
+                            call._pressed(manager);
+                        break;
+                    case NetworkSystem::ButtonState::RELEASED:
+                        if (call._released)
+                            call._released(manager);
+                        break;
+                }
+            }
+        }
+    }
+
     void EventSystem::destroy()
     {
         std::cout << "Event System destroyed" << std::endl;
@@ -72,21 +128,26 @@ namespace R_TYPE {
             if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
                 if (wasPressed == false) {
                     it.second.pressed(manager);
+                    dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::PRESSED, true);
                     wasPressed = true;
                 }
             }
             if (it.second.released && event.type == sf::Event::KeyReleased && event.key.code == it.first) {
                 it.second.released(manager);
+                dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::RELEASED, true);
                 wasPressed = false;
             }
             if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
                 if (wasPressed == true) {
                     it.second.down(manager);
+                    dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::DOWN, true);
                 }
             }
             if (!sf::Keyboard::isKeyPressed(it.first) ) {
-                if (wasPressed == false)
+                if (wasPressed == false) {
                     it.second.up(manager);
+                    dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::UP, true);
+                }
             }
         }
     }
@@ -96,6 +157,7 @@ namespace R_TYPE {
         for (auto &it : listener->getMouseMappings()) {
             if (it.second._pressed && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == it.first) {
                 it.second._pressed(manager);
+                dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::PRESSED, false);
                 break;
             }
             // if (it.second._down && Window::isMouseButtonDown(it.first)) {
@@ -104,6 +166,7 @@ namespace R_TYPE {
             // }
             if (it.second._released && event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == it.first) {
                 it.second._released(manager);
+                dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::RELEASED, false);
                 break;
             }
             // if (Window::isMouseButtonUp(it.first)) {

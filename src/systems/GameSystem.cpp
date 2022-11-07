@@ -51,7 +51,6 @@ namespace R_TYPE {
 
     void GameSystem::updateServeur(SceneManager &sceneManager, uint64_t deltaTime)
     {
-        std::cout << "updateServeur GameSystem" << std::endl;
     }
 
     void GameSystem::updateClient(SceneManager &sceneManager, uint64_t deltaTime)
@@ -238,7 +237,6 @@ namespace R_TYPE {
             },
             [](SceneManager &) {},
             [](SceneManager &) {});
-            
 
         ButtonCallbacks left (
             [player_e](SceneManager &) {
@@ -340,6 +338,7 @@ namespace R_TYPE {
 
                 if (mousePosition.x > pos->getPosition().x && mousePosition.x < pos->getPosition().x + click.x &&
                     mousePosition.y > pos->getPosition().y && mousePosition.y < pos->getPosition().y + click.y) {
+
                         if (goTo != SceneManager::SceneType::NONE)
                             sceneManager.setCurrentScene(goTo);
                         else

@@ -5,6 +5,7 @@
 ** ClientSystem
 */
 
+#include "GraphicSystem.hpp"
 #include "ClientSystem.hpp"
 
 namespace R_TYPE {
@@ -12,18 +13,20 @@ namespace R_TYPE {
 ClientSystem::ClientSystem(std::string ip, size_t port) : _server_endpoint(asio::ip::make_address(ip), port)
 {
     std::cout << "Client Network System created" << std::endl;
+    graphicSystem = std::make_unique<GraphicSystem>(std::unique_ptr<ClientSystem>(this));
 }
 
 ClientSystem::~ClientSystem()
 {
 }
 
-void ClientSystem::init(SceneManager &/*manager*/)
+void ClientSystem::init(SceneManager &manager)
 {
     std::cout << "Client Network System initiating" << std::endl;
     _socket.open(asio::ip::udp::v4());
     read_setup();
     _threadContext = std::thread([this]() { _context.run(); });
+    graphicSystem->init(manager);
 }
 
 void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
@@ -33,6 +36,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
         _ping_cooldown = 0;
         broadcast(manager);
     }
+    graphicSystem->update(manager, deltaTime);
 }
 
 void ClientSystem::destroy()
@@ -59,26 +63,32 @@ void ClientSystem::handle_incomming_message()
 void ClientSystem::broadcast(SceneManager &manager)
 {
     char buff[1024];
-    size_t c = 0;
 
     for (int i = 0; i < 1024; buff[i] = '\0', i++);
     switch (manager.getCurrentSceneType()) {
         case SceneManager::SceneType::LEVEL1:
-            buff[c] = protocol::Header::PLAYER_ACTION;
-            c += sizeof(protocol::Header);
+            buff[0] = protocol::Header::PLAYER_ACTION;
             break;
         default :
-            buff[c] = protocol::Header::PING;
-            c += sizeof(protocol::Header);
+            buff[0] = protocol::Header::PING;
             break;
     }
-    buff[c] = static_cast<int>(manager.getCurrentSceneType());
     _socket.send_to(asio::buffer(buff), _server_endpoint);
 }
 
-void ClientSystem::createMessage(char *buff, SceneManager &manager)
+void ClientSystem::sendEvent(int button, NetworkSystem::ButtonState state, bool isKey)
 {
+    char buff[1024];
+    size_t c = 0;
 
+    buff[c] = protocol::Header::EVENT;
+    c += sizeof(protocol::Header);
+    buff[c] = isKey;
+    c += sizeof(bool);
+    buff[c] = button;
+    c += sizeof(int);
+    buff[c] = static_cast<uint8_t>(state);
+    _socket.send_to(asio::buffer(buff), _server_endpoint);
 }
 
 }

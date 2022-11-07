@@ -20,6 +20,18 @@
 
         class NetworkSystem : public ISystem {
             public:
+                enum class ButtonState : uint8_t {
+                    PRESSED,
+                    DOWN,
+                    RELEASED,
+                    UP
+                };
+
+                enum class EventType : uint8_t {
+                    MOUSE,
+                    KEY
+                };
+
                 NetworkSystem();
                 NetworkSystem(size_t port);
                 ~NetworkSystem();

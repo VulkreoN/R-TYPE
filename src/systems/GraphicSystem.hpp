@@ -16,9 +16,12 @@
 #include "EventSystem.hpp"
 
 namespace R_TYPE {
+
+    class ClientSystem;
+
     class GraphicSystem: public ISystem {
         public:
-            GraphicSystem();
+            GraphicSystem(std::unique_ptr<ClientSystem> client);
             ~GraphicSystem();
 
             void init(SceneManager &manager) final;

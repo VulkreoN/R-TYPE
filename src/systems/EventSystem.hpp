@@ -13,13 +13,17 @@
 
 namespace R_TYPE {
 
+    class NetworkSystem;
+
     class EventSystem: public ISystem {
         public:
-            EventSystem();
+            EventSystem(std::unique_ptr<NetworkSystem> network);
             ~EventSystem();
 
             void init(SceneManager &manager) final;
             void update(SceneManager &manager, uint64_t deltaTime) final;
+            void updateClient(SceneManager &manager, uint64_t deltaTime);
+            void updateServer(SceneManager &manager, uint64_t deltaTime);
             void destroy() final;
 
             void setWindow(sf::RenderWindow *_window) {window = _window;};
@@ -31,6 +35,7 @@ namespace R_TYPE {
             void handleMouse(SceneManager &, std::shared_ptr<Event> listener, sf::Event event);
             static std::map<int, std::vector<std::shared_ptr<Event>>> _event;
             sf::RenderWindow *window;
+            std::unique_ptr<NetworkSystem> _network;
     };
 }
 
