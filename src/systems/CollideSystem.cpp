@@ -95,7 +95,7 @@ namespace R_TYPE {
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
             sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
 
-            if (box.intersects(playerBox)) {
+            if (box.intersects(playerBox) && component->getLevelNono() < 3) {
                 if (bonus->getType() == Bonus::BonusType::SPEED || component->getNono() == false)
                     component->addBonus(bonus->getType());
                 else if (component->getNono() == true){

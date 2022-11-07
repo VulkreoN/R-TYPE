@@ -407,6 +407,11 @@ namespace R_TYPE {
                             Velocity(0.25f, 0.25f), true, sf::IntRect(242, 183, 15, 17));
                         scene.getCurrentScene().addEntity(shoot2);
                         scene.getCurrentScene().addEntity(shoot3);
+                    } else if (player->getLevelNono() == 2) {
+                        std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
+                            (2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
+                            Velocity(0.5f, 0), true, sf::IntRect(37, 608, 63, 55));
+                        scene.getCurrentScene().addEntity(shoot2);
                     }
                 }
             },
