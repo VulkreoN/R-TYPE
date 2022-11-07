@@ -572,6 +572,7 @@ namespace R_TYPE {
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneLose()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneLose, this));
+        std::shared_ptr<Entity> background = createSprite(57, 0, 0);
         std::shared_ptr<Entity> entity = createText("You Lose", 350, 25, 50);
         std::shared_ptr<Entity> entity1 = createSprite(47, 230, 300);
         std::shared_ptr<Entity> entity2 = createSprite(51, 230, 400);
@@ -579,15 +580,17 @@ namespace R_TYPE {
         createButtonEvent(entity1, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
         createButtonEvent(entity2, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
 
-        scene->addEntity(entity)
-              .addEntity(entity1)
-              .addEntity(entity2);
+        scene->addEntity(background)
+                .addEntity(entity)
+                .addEntity(entity1)
+                .addEntity(entity2);
         return (scene);
     }
 
     std::unique_ptr<R_TYPE::IScene> GameSystem::createSceneWin()
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneWin, this));
+        std::shared_ptr<Entity> background = createSprite(57, 0, 0);
         std::shared_ptr<Entity> entity = createText("You Win", 350, 25, 50);
         std::shared_ptr<Entity> entity1 = createSprite(47, 230, 300);
         std::shared_ptr<Entity> entity2 = createSprite(51, 230, 400);
@@ -595,7 +598,8 @@ namespace R_TYPE {
         createButtonEvent(entity1, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
         createButtonEvent(entity2, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
 
-        scene->addEntity(entity)
+        scene->addEntity(background)
+              .addEntity(entity)
               .addEntity(entity1)
               .addEntity(entity2);
         return (scene);
