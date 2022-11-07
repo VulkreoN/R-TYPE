@@ -264,6 +264,8 @@ namespace R_TYPE {
 
         if (name == 10)
             component3->setType(Projectiles::Type::ROCKET);
+        else if (rect.left == 37)
+            component3->setType(Projectiles::Type::LASER_BOUCLE);
         
         component->getSprite().setScale(0.7, 0.7);
 

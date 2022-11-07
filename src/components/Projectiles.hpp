@@ -9,7 +9,7 @@ namespace R_TYPE {
     class Projectiles : public Component {
         public:
             enum class Type {
-                LASER,
+                LASER_BOUCLE,
                 ROCKET,
                 BASIC,
                 CHARGED,

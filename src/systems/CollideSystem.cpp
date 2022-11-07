@@ -174,12 +174,11 @@ namespace R_TYPE {
             auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
             auto posProj = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            
 
             if (box.contains(pos->getPosition().x, pos->getPosition().y) && pos != posProj && projectile->shootByPlayer() != proj->shootByPlayer()) {
-                if (projectile->getType() != Projectiles::Type::CHARGED)
+                if (projectile->getType() != Projectiles::Type::CHARGED && projectile->getType() != Projectiles::Type::LASER_BOUCLE)
                     projectile->setIsActive(false);
-                if (proj->getType() != Projectiles::Type::CHARGED)
+                if (proj->getType() != Projectiles::Type::CHARGED && proj->getType() != Projectiles::Type::LASER_BOUCLE)
                     proj->setIsActive(false);
                 return;
             }
@@ -197,7 +196,7 @@ namespace R_TYPE {
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
 
             if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
-                if (projectile->getType() != Projectiles::Type::CHARGED)
+                if (projectile->getType() != Projectiles::Type::CHARGED && projectile->getType() != Projectiles::Type::LASER_BOUCLE)
                     projectile->setIsActive(false);
                 if (ennemy->getLoot() != Bonus::BonusType::NONE) {
                     auto bonus = GameSystem::createBonus(56, posEnnemi->getPosition(), ennemy->getLoot());
