@@ -138,6 +138,15 @@ namespace R_TYPE {
                 player->getSprite().setPosition(player->getPosition());
                 window->draw(player->getSprite());
             }
+
+            for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+                auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
+                auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                amanager.update_ennemy(e, deltaTime);
+                sprite->getSprite().setPosition(pos->getPosition());
+                window->draw(sprite->getSprite());
+            }
         }
         window->display();
     }
