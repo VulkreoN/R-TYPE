@@ -4,6 +4,9 @@
 #include "Entity.hpp"
 #include "GameSystem.hpp"
 #include "Player.hpp"
+#include <cmath>
+
+#define PI 3.14159265
 
 namespace R_TYPE {
 
@@ -21,6 +24,7 @@ namespace R_TYPE {
         sf::Vector2f distance = getDistance(manager, *selfPos);
 
         if (type == Ennemy::Type::TURRET) {
+            updateAngle(distance, ennemy);
             if (scripts.turretScript()) {
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(54, *selfPos, getVelocityTarget(distance), false);
                 manager.getCurrentScene().addEntity(shoot);
@@ -93,5 +97,24 @@ namespace R_TYPE {
     Ennemy::~Ennemy()
     {
 
+    }
+
+    void Ennemy::updateAngle(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy)
+    {
+        auto sprite = Component::castComponent<Sprite>((*ennemy)[IComponent::Type::SPRITE]);
+        angle = distance.x / distance.y;
+        angle = atan(angle) * 180 / PI;
+        int angleOfSprite = sprite->getAngle();
+
+        if (angle > -90 && angle < -54)
+            sprite->setRect(sf::IntRect(87, 2, 15, 14));
+        else if (angle > -54 && angle < -18)
+            sprite->setRect(sf::IntRect(70, 2, 15, 14));
+        else if (angle > -18 && angle < 18)
+            sprite->setRect(sf::IntRect(36, 2, 15, 14));
+        else if (angle > 18 && angle < 54)
+            sprite->setRect(sf::IntRect(19, 2, 15, 14));
+        else if (angle > 54 && angle < 90)
+            sprite->setRect(sf::IntRect(1, 2, 15, 14));
     }
 }

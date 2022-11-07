@@ -31,10 +31,13 @@ namespace R_TYPE {
             static Velocity getVelocityTarget(sf::Vector2f distance);
 
             Type getType() {return (type);};
+
+            void updateAngle(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
         private:
             bool isAlive;
             Type type;
             Script scripts;
+            float angle;
     };
 }
 
