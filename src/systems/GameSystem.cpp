@@ -68,6 +68,7 @@ namespace R_TYPE {
                 if (projectile->getType() == Projectiles::Type::ROCKET && pos->getPosition().y < 100) {
                     velocity->setX(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().x); 
                     velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
+                    projectile->setSpriteAngle(Ennemy::getDistance(sceneManager, pos->getPosition()), e);
                     projectile->setType(Projectiles::Type::BASIC);
                 }
             }

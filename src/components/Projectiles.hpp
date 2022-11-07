@@ -24,6 +24,8 @@ namespace R_TYPE {
             void setType(Type _type) {type = _type;};
             Type getType() {return (type);};
 
+            void setSpriteAngle(sf::Vector2f distance, std::shared_ptr<IEntity> entity);
+
         private:
             bool byPlayer;
             bool isActive;
