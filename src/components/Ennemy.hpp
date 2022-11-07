@@ -36,11 +36,14 @@ namespace R_TYPE {
             void setState(Animation::State state);
 
             Animation::State getState();
+
+            void updateAngle(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
         private:
             bool isAlive;
             Type type;
             Script scripts;
             Animation::State _state;
+            float angle;
     };
 }
 
