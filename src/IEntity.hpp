@@ -51,7 +51,7 @@ namespace R_TYPE {
 
         virtual std::shared_ptr<IComponent> &operator[](IComponent::Type type) = 0;
 
-        virtual std::vector<std::shared_ptr<IComponent>> getFilteredComponents(IComponent::Type components, std::shared_ptr<IEntity> entity) = 0;
+        virtual std::vector<std::shared_ptr<IComponent>> getFilteredComponents(IComponent::Type components) = 0;
     };
 }
 #endif /* IENTITY_HPP */

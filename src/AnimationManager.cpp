@@ -31,13 +31,12 @@ namespace R_TYPE {
         auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
         auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
         std::shared_ptr<IComponent> anim;
-        auto test = e->getFilteredComponents(IComponent::Type::ANIMATION, e);
+        auto test = e->getFilteredComponents(IComponent::Type::ANIMATION);
         for (int i = 0; i < test.size(); i++) {
             
             // if (anim.second->getType() == Component::Type::ANIMATION) {s
             //     auto test = e->getFilteredComponents({IComponent::Type::ANIMATION});
             //     for (int i = 0; i < test.size(); i++) {
-                std::cout << i  << " < " << test.size() << std::endl;
                     auto anim_cast = Component::castComponent<Animation>(test[i]);
                     // std::cout << (int)anim_cast->getState() << std::endl;
                     // std::cout << (int) player->getState() << std::endl;

@@ -39,7 +39,7 @@ namespace R_TYPE {
              */
             std::shared_ptr<IComponent> &operator[](IComponent::Type type);
 
-            std::vector<std::shared_ptr<IComponent>> Entity::getFilteredComponents(IComponent::Type components);
+            std::vector<std::shared_ptr<IComponent>> getFilteredComponents(IComponent::Type components);
 
             bool hasTag(Tags tag) const;
         private:

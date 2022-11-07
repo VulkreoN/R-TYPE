@@ -249,7 +249,7 @@ namespace R_TYPE {
                 auto velocity = Component::castComponent<Velocity>(comp);
                 auto comp_p = (*player_e)[IComponent::Type::PLAYER];
                 auto player = Component::castComponent<Player>(comp_p);
-                player->setState(Animation::State::UP_PRESS);
+                player->setState(Animation::State::IDLE);
                 velocity->setY(0);
             },
             [player_e](SceneManager &) {
@@ -257,12 +257,7 @@ namespace R_TYPE {
                 auto player = Component::castComponent<Player>(comp_p);
                 player->setState(Animation::State::UP_DOWN);
             },
-            [player_e](SceneManager &) {
-                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
-                auto player = Component::castComponent<Player>(comp_p);
-                player->setState(Animation::State::IDLE);
-                std::cout << "IDLE" << std::endl;
-            });
+            [](SceneManager &) {});
             
 
         ButtonCallbacks left (
@@ -284,15 +279,25 @@ namespace R_TYPE {
             [player_e](SceneManager &) {
                 auto comp_v = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp_v);
-
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp_p);
+                player->setState(Animation::State::DOWN_PRESS);
                 velocity->setY(0.05f);
             },
             [player_e](SceneManager &) {
                 auto comp = (*player_e)[IComponent::Type::VELOCITY];
                 auto velocity = Component::castComponent<Velocity>(comp);
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp_p);
+
+                player->setState(Animation::State::IDLE);
                 velocity->setY(0);
             },
-            [](SceneManager &) {},
+            [player_e](SceneManager &) {
+                auto comp_p = (*player_e)[IComponent::Type::PLAYER];
+                auto player = Component::castComponent<Player>(comp_p);
+                player->setState(Animation::State::DOWN_DOWN); 
+            },
             [](SceneManager &) {});
 
         ButtonCallbacks right (
