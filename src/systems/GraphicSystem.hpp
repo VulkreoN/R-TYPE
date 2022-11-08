@@ -35,7 +35,8 @@ namespace R_TYPE {
         private:
             static std::shared_ptr<sf::RenderWindow> window;
             std::unique_ptr<EventSystem> eventSystem;
-            std::unique_ptr<sf::View> camera;
+            std::shared_ptr<sf::View> camera;
+            std::shared_ptr<sf::View> normalView;
             static std::vector<std::shared_ptr<sf::Texture>> _textures;
             std::vector<std::string> _pathTextures;
             bool _isInit;

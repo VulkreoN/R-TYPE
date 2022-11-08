@@ -22,7 +22,7 @@ namespace R_TYPE {
             void update(SceneManager &manager, uint64_t deltaTime) final;
             void destroy() final;
 
-            void setWindow(std::shared_ptr<sf::RenderWindow> _window) {window = _window;};
+            void setWindow(std::shared_ptr<sf::RenderWindow> _window, std::shared_ptr<sf::View> _camera, std::shared_ptr<sf::View> _normalView);
             static bool isInit;
 
         protected:
@@ -31,6 +31,8 @@ namespace R_TYPE {
             void handleMouse(SceneManager &, std::shared_ptr<Event> listener, sf::Event event);
             static std::map<int, std::vector<std::shared_ptr<Event>>> _event;
             std::shared_ptr<sf::RenderWindow> window;
+            std::shared_ptr<sf::View> camera;
+            std::shared_ptr<sf::View> normalView;
     };
 }
 

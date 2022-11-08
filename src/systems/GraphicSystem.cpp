@@ -41,7 +41,8 @@ namespace R_TYPE {
         window->setFramerateLimit(60);
         // eventSystem->init(manager);
         // eventSystem->setWindow(window);
-        camera = std::make_unique<sf::View>(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
+        camera = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
+        normalView = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 800.f, 600.f));
         input_file.open("assets/sprites_sheets/pathText.txt");
         while (getline(input_file, line)) {
             std::istringstream ss_line(line);
@@ -75,7 +76,7 @@ namespace R_TYPE {
             // }
 
 
-            for (auto &entity : (*scene.second)[IEntity::Tags::SPRITE_2D]) { 
+            for (auto &entity : (*scene.second)[IEntity::Tags::SPRITE_2D]) {
                 auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
                 if (sprite->isInit == true)
                     continue;
@@ -96,7 +97,7 @@ namespace R_TYPE {
             window->setView(*camera);
             _isInit = true;
         } else if (manager.getCurrentSceneType() != SceneManager::SceneType::LEVEL1 && _isInit == true) {
-            window->setView(window->getDefaultView());
+            window->setView(*normalView);
             _isInit = false;
         }
     }
@@ -106,7 +107,7 @@ namespace R_TYPE {
         initAllSprites(manager);
         if (EventSystem::isInit == false) {
             eventSystem->init(manager);
-            eventSystem->setWindow(window);
+            eventSystem->setWindow(window, camera, normalView);
             EventSystem::isInit = true;
         }
         eventSystem->update(manager, deltaTime);
