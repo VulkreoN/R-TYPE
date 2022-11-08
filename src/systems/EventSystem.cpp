@@ -44,9 +44,6 @@ namespace R_TYPE {
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 manager.setShouldClose(true);
-            else if (event.type == sf::Event::Resized) {
-                
-            }
             for (auto &listener : _event[(int)manager.getCurrentSceneType()]) {
                 handleKeyboard(manager, listener, event);
                 handleMouse(manager, listener, event);
