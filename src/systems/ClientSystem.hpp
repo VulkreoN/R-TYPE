@@ -24,7 +24,7 @@ namespace R_TYPE {
             void init(SceneManager &manager) final;
             void update(SceneManager &manager, uint64_t deltaTime) final;
             void destroy() final;
-            void sendEvent(int button, NetworkSystem::ButtonState state, bool isKey);
+            void sendEvent(int button, NetworkSystem::ButtonState state, bool isKey, int x = 0, int y = 0);
 
             size_t _id;
 

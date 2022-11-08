@@ -74,14 +74,17 @@ namespace R_TYPE {
 
     void EventSystem::updateServer(SceneManager &manager, uint64_t deltaTime)
     {
-        for (auto &current : dynamic_cast<ServerSystem &>(*_network).getKeys()) {
+        auto keys = dynamic_cast<ServerSystem &>(*_network).getKeys();
+        auto mouseButtons = dynamic_cast<ServerSystem &>(*_network).getMouseButtons();
+        auto mousePositions = dynamic_cast<ServerSystem &>(*_network).getMousePositions();
+
+        while (!keys.empty()) {
             for (auto &listener : _event[(int)manager.getCurrentSceneType()]) {
-                auto call = listener->getKeyboardMap()[static_cast<sf::Keyboard::Key>(current.first)];
-                switch (current.second) {
+                auto call = listener->getKeyboardMap()[static_cast<sf::Keyboard::Key>(keys.front().first)];
+                switch (keys.front().second) {
                     case NetworkSystem::ButtonState::PRESSED:
-                        if (call.pressed) {
+                        if (call.pressed)
                             call.pressed(manager);
-                        }
                         break;
                     case NetworkSystem::ButtonState::DOWN:
                         if (call.down)
@@ -97,22 +100,27 @@ namespace R_TYPE {
                         break;
                 }
             }
+            keys.pop_front();
+            dynamic_cast<ServerSystem &>(*_network).removeKey();
         }
 
-        for (auto &current : dynamic_cast<ServerSystem &>(*_network).getMouse()) {
+        while(!mouseButtons.empty() && !mousePositions.empty()) {
             for (auto &listener : _event[(int)manager.getCurrentSceneType()]) {
-                auto call = listener->getMouseMappings()[static_cast<sf::Mouse::Button>(current.first)];
-                switch (current.second) {
+                auto call = listener->getMouseMappings()[static_cast<sf::Mouse::Button>(mouseButtons.front().first)];
+                switch (mouseButtons.front().second) {
                     case NetworkSystem::ButtonState::PRESSED:
                         if (call._pressed)
-                            call._pressed(manager);
+                            call._pressed(manager, sf::Vector2i(mousePositions.front().first, mousePositions.front().second));
                         break;
                     case NetworkSystem::ButtonState::RELEASED:
                         if (call._released)
-                            call._released(manager);
+                            call._released(manager, sf::Vector2i(mousePositions.front().first, mousePositions.front().second));
                         break;
                 }
             }
+            mouseButtons.pop_front();
+            mousePositions.pop_front();
+            dynamic_cast<ServerSystem &>(*_network).removeMouse();
         }
     }
 
@@ -154,10 +162,12 @@ namespace R_TYPE {
 
     void EventSystem::handleMouse(SceneManager &manager, std::shared_ptr<Event> listener, sf::Event event)
     {
+        sf::Vector2i mousePosition = sf::Mouse::getPosition(*GraphicSystem::getWindow());
+
         for (auto &it : listener->getMouseMappings()) {
             if (it.second._pressed && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == it.first) {
-                it.second._pressed(manager);
-                dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::PRESSED, false);
+                it.second._pressed(manager, mousePosition);
+                dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::PRESSED, false, mousePosition.x, mousePosition.y);
                 break;
             }
             // if (it.second._down && Window::isMouseButtonDown(it.first)) {
@@ -165,8 +175,8 @@ namespace R_TYPE {
             //     break;
             // }
             if (it.second._released && event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == it.first) {
-                it.second._released(manager);
-                dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::RELEASED, false);
+                it.second._released(manager, mousePosition);
+                dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::RELEASED, false, mousePosition.x, mousePosition.y);
                 break;
             }
             // if (Window::isMouseButtonUp(it.first)) {

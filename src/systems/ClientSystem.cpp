@@ -41,20 +41,19 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
     }
     if (_message_queue.size() != 0) {
         for (auto &msg_tmp : _message_queue) {
-            char msg[MAX_MSG_LENGTH];
+            uint8_t msg[MAX_MSG_LENGTH];
             memcpy(msg, *msg_tmp, MAX_MSG_LENGTH);
             if ((protocol::Header)msg[0] == protocol::Header::GAME_INFO) {
                 for (size_t i = sizeof(protocol::Header); (uint8_t)msg[i]; i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
                     i += sizeof(uint8_t);
-                    std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
+                    // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
 
 
                     // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
                     // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
                     for (auto &e : manager.getCurrentScene().get_by_id((size_t)msg[i + sizeof(float) * 2])) {
-                        std::cout << (size_t)msg[i + sizeof(float) * 2] << std::endl;
-                        (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX((float)msg[i]);
-                        (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY((float)msg[i + sizeof(float)]);
+                        (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
+                        (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
                     }
                 }
             }
@@ -122,19 +121,25 @@ void ClientSystem::create_event_msg(char *buff)
     */
 }
 
-void ClientSystem::sendEvent(int button, NetworkSystem::ButtonState state, bool isKey)
+void ClientSystem::sendEvent(int button, NetworkSystem::ButtonState state, bool isKey, int x, int y)
 {
-    char buff[1024];
+    uint8_t buff[15] = {0};
     size_t c = 0;
 
     buff[c] = protocol::Header::EVENT;
-    c += sizeof(protocol::Header);
+    c += sizeof(uint8_t);
     buff[c] = isKey;
     c += sizeof(bool);
-    buff[c] = button;
+    putInt(button, buff, 2);
     c += sizeof(int);
     buff[c] = static_cast<uint8_t>(state);
-    _socket.send_to(asio::buffer(buff), _server_endpoint);
+    if (!isKey) {
+        c += sizeof(uint8_t);
+        putInt(x, buff, c);
+        c += sizeof(int);
+        putInt(y, buff, c);
+    }
+    _socket.send_to(asio::buffer(buff, 15), _server_endpoint);
 }
 
 }

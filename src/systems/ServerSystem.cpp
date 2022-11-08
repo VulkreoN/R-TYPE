@@ -40,8 +40,6 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
         broadcast(manager);
     }
     eventSystem->update(manager, deltaTime);
-    _keys.clear();
-    _mouseButtons.clear();
 }
 
 void ServerSystem::destroy()
@@ -67,20 +65,23 @@ void ServerSystem::handle_incomming_message()
         _connections.push_back(std::make_unique<Connection> (_edp_buff, _connections.size() + 1));
     // here, handle the recienved message stored in _buffer
     if ((protocol::Header)_buffer[c] == protocol::Header::EVENT) {
-        c += sizeof(protocol::Header);
+        c += sizeof(uint8_t);
         isKey = (bool)_buffer[c];
         c += sizeof(bool);
         if (isKey) {
-            _keys.push_back(std::make_pair((int)_buffer[c], static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
+            _keys.push_back(std::make_pair(readInt(_buffer, c), static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
         } else {
-            _mouseButtons.push_back(std::make_pair((int)_buffer[c], static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
+            _mouseButtons.push_back(std::make_pair(readInt(_buffer, c), static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
+            c += sizeof(int);
+            c += sizeof(uint8_t);
+            _mousePositions.push_back(std::make_pair(readInt(_buffer, c), readInt(_buffer, c + sizeof(int))));
         }
     }
 }
 
 void ServerSystem::broadcast(SceneManager &manager)
 {
-    char buff[MAX_MSG_LENGTH];
+    uint8_t buff[MAX_MSG_LENGTH];
 
     for (int i = 0; i < MAX_MSG_LENGTH; buff[i] = '\0', i++);
     if (true /* not game start */) {
@@ -103,7 +104,7 @@ void ServerSystem::broadcast(SceneManager &manager)
     }
 }
 
-void ServerSystem::create_start_game_msg(char *buff, std::unique_ptr<Connection> &connection)
+void ServerSystem::create_start_game_msg(uint8_t *buff, std::unique_ptr<Connection> &connection)
 {
     buff[0] = protocol::Header::START_GAME;
     buff[sizeof(protocol::Header)] = (size_t)connection->get_id();
@@ -111,7 +112,7 @@ void ServerSystem::create_start_game_msg(char *buff, std::unique_ptr<Connection>
     buff[sizeof(protocol::Header) + 2 * sizeof(size_t)] = '\0';
 }
 
-void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
+void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
 {
     size_t c = 0;
 
@@ -122,9 +123,9 @@ void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
         if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
             buff[c] = (uint8_t)1;
             c += sizeof(uint8_t);
-            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().x; // entity's X crd
+            putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().x, buff, c); // entity's X crd
             c += sizeof(float);
-            buff[c] = (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->getPosition().y; // entity's Y crd
+            putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().y, buff, c); // entity's Y crd
             c += sizeof(float);
             buff[c] = e->get_id(); // entity's ID
             c += sizeof(size_t);
@@ -162,15 +163,30 @@ void ServerSystem::create_game_info_msg(char *buff, SceneManager &manager)
     }
 }
 
-const std::vector<std::pair<int, NetworkSystem::ButtonState>> &ServerSystem::getKeys() const
+std::list<std::pair<int, NetworkSystem::ButtonState>> ServerSystem::getKeys() const
 {
     return _keys;
 }
 
-const std::vector<std::pair<int, NetworkSystem::ButtonState>> &ServerSystem::getMouse() const
+std::list<std::pair<int, NetworkSystem::ButtonState>> ServerSystem::getMouseButtons() const
 {
     return _mouseButtons;
 }
 
+std::list<std::pair<int, int>> ServerSystem::getMousePositions() const
+{
+    return _mousePositions;
+}
+
+void ServerSystem::removeKey()
+{
+    _keys.pop_front();
+}
+
+void ServerSystem::removeMouse()
+{
+    _mouseButtons.pop_front();
+    _mousePositions.pop_front();
+}
 
 }
