@@ -538,14 +538,20 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower11 = createEnnemy(55, 806, 163, 0.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower12 = createEnnemy(55, 145, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower13 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower14 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower14 = createEnnemy(55, 905, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower15 = createEnnemy(55, 1075, 67, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower16 = createEnnemy(55, 1210, 67, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy(9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
-        std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
-        std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::SPEED);
         std::shared_ptr<Entity> joryde2 = createEnnemy(9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
+        std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::SPEED);
+        std::shared_ptr<Entity> dino2 = createEnnemy(10, 545, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino3 = createEnnemy(10, 1160, 182, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(5, 700, 90, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(5, 1250, 95, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(5, 1250, 75, 0.f, Ennemy::Type::SPATIAL);
 
-
-        scene-> addEntity(top_wall)
+        scene->addEntity(top_wall)
                 .addEntity(bottom_wall)
                 .addEntity(player)
                 .addEntity(tower1)
@@ -562,10 +568,17 @@ namespace R_TYPE {
                 .addEntity(tower12)
                 .addEntity(tower13)
                 .addEntity(tower14)
+                .addEntity(tower15)
+                .addEntity(tower16)
                 .addEntity(dino1)
+                .addEntity(dino2)
+                .addEntity(dino3)
                 .addEntity(joryde1)
                 .addEntity(joryde2)
-                .addEntities(spatial1);
+                .addEntities(spatial1)
+                .addEntities(spatial2)
+                .addEntities(spatial3)
+                .addEntities(spatial4);
         return (scene);
     }
 

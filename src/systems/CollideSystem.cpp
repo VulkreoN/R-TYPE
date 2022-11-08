@@ -62,10 +62,9 @@ namespace R_TYPE {
             sf::FloatRect box = sprite->getSprite().getGlobalBounds();
 
             if (component->getType() == Ennemy::Type::ROBOT_DINO) {
-                if (pos->getPosition().y > 32)
-                    if (isBlack(*pos, box) == false) {
-                        velocity->setX(-velocity->getVelocity().x);
-                    }
+                if (isBlack(*pos, box) == false) {
+                    velocity->setX(-velocity->getVelocity().x);
+                }
             }
         }
     }

@@ -81,7 +81,7 @@ namespace R_TYPE {
             velo.setX(-distance.x * 100 / (distance.y * -1) * 0.001);
         }
 
-        if (distance.x > distance.y && distance.y > 0) {
+        if (distance.x > distance.y) {
             velo.setX(0.1f);
             velo.setY(distance.y * 100 / distance.x * 0.001);
         } else if (distance.y > distance.x && distance.x > 0) {
