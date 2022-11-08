@@ -121,7 +121,6 @@ namespace R_TYPE {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             sprite->setPos(pos->getPosition());
-            std::cout << "pos: " << pos->getPosition().x << " " << pos->getPosition().y << std::endl;
             window->draw(sprite->getSprite());
         }
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::TEXT]) {

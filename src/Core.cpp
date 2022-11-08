@@ -19,6 +19,7 @@ namespace R_TYPE {
         isServeur = true;
         _systems[SystemType::GAME] = std::make_unique<GameSystem>();
         // _systems[SystemType::EVENT] = std::make_unique<EventSystem>();
+        _systems[SystemType::COLLIDE] = std::make_unique<CollideSystem>();
         _systems[SystemType::NETWORK] = std::make_unique<ServerSystem>(port);
     }
 
@@ -29,7 +30,7 @@ namespace R_TYPE {
         _systems[SystemType::GAME] = std::make_unique<GameSystem>();
         //_systems[SystemType::GRAPHIC] = std::make_unique<GraphicSystem>();
         // _systems[SystemType::EVENT] = std::make_unique<EventSystem>();
-        _systems[SystemType::COLLIDE] = std::make_unique<CollideSystem>();
+        // _systems[SystemType::COLLIDE] = std::make_unique<CollideSystem>();
         _systems[SystemType::NETWORK] = std::make_unique<ClientSystem>(ip, port);
     }
 

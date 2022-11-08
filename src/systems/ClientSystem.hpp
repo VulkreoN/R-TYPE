@@ -25,6 +25,7 @@ namespace R_TYPE {
             void update(SceneManager &manager, uint64_t deltaTime) final;
             void destroy() final;
             void sendEvent(int button, NetworkSystem::ButtonState state, bool isKey, int x = 0, int y = 0);
+            void createProjectile(SceneManager &manager, int id, float x, float y);
 
             size_t _id;
 

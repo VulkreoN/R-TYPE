@@ -52,6 +52,19 @@ namespace R_TYPE {
     void GameSystem::updateServeur(SceneManager &sceneManager, uint64_t deltaTime)
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                auto projectile = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
+
+                pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+                pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+                if (projectile->getType() == Projectiles::Type::ROCKET && pos->getPosition().y < 100) {
+                    velocity->setX(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().x); 
+                    velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
+                    projectile->setType(Projectiles::Type::BASIC);
+                }
+            }
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
@@ -74,19 +87,20 @@ namespace R_TYPE {
     void GameSystem::updateClient(SceneManager &sceneManager, uint64_t deltaTime)
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
-            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
-                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
-                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-                auto projectile = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
+            // for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
+            //     auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+            //     auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            //     auto projectile = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
 
-                pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
-                pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
-                if (projectile->getType() == Projectiles::Type::ROCKET && pos->getPosition().y < 100) {
-                    velocity->setX(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().x); 
-                    velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
-                    projectile->setType(Projectiles::Type::BASIC);
-                }
-            }
+            //     pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+            //     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+            //     std::cout << "projectile x: " << pos->getPosition().x << " y: " << pos->getPosition().y << std::endl;
+            //     if (projectile->getType() == Projectiles::Type::ROCKET && pos->getPosition().y < 100) {
+            //         velocity->setX(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().x); 
+            //         velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
+            //         projectile->setType(Projectiles::Type::BASIC);
+            //     }
+            // }
 
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
@@ -202,7 +216,7 @@ namespace R_TYPE {
 
     std::shared_ptr<Entity> GameSystem::createProjectiles(int id, int name, Position pos, Velocity velocity, bool byPlayer, sf::IntRect rect)
     {
-        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>(id);
         std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
         std::shared_ptr<Sprite> component = std::make_shared<Sprite>(name, *component2, 0, rect);
         std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
@@ -210,6 +224,10 @@ namespace R_TYPE {
 
         if (name == 10)
             component3->setType(Projectiles::Type::ROCKET);
+        else if (id == 6010)
+            component3->setType(Projectiles::Type::CHARGED);
+        else if (id == 6021)
+            component3->setType(Projectiles::Type::BASIC);
         
         component->getSprite().setScale(0.7, 0.7);
 

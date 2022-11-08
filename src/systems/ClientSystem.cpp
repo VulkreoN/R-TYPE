@@ -9,6 +9,7 @@
 #include "Player.hpp"
 #include "GraphicSystem.hpp"
 #include "ClientSystem.hpp"
+#include "GameSystem.hpp"
 
 namespace R_TYPE {
 
@@ -46,12 +47,14 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
             if ((protocol::Header)msg[0] == protocol::Header::GAME_INFO) {
                 for (size_t i = sizeof(protocol::Header); (uint8_t)msg[i]; i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
                     i += sizeof(uint8_t);
-                    // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
-
+                    int id = readInt(msg, i + sizeof(float) * 2);
+                    if (id >= 6010 && manager.getCurrentScene().get_by_id(id).size() == 0) {
+                        createProjectile(manager, id, readFloat(msg, i), readFloat(msg, i + sizeof(float)));
+                    }
 
                     // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
                     // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
-                    for (auto &e : manager.getCurrentScene().get_by_id((size_t)msg[i + sizeof(float) * 2])) {
+                    for (auto &e : manager.getCurrentScene().get_by_id(id)) {
                         (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
                         (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
                     }
@@ -61,6 +64,19 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
         _message_queue.clear();
     }
     graphicSystem->update(manager, deltaTime);
+}
+
+void ClientSystem::createProjectile(SceneManager &manager, int id, float x, float y)
+{
+    std::shared_ptr<Entity> proj = std::make_shared<Entity>();
+    std::cout << "pos x: " << x << " pos y: " << y << std::endl;
+
+    if (id == 6010)
+        proj = GameSystem::createProjectiles(id, 1, Position(x, y), Velocity(0.5f, 0), true, sf::IntRect(233, 120, 31, 11));
+    else if (id == 6011)
+        proj = GameSystem::createProjectiles(id, 1, Position(x, y), Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
+
+    manager.getCurrentScene().addEntity(proj);
 }
 
 void ClientSystem::destroy()
