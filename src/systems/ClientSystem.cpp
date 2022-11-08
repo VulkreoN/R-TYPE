@@ -66,7 +66,7 @@ void ClientSystem::handle_incomming_message()
     _message_queue.push_back(std::make_unique<char *> (new char [MAX_MSG_LENGTH]));
     memcpy(*_message_queue.back(), _buffer, MAX_MSG_LENGTH);
     // here, handle the recienved message stored in _buffer
-    /*if ((protocol::Header)_buffer[0] == protocol::Header::START_GAME) {
+    if ((protocol::Header)_buffer[0] == protocol::Header::START_GAME) {
         std::cout << "Starting game, ID: " << (size_t)_buffer[sizeof(protocol::Header)] << " and there are : " << (size_t)_buffer[sizeof(protocol::Header) + sizeof(size_t)] << " players." << std::endl;
         _id = (size_t)_buffer[sizeof(protocol::Header)];
     }
@@ -77,7 +77,7 @@ void ClientSystem::handle_incomming_message()
             std::cout << "Entity x: " << (float)_buffer[i] << ", y: " << (float)_buffer[i + sizeof(float)] <<
                 ", ID: " << (size_t)_buffer[i + sizeof(float) * 2] << ", status" << (size_t)_buffer[i + sizeof(size_t) + sizeof(float) * 2] << std::endl;
         }
-    }*/
+    }
 }
 
 void ClientSystem::broadcast(SceneManager &manager)

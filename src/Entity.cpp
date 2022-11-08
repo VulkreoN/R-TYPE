@@ -3,13 +3,11 @@
 
 #include "Entity.hpp"
 
-size_t next_id = 10;
-
 namespace R_TYPE {
-    Entity::Entity()
+    Entity::Entity(size_t id)
     {
-        _id = next_id;
-        next_id++;
+        _id = id;
+        std::cout << "ID: " << id << std::endl;
     }
 
     const std::map<Entity::Tags, std::vector<std::vector<IComponent::Type>>> Entity::entityTags = {
