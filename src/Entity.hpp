@@ -12,8 +12,11 @@
 namespace R_TYPE {
     class Entity : public IEntity {
         public:
-            // @brief Constructor that sets the ID
-            Entity();
+            /**
+             * @brief Constructor that sets the ID
+             * @param entity's ID
+             */
+            Entity(size_t id = 0);
 
             ///@brief Map between Entity tags and combinaisons of Components tags
             static const std::map<Tags, std::vector<std::vector<IComponent::Type>>> entityTags;
