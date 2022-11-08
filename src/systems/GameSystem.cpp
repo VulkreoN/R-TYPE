@@ -331,21 +331,20 @@ namespace R_TYPE {
     void GameSystem::createButtonEvent(std::shared_ptr<Entity> &entity, SceneManager::SceneType goTo, sf::Vector2i click)
     {
         MouseCallback mouseCallbacks(
-            [entity, goTo, click](SceneManager &sceneManager) {
+            [entity, goTo, click](SceneManager &sceneManager, sf::Vector2i mousePosition) {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
-                sf::Vector2<int> mousePosition = sf::Mouse::getPosition(*GraphicSystem::getWindow());
 
+                std::cout << "enter mouse callback" << std::endl;
                 if (mousePosition.x > pos->getPosition().x && mousePosition.x < pos->getPosition().x + click.x &&
                     mousePosition.y > pos->getPosition().y && mousePosition.y < pos->getPosition().y + click.y) {
-
                         if (goTo != SceneManager::SceneType::NONE)
                             sceneManager.setCurrentScene(goTo);
                         else
                             sceneManager.setShouldClose(true);
                 }
             },
-            [](SceneManager &) {});
+            [](SceneManager &, sf::Vector2i) {});
 
         std::shared_ptr<Event> eventListener = std::make_shared<Event>();
 

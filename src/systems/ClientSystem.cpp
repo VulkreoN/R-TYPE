@@ -76,19 +76,25 @@ void ClientSystem::broadcast(SceneManager &manager)
     _socket.send_to(asio::buffer(buff), _server_endpoint);
 }
 
-void ClientSystem::sendEvent(int button, NetworkSystem::ButtonState state, bool isKey)
+void ClientSystem::sendEvent(int button, NetworkSystem::ButtonState state, bool isKey, int x, int y)
 {
-    char buff[1024];
+    uint8_t buff[15] = {0};
     size_t c = 0;
 
     buff[c] = protocol::Header::EVENT;
-    c += sizeof(protocol::Header);
+    c += sizeof(uint8_t);
     buff[c] = isKey;
     c += sizeof(bool);
-    buff[c] = button;
+    putInt(button, buff, 2);
     c += sizeof(int);
     buff[c] = static_cast<uint8_t>(state);
-    _socket.send_to(asio::buffer(buff), _server_endpoint);
+    if (!isKey) {
+        c += sizeof(uint8_t);
+        putInt(x, buff, c);
+        c += sizeof(int);
+        putInt(y, buff, c);
+    }
+    _socket.send_to(asio::buffer(buff, 15), _server_endpoint);
 }
 
 }

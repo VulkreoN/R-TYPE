@@ -8,7 +8,7 @@
 #ifndef ServerSystem_HPP_
     #define ServerSystem_HPP_
 
-    #include <utility>
+    #include <list>
     #include "NetworkSystem.hpp"
     #include "network/Connection.hpp"
 
@@ -27,8 +27,12 @@
                 void update(SceneManager &manager, uint64_t deltaTime) final;
                 void destroy() final;
 
-                const std::vector<std::pair<int, NetworkSystem::ButtonState>> &getKeys() const;
-                const std::vector<std::pair<int, NetworkSystem::ButtonState>> &getMouse() const;
+                std::list<std::pair<int, NetworkSystem::ButtonState>> getKeys() const;
+                std::list<std::pair<int, NetworkSystem::ButtonState>> getMouseButtons() const;
+                std::list<std::pair<int, int>> getMousePositions() const;
+
+                void removeKey();
+                void removeMouse();
 
             protected:
             private:
@@ -37,8 +41,9 @@
 
                 int _broadcast_cooldown;
                 std::vector<std::unique_ptr<Connection>> _connections;
-                std::vector<std::pair<int, NetworkSystem::ButtonState>> _keys;
-                std::vector<std::pair<int, NetworkSystem::ButtonState>> _mouseButtons;
+                std::list<std::pair<int, NetworkSystem::ButtonState>> _keys;
+                std::list<std::pair<int, NetworkSystem::ButtonState>> _mouseButtons;
+                std::list<std::pair<int, int>> _mousePositions;
                 std::unique_ptr<EventSystem> eventSystem;
 
                 // functions to create messages to send
