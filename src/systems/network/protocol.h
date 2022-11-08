@@ -15,7 +15,9 @@
         enum Header {
             PING,
             GAME_INFO,
-            START_GAME
+            PLAYER_ACTION,
+            START_GAME,
+            EVENT
         };
 
     }

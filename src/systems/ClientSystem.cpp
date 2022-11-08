@@ -7,6 +7,7 @@
 
 #include "Position.hpp"
 #include "Player.hpp"
+#include "GraphicSystem.hpp"
 #include "ClientSystem.hpp"
 
 namespace R_TYPE {
@@ -15,18 +16,20 @@ ClientSystem::ClientSystem(std::string ip, size_t port) : _server_endpoint(asio:
 {
     std::cout << "Client Network System created" << std::endl;
     _id = 0;
+    graphicSystem = std::make_unique<GraphicSystem>(std::unique_ptr<ClientSystem>(this));
 }
 
 ClientSystem::~ClientSystem()
 {
 }
 
-void ClientSystem::init(SceneManager &/*manager*/)
+void ClientSystem::init(SceneManager &manager)
 {
     std::cout << "Client Network System initiating" << std::endl;
     _socket.open(asio::ip::udp::v4());
     read_setup();
     _threadContext = std::thread([this]() { _context.run(); });
+    graphicSystem->init(manager);
 }
 
 void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
@@ -54,6 +57,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
         }
         _message_queue.clear();
     }
+    graphicSystem->update(manager, deltaTime);
 }
 
 void ClientSystem::destroy()
@@ -88,6 +92,8 @@ void ClientSystem::broadcast(SceneManager &manager)
     switch (manager.getCurrentSceneType()) {
         case SceneManager::SceneType::GAME:
             create_event_msg(buff);
+        case SceneManager::SceneType::LEVEL1:
+            buff[0] = protocol::Header::PLAYER_ACTION;
             break;
         default :
             buff[0] = protocol::Header::PING;
@@ -110,6 +116,21 @@ void ClientSystem::create_event_msg(char *buff)
     for (player_projectile in player_projectiles)
         send : x crds, y crds, id, type... etc.
     */
+}
+
+void ClientSystem::sendEvent(int button, NetworkSystem::ButtonState state, bool isKey)
+{
+    char buff[1024];
+    size_t c = 0;
+
+    buff[c] = protocol::Header::EVENT;
+    c += sizeof(protocol::Header);
+    buff[c] = isKey;
+    c += sizeof(bool);
+    buff[c] = button;
+    c += sizeof(int);
+    buff[c] = static_cast<uint8_t>(state);
+    _socket.send_to(asio::buffer(buff), _server_endpoint);
 }
 
 }
