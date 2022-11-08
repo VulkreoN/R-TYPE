@@ -43,14 +43,32 @@ namespace R_TYPE {
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
     {
-        //if (Core::getIsServeur() == false)
+        if (Core::getIsServeur() == false)
             updateClient(sceneManager, deltaTime);
-        //else
-        //    updateServeur(sceneManager, deltaTime);
+        else
+           updateServeur(sceneManager, deltaTime);
     }
 
     void GameSystem::updateServeur(SceneManager &sceneManager, uint64_t deltaTime)
     {
+        if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+                auto position = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                if (player->isAlive() == false) {
+                    sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
+                }
+                Position moved(0,0);
+                moved.setX(position->getPosition().x + velocity->getVelocity().x * deltaTime);
+                moved.setY(position->getPosition().y + velocity->getVelocity().y * deltaTime);
+
+                if (CollideSystem::canMove(moved, sceneManager, velocity->getVelocity())) {
+                    position->setX(moved.getPosition().x);
+                    position->setY(moved.getPosition().y);
+                }
+            }
+        }
     }
 
     void GameSystem::updateClient(SceneManager &sceneManager, uint64_t deltaTime)
@@ -80,22 +98,24 @@ namespace R_TYPE {
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
                 // }
             }
-            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
-                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
-                auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
-                auto position = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-                if (player->isAlive() == false) {
-                    sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
-                }
-                Position moved(0,0);
-                moved.setX(position->getPosition().x + velocity->getVelocity().x * deltaTime);
-                moved.setY(position->getPosition().y + velocity->getVelocity().y * deltaTime);
+            // for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+            //     auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+            //     auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+            //     auto position = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            //     std::cout << "Position : " << position->getPosition().x << " " << position->getPosition().y << std::endl;
+            // }
+            //     if (player->isAlive() == false) {
+            //         sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
+            //     }
+            //     Position moved(0,0);
+            //     moved.setX(position->getPosition().x + velocity->getVelocity().x * deltaTime);
+            //     moved.setY(position->getPosition().y + velocity->getVelocity().y * deltaTime);
 
-                if (CollideSystem::canMove(moved, sceneManager, velocity->getVelocity())) {
-                    position->setX(moved.getPosition().x);
-                    position->setY(moved.getPosition().y);
-                }
-            }
+            //     if (CollideSystem::canMove(moved, sceneManager, velocity->getVelocity())) {
+            //         position->setX(moved.getPosition().x);
+            //         position->setY(moved.getPosition().y);
+            //     }
+            // }
 
             // delete all projectiles if they are out of the screen
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
@@ -305,6 +325,7 @@ namespace R_TYPE {
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
 
                     scene.getCurrentScene().addEntity(shoot);
+                    std::cout << "shoot" << std::endl;
                 }
             },
             [](SceneManager &) {
@@ -443,24 +464,24 @@ namespace R_TYPE {
 
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
-                .addEntity(player)
-                .addEntity(tower1)
-                .addEntity(tower2)
-                .addEntity(tower3)
-                .addEntity(tower4)
-                .addEntity(tower5)
-                .addEntity(tower6)
-                .addEntity(tower7)
-                .addEntity(tower8)
-                .addEntity(tower9)
-                .addEntity(tower10)
-                .addEntity(tower11)
-                .addEntity(tower12)
-                .addEntity(tower13)
-                .addEntity(tower14)
-                .addEntity(dino1)
-                .addEntity(joryde1)
-                .addEntities(spatial1);
+                .addEntity(player);
+                // .addEntity(tower1)
+                // .addEntity(tower2)
+                // .addEntity(tower3)
+                // .addEntity(tower4)
+                // .addEntity(tower5)
+                // .addEntity(tower6)
+                // .addEntity(tower7)
+                // .addEntity(tower8)
+                // .addEntity(tower9)
+                // .addEntity(tower10)
+                // .addEntity(tower11)
+                // .addEntity(tower12)
+                // .addEntity(tower13)
+                // .addEntity(tower14)
+                // .addEntity(dino1)
+                // .addEntity(joryde1)
+                // .addEntities(spatial1);
         return (scene);
     }
 

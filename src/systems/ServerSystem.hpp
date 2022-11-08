@@ -12,7 +12,7 @@
     #include "NetworkSystem.hpp"
     #include "network/Connection.hpp"
 
-    #define NETWORK_BROADCAST_FREQUENCY  100
+    #define NETWORK_BROADCAST_FREQUENCY  0
 
     namespace R_TYPE {
 

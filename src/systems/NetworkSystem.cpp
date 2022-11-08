@@ -32,7 +32,7 @@ void NetworkSystem::read_setup()
             _buffer[size] = '\0';
             if (PRINT_READ_MSG) {
                 protocol::Header header = (protocol::Header)_buffer[0];
-                std::cout << _edp_buff << " : " << header << std::endl;
+                // std::cout << _edp_buff << " : " << header << std::endl;
             }
             handle_incomming_message();
             read_setup();

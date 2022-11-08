@@ -47,10 +47,14 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                 for (size_t i = sizeof(protocol::Header); (uint8_t)msg[i]; i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
                     i += sizeof(uint8_t);
                     std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
+
+
+                    // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
+                    // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
                     for (auto &e : manager.getCurrentScene().get_by_id((size_t)msg[i + sizeof(float) * 2])) {
+                        std::cout << (size_t)msg[i + sizeof(float) * 2] << std::endl;
                         (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX((float)msg[i]);
                         (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY((float)msg[i + sizeof(float)]);
-                        std::cout << "Mooving entity " << std::endl;
                     }
                 }
             }
@@ -70,18 +74,18 @@ void ClientSystem::handle_incomming_message()
     _message_queue.push_back(std::make_unique<char *> (new char [MAX_MSG_LENGTH]));
     memcpy(*_message_queue.back(), _buffer, MAX_MSG_LENGTH);
     // here, handle the recienved message stored in _buffer
-    /*if ((protocol::Header)_buffer[0] == protocol::Header::START_GAME) {
+    if ((protocol::Header)_buffer[0] == protocol::Header::START_GAME) {
         std::cout << "Starting game, ID: " << (size_t)_buffer[sizeof(protocol::Header)] << " and there are : " << (size_t)_buffer[sizeof(protocol::Header) + sizeof(size_t)] << " players." << std::endl;
         _id = (size_t)_buffer[sizeof(protocol::Header)];
     }
     if ((protocol::Header)_buffer[0] == protocol::Header::GAME_INFO) {
-        std::cout << "Game Info is being sent, here are the entities to display :" << std::endl;
+        // std::cout << "Game Info is being sent, here are the entities to display :" << std::endl;
         for (size_t i = sizeof(protocol::Header); (uint8_t)_buffer[i]; i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
             i += sizeof(uint8_t);
-            std::cout << "Entity x: " << (float)_buffer[i] << ", y: " << (float)_buffer[i + sizeof(float)] <<
-                ", ID: " << (size_t)_buffer[i + sizeof(float) * 2] << ", status" << (size_t)_buffer[i + sizeof(size_t) + sizeof(float) * 2] << std::endl;
+            // std::cout << "Entity x: " << (float)_buffer[i] << ", y: " << (float)_buffer[i + sizeof(float)] <<
+            //     ", ID: " << (size_t)_buffer[i + sizeof(float) * 2] << ", status" << (size_t)_buffer[i + sizeof(size_t) + sizeof(float) * 2] << std::endl;
         }
-    }*/
+    }
 }
 
 void ClientSystem::broadcast(SceneManager &manager)

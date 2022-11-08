@@ -127,25 +127,25 @@ namespace R_TYPE {
             bool wasPressed = false;
             if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
                 if (wasPressed == false) {
-                    it.second.pressed(manager);
+                    // it.second.pressed(manager);
                     dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::PRESSED, true);
                     wasPressed = true;
                 }
             }
             if (it.second.released && event.type == sf::Event::KeyReleased && event.key.code == it.first) {
-                it.second.released(manager);
+                // it.second.released(manager);
                 dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::RELEASED, true);
                 wasPressed = false;
             }
             if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
                 if (wasPressed == true) {
-                    it.second.down(manager);
+                    // it.second.down(manager);
                     dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::DOWN, true);
                 }
             }
             if (!sf::Keyboard::isKeyPressed(it.first) ) {
                 if (wasPressed == false) {
-                    it.second.up(manager);
+                    // it.second.up(manager);
                     dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::UP, true);
                 }
             }
