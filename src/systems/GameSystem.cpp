@@ -159,7 +159,8 @@ namespace R_TYPE {
         auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
         sprite->getSprite().setScale(0.7, 0.7);
         std::shared_ptr<Nono> comp = std::make_shared<Nono>();
-        comp->setState(Animation::State::LV3);
+        // A remettre a LV 1
+        comp->setState(Animation::State::LV2);
         std::shared_ptr<Animation> anim_lv1 = std::make_shared<Animation>(Animation::State::LV1, sprite->getRect(), 0, 0, 6, true, 276, 35);
         std::shared_ptr<Animation> anim_lv2 = std::make_shared<Animation>(Animation::State::LV2, sprite->getRect(), 0, 0, 6, true, 122, 70);
         std::shared_ptr<Animation> anim_lv3 = std::make_shared<Animation>(Animation::State::LV3, sprite->getRect(), 0, 0, 4, true, 270, 342);
@@ -589,7 +590,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower15 = createEnnemy(55, 1075, 67, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower16 = createEnnemy(55, 1210, 67, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy(9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
-        std::shared_ptr<Entity> joryde2 = createEnnemy(9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
+        std::shared_ptr<Entity> joryde2 = createEnnemy(9, 260, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
         std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::SPEED);
         std::shared_ptr<Entity> dino2 = createEnnemy(10, 545, 179, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> dino3 = createEnnemy(10, 1160, 182, 0.f, Ennemy::Type::ROBOT_DINO);
