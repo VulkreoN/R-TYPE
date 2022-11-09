@@ -60,12 +60,15 @@ namespace R_TYPE {
     {
         auto component = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
         auto spritePlayer = Component::castComponent<Sprite>((*player)[IComponent::Type::SPRITE]);
+        auto pos = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
-            sf::IntRect box = sprite->getRect();
+            auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            // sf::IntRect box = sprite->getRect();
             sf::IntRect playerBox = spritePlayer->getRect();
 
-            if (box.intersects(playerBox)) {
+            if (posEnnemi->getPosition().x > pos->getPosition().x && posEnnemi->getPosition().x < pos->getPosition().x + playerBox.width 
+            && posEnnemi->getPosition().y > pos->getPosition().y && posEnnemi->getPosition().y < pos->getPosition().y + playerBox.height) {
                 component->setAlive(false);
             }
         }
