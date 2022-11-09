@@ -48,7 +48,10 @@ namespace R_TYPE {
             std::unique_ptr<R_TYPE::IScene> createFirstLevel();
             std::unique_ptr<R_TYPE::IScene> createSceneLose();
             std::unique_ptr<R_TYPE::IScene> createSceneWin();
+
+            void updateRectWindow();
         private:
+            sf::FloatRect rectWindow;
     };
 }
 

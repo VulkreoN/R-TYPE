@@ -36,14 +36,6 @@ namespace R_TYPE {
             } else if (component->shootByPlayer() == true)
                 didHitEnnemi(sceneManager, e);
         }
-        // for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
-        //     auto component = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
-
-        //     if (component->getIsActive() == false) {
-        //         sceneManager.getCurrentScene().removeEntity(e);
-        //         return;
-        //     }
-        // }
         for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             collideEnnemyPlayer(sceneManager, player);
         }

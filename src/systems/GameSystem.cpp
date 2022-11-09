@@ -52,6 +52,7 @@ namespace R_TYPE {
     void GameSystem::updateServeur(SceneManager &sceneManager, uint64_t deltaTime)
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
+            // updateRectWindow();
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
@@ -63,6 +64,9 @@ namespace R_TYPE {
                     velocity->setX(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().x); 
                     velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
                     projectile->setType(Projectiles::Type::BASIC);
+                }
+                if (pos->getPosition().x < rectWindow.left || pos->getPosition().x > rectWindow.left + 270) {
+                    projectile->setIsActive(false);
                 }
                 if (projectile->getTimeSend() > 4) {
                     sceneManager.getCurrentScene().removeEntity(e);
@@ -90,10 +94,17 @@ namespace R_TYPE {
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
                 auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
 
-                ennemy->launchScript(sceneManager, e);
+                if (pos->getPosition().x > rectWindow.left && pos->getPosition().x < rectWindow.left + 270) {
+                    ennemy->launchScript(sceneManager, e);
+                }
 
                 pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                 pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+
+                if (ennemy->getTimeSend() > 4) {
+                    sceneManager.getCurrentScene().removeEntity(e);
+                    break;
+                }
             }
         }
     }
@@ -113,12 +124,6 @@ namespace R_TYPE {
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
                 auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
 
-                // int min = GraphicSystem::getWindow()->getView().getCenter().x - 135;
-                // int max = GraphicSystem::getWindow()->getView().getCenter().x + 135;
-
-                // if (pos->getPosition().x < min || pos->getPosition().x > max) {
-                //     proj->setIsActive(false);
-                // }
                 if (proj->getIsActive() == false) {
                     sceneManager.getCurrentScene().removeEntity(e);
                 }
@@ -162,7 +167,7 @@ namespace R_TYPE {
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
 
         if (type == Ennemy::Type::TURRET) {
-            component = std::make_shared<Sprite>(name, *component2, angle);
+            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(0 , 0, 16, 12));
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(1, 14, 47, 42));
             component->getSprite().setScale(0.5, 0.5);
@@ -461,18 +466,18 @@ namespace R_TYPE {
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
                 .addEntity(player)
-                // .addEntity(tower1)
-                // .addEntity(tower2)
-                // .addEntity(tower3)
-                // .addEntity(tower4)
-                // .addEntity(tower5)
-                // .addEntity(tower6)
-                // .addEntity(tower7)
-                // .addEntity(tower8)
-                // .addEntity(tower9)
-                // .addEntity(tower10)
-                // .addEntity(tower11)
-                // .addEntity(tower12)
+                .addEntity(tower1)
+                .addEntity(tower2)
+                .addEntity(tower3)
+                .addEntity(tower4)
+                .addEntity(tower5)
+                .addEntity(tower6)
+                .addEntity(tower7)
+                .addEntity(tower8)
+                .addEntity(tower9)
+                .addEntity(tower10)
+                .addEntity(tower11)
+                .addEntity(tower12)
                 // .addEntity(tower13)
                 // .addEntity(tower14)
                 // .addEntity(dino1)
@@ -511,5 +516,10 @@ namespace R_TYPE {
               .addEntity(entity1)
               .addEntity(entity2);
         return (scene);
+    }
+
+    void GameSystem::updateRectWindow()
+    {
+        rectWindow.left += 0.25f;
     }
 }

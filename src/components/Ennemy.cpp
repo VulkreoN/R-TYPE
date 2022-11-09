@@ -22,7 +22,7 @@ namespace R_TYPE {
 
         if (type == Ennemy::Type::TURRET) {
             if (scripts.turretScript()) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(600, 54, *selfPos, getVelocityTarget(distance), false);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6021, 54, *selfPos, getVelocityTarget(distance), false, sf::IntRect(0, 0, 14, 12));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
