@@ -115,4 +115,24 @@ namespace R_TYPE {
     {
         return(_clock);
     }
+
+    int Animation::getPosX()
+    {
+        return(_posX);
+    }
+
+    int Animation::getPosY()
+    {
+        return(_posY);
+    }
+
+    void Animation::setPosX(int posX)
+    {
+        _posX = posX;
+    }
+
+    void Animation::setPosY(int posY)
+    {
+        _posY = posY;
+    }
 }

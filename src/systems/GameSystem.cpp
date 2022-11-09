@@ -155,15 +155,14 @@ namespace R_TYPE {
     {
         int posX = pos.getPosition().x;
         int posY = pos.getPosition().y;
-        std::shared_ptr<Entity> entity = createSprite(name, posX - 100, posY, sf::IntRect(279, 35, 19, 15));
+        std::shared_ptr<Entity> entity = createSprite(name, posX - 100, posY, sf::IntRect(276, 35, 24, 18));
         auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
         sprite->getSprite().setScale(0.7, 0.7);
         std::shared_ptr<Nono> comp = std::make_shared<Nono>();
-        comp->setState(Animation::State::LV1);
-        std::shared_ptr<Animation> anim_lv1 = std::make_shared<Animation>(Animation::State::LV1, sprite->getRect(), 0, 0, 4, true);
-        std::shared_ptr<Animation> anim_lv2 = std::make_shared<Animation>(Animation::State::LV2, sprite->getRect(), 0, 0, 4, true);
-        std::shared_ptr<Animation> anim_lv3 = std::make_shared<Animation>(Animation::State::LV3, sprite->getRect(), 0, 0, 4, true);
-
+        comp->setState(Animation::State::LV3);
+        std::shared_ptr<Animation> anim_lv1 = std::make_shared<Animation>(Animation::State::LV1, sprite->getRect(), 0, 0, 6, true, 276, 35);
+        std::shared_ptr<Animation> anim_lv2 = std::make_shared<Animation>(Animation::State::LV2, sprite->getRect(), 0, 0, 6, true, 122, 70);
+        std::shared_ptr<Animation> anim_lv3 = std::make_shared<Animation>(Animation::State::LV3, sprite->getRect(), 0, 0, 4, true, 270, 342);
 
         // TODO: add velocity to player
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);

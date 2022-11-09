@@ -5,7 +5,7 @@ namespace R_TYPE {
     Nono::Nono():
     Component(Component::Type::NONO)
     {
-        upgrade = 0;
+        upgrade = 1;
         isSnap = false;
         unKillable = true;
     }

@@ -126,9 +126,13 @@ namespace R_TYPE {
             if (nono->getUpgrade() == 1) {
                 sprite->setRect(sf::IntRect(120, 69, 28, 21));
                 nono->setState(Animation::State::LV2);
+                auto anim = Component::castComponent<Animation>((*e)[IComponent::Type::ANIMATION]);
+                anim->setRect(sprite->getRect());
             } else if (nono->getUpgrade() == 2) {
                 sprite->setRect(sf::IntRect(270, 342, 28, 31));
                 nono->setState(Animation::State::LV3);
+                auto anim = Component::castComponent<Animation>((*e)[IComponent::Type::ANIMATION]);
+                anim->setRect(sprite->getRect());
             }
         }
     }
