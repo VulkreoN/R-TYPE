@@ -11,6 +11,7 @@
 #include "EventSystem.hpp"
 #include "network/protocol.h"
 #include "Projectiles.hpp"
+#include "GameSystem.hpp"
 
 namespace R_TYPE {
 
@@ -40,6 +41,11 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
         _broadcast_cooldown = 0;
         broadcast(manager);
     }
+    if (_player_id_add_queue.size() > 0) {
+        for (size_t id : _player_id_add_queue)
+            manager.getCurrentScene().addEntity(GameSystem::createPlayer(id, 53, 100, 100));
+        _player_id_add_queue.clear();
+    }
     eventSystem->update(manager, deltaTime);
 }
 
@@ -62,8 +68,10 @@ void ServerSystem::handle_incomming_message()
                     << ", y = " << (float)_buffer[sizeof(protocol::Header) + sizeof(float)] << std::endl;
             }
         }
-    if (new_client)
+    if (new_client && _connections.size() < MAX_NUMBER_OF_CONNECTIONS) {
         _connections.push_back(std::make_unique<Connection> (_edp_buff, _connections.size() + 1));
+        _player_id_add_queue.push_back(_connections.back()->get_id());
+    }
     // here, handle the recienved message stored in _buffer
     if ((protocol::Header)_buffer[c] == protocol::Header::EVENT) {
         c += sizeof(uint8_t);
