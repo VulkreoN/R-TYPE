@@ -62,13 +62,29 @@ namespace R_TYPE {
             int getXmax();
 
             bool getDoActions();
+
+            int setNbFrame(int nbFrame);
+
+            int getNbFrame();
+
+            void restartClock();
+
+            void setCurrentFrame(sf::Time currentFrame);
+
+            sf::Time getCurrentFrame();
+
+            sf::Clock getClock();
         private:
             State _state;
             sf::IntRect _rect;
             int _y;
             int _x;
             int _xMax;
+            int _xMin;
             bool _doActions;
+            int _nbFrame;
+            sf::Clock _clock;
+            sf::Time _currentFrame;
     };
 }
 

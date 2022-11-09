@@ -16,13 +16,16 @@ namespace R_TYPE {
             anim->setRect(sf::IntRect(anim->getX() * anim->getRect().width, anim->getY() * anim->getRect().height,anim->getRect().width,anim->getRect().height));
             sprite->setRect(anim->getRect());
         } else {
-            while (clock) {
-                int i = anim->getX();
-                anim->setRect(sf::IntRect(i * anim->getRect().width,anim->getY() * anim->getRect().height,anim->getRect().width,anim->getRect().height));
-                if (i > anim->getXmax())
-                    i = anim->getX();
+            anim->setCurrentFrame(anim->getClock().getElapsedTime());
+            if (anim->getCurrentFrame().asSeconds() > 0.1) {
+                std::cout << (int)anim->getState() << std::endl;
+                anim->setRect(sf::IntRect(anim->getNbFrame() * anim->getRect().width,anim->getY() * anim->getRect().height,anim->getRect().width,anim->getRect().height));
+                if (anim->getNbFrame() >= anim->getXmax())
+                    anim->setNbFrame(anim->getX());
+                anim->setNbFrame(anim->getNbFrame() + 1);
+                sprite->setRect(anim->getRect());
+                anim->restartClock();
             }
-
         }
     }
 
@@ -45,8 +48,9 @@ namespace R_TYPE {
         auto anims = e->getFilteredComponents(IComponent::Type::ANIMATION);
         for (int i = 0; i < anims.size(); i++) {
             auto anim_cast = Component::castComponent<Animation>(anims[i]);
-            if (anim_cast->getState() == ennemy->getState())
+            if (anim_cast->getState() == ennemy->getState()) {
                 playAnim(anim_cast, sprite); 
+            }
         }
     }
 

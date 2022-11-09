@@ -59,6 +59,10 @@ namespace R_TYPE {
                 if (pos->getPosition().y > 32)
                     if (isBlack(*pos, box) == false) {
                         velocity->setX(-velocity->getVelocity().x);
+                        if (component->getState() == Animation::State::RIGHT)
+                            component->setState(Animation::State::LEFT);
+                        else 
+                            component->setState(Animation::State::RIGHT);
                     }
             }
         }
