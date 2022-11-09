@@ -6,3 +6,4 @@ r-type_client
 Makefile
 make
 .idea
+vcpkg/

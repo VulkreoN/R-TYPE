@@ -8,11 +8,12 @@
 #ifndef NETWORKSYSTEM_HPP_
     #define NETWORKSYSTEM_HPP_
 
+    #define ASIO_STANDALONE
     #include <asio.hpp>
 
     #include "ISystem.hpp"
     #include "SceneManager.hpp"
-    #include "network/protocol.h"
+    #include "network/protocol.hpp"
 
     #define PRINT_READ_MSG  true    // set to true if you want to print every message the server recieves
 

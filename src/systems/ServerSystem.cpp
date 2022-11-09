@@ -8,7 +8,7 @@
 #include "Position.hpp"
 #include "Player.hpp"
 #include "ServerSystem.hpp"
-#include "network/protocol.h"
+#include "network/protocol.hpp"
 
 namespace R_TYPE {
 
