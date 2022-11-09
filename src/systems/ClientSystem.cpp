@@ -55,7 +55,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                     // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
                     // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
                     if (manager.getCurrentScene().get_by_id(id).size() == 0 && id > 0 && id < 5)
-                        manager.getCurrentScene().addEntity(GameSystem::createPlayer(id, 53, 100, -20 + id * 10));
+                        manager.getCurrentScene().addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
                     for (auto &e : manager.getCurrentScene().get_by_id(id)) {
                         (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
                         (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));

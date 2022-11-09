@@ -43,7 +43,7 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
     }
     if (_player_id_add_queue.size() > 0) {
         for (size_t id : _player_id_add_queue)
-            manager.getCurrentScene().addEntity(GameSystem::createPlayer(id, 53, 100, 100));
+            manager.getCurrentScene().addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
         _player_id_add_queue.clear();
     }
     eventSystem->update(manager, deltaTime);
