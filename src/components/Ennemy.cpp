@@ -29,7 +29,7 @@ namespace R_TYPE {
             if (scripts.jorydeScript(distance, selfVel)) {
                 if (distance.x > 0)
                     isAlive = false;
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(600, 9, *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6020, 9, *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::ROBOT_DINO) {

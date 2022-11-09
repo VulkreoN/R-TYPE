@@ -38,7 +38,7 @@ namespace R_TYPE {
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
         sceneManager.addScene(createSceneLose(), SceneManager::SceneType::LOSE);
         sceneManager.addScene(createSceneWin(), SceneManager::SceneType::WIN);
-        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
+        sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -85,6 +85,16 @@ namespace R_TYPE {
                     position->setY(moved.getPosition().y);
                 }
             }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
+
+                ennemy->launchScript(sceneManager, e);
+
+                pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
+                pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+            }
         }
     }
 
@@ -92,15 +102,10 @@ namespace R_TYPE {
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
 
-            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
-                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
-                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-                // float windowPosX = GraphicSystem::getWindow()->getView().getCenter().x - 135;
-
-                // if (pos->getPosition().x < windowPosX + 270) {
-                    pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
-                    pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
-                // }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
+                if (player->isAlive() == false)
+                    sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
             }
 
             // delete all projectiles if they are out of the screen
@@ -116,7 +121,6 @@ namespace R_TYPE {
                 // }
                 if (proj->getIsActive() == false) {
                     sceneManager.getCurrentScene().removeEntity(e);
-                    std::cout << "remove projectile" << std::endl;
                 }
             }
         }
@@ -456,7 +460,7 @@ namespace R_TYPE {
 
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
-                .addEntity(player);
+                .addEntity(player)
                 // .addEntity(tower1)
                 // .addEntity(tower2)
                 // .addEntity(tower3)
@@ -472,7 +476,7 @@ namespace R_TYPE {
                 // .addEntity(tower13)
                 // .addEntity(tower14)
                 // .addEntity(dino1)
-                // .addEntity(joryde1)
+                .addEntity(joryde1);
                 // .addEntities(spatial1);
         return (scene);
     }

@@ -70,8 +70,8 @@ namespace R_TYPE {
         auto spritePlayer = Component::castComponent<Sprite>((*player)[IComponent::Type::SPRITE]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
+            sf::IntRect box = sprite->getRect();
+            sf::IntRect playerBox = spritePlayer->getRect();
 
             if (box.intersects(playerBox)) {
                 component->setAlive(false);
@@ -100,8 +100,7 @@ namespace R_TYPE {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
             auto posProj = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            
+            sf::IntRect box = sprite->getRect();
 
             if (box.contains(pos->getPosition().x, pos->getPosition().y) && pos != posProj) {
                 if (projectile->getType() != Projectiles::Type::CHARGED)
@@ -120,12 +119,14 @@ namespace R_TYPE {
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
+            sf::IntRect box = sprite->getRect();
 
-            if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
+            if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width 
+            && pos->getPosition().y > posEnnemi->getPosition().y && pos->getPosition().y < posEnnemi->getPosition().y + box.height) {
                 if (projectile->getType() != Projectiles::Type::CHARGED)
                     projectile->setIsActive(false);
-                sceneManager.getCurrentScene().removeEntity(e);
+                ennemy->setIsAlive(false);
                 return;
             }
         }
@@ -138,10 +139,12 @@ namespace R_TYPE {
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto posPlayer = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            
-            if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
+            sf::IntRect box = sprite->getRect();
+
+            if (pos->getPosition().x > posPlayer->getPosition().x && pos->getPosition().x < posPlayer->getPosition().x + box.width 
+            && pos->getPosition().y > posPlayer->getPosition().y && pos->getPosition().y < posPlayer->getPosition().y + box.height) {
                 projectile->setIsActive(false);
                 player->setAlive(false);
                 return;

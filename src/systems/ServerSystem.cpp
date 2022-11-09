@@ -11,6 +11,7 @@
 #include "EventSystem.hpp"
 #include "network/protocol.h"
 #include "Projectiles.hpp"
+#include "Ennemy.hpp"
 
 namespace R_TYPE {
 
@@ -130,7 +131,7 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             c += sizeof(float);
             putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)1; // to change, entity's status
+            buff[c] = (uint8_t)Component::castComponent<Player>((*e)[IComponent::Type::PLAYER])->isAlive(); // to change, entity's status
             c += sizeof(uint8_t);
         }
     }
@@ -151,17 +152,19 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
         }
     }
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
-        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
-            buff[c] = (uint8_t)1;
-            c += sizeof(uint8_t);
+        if (c + sizeof(size_t) + sizeof(float) * 3 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::ENNEMY, buff, c);
+            c += sizeof(float);
             putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().x, buff, c); // entity's X crd
             c += sizeof(float);
             putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().y, buff, c); // entity's Y crd
             c += sizeof(float);
-            buff[c] = e->get_id(); // entity's ID
+            putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)1; // to change, entity's status
+            buff[c] = (uint8_t)Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->IsAlive(); // to change, entity's status
             c += sizeof(uint8_t);
+            if (Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->IsAlive() == false)
+                Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->nextTimeSend();
         }
     }
 }

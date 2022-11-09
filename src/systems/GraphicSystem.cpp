@@ -98,7 +98,7 @@ namespace R_TYPE {
             camera = new sf::View(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
             window->setView(*camera);
             _isInit = true;
-        } else if (manager.getCurrentSceneType() != SceneManager::SceneType::LEVEL1 && _isInit == true) {
+        } else if (manager.getCurrentSceneType() != SceneManager::SceneType::LEVEL1) {
             camera = new sf::View(sf::FloatRect(0.f, 0.f, 800.f, 600.f));
             window->setView(*camera);
             _isInit = false;

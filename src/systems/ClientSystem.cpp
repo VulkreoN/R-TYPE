@@ -52,7 +52,6 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                     int id = readInt(msg, i + sizeof(float) * 2);
                     if (id >= 6010 && manager.getCurrentScene().get_by_id(id).size() == 0 && (bool)msg[i + sizeof(float) * 2 + sizeof(size_t)] == true) {
                         createProjectile(manager, id, readFloat(msg, i), readFloat(msg, i + sizeof(float)));
-                        std::cout << "Creating projectile : " << id << std::endl;
                     }
 
                     // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
@@ -61,6 +60,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                         for (auto &e : manager.getCurrentScene().get_by_id(id)) {
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
+                            (Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]))->setAlive((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)]);
                         }
                     }
                     if (tags == (int)IEntity::Tags::PROJECTILES) {
@@ -70,7 +70,16 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                             (Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]))->setIsActive((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)]);
                             if ((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)] == false) {
                                 manager.getCurrentScene().removeEntity(e);
-                                std::cout << "Removing projectile : " << id << std::endl;
+                            }
+                        }
+                    }
+                    if (tags == (int)IEntity::Tags::ENNEMY) {
+                        for (auto &e : manager.getCurrentScene().get_by_id(id)) {
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
+                            (Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]))->setIsAlive((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)]);
+                            if ((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)] == false) {
+                                manager.getCurrentScene().removeEntity(e);
                             }
                         }
                     }
@@ -90,6 +99,8 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
         proj = GameSystem::createProjectiles(id, 1, Position(x, y), Velocity(0.5f, 0), true, sf::IntRect(233, 120, 31, 11));
     else if (id == 6011)
         proj = GameSystem::createProjectiles(id, 1, Position(x, y), Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
+    else if (id == 6020)
+        proj = GameSystem::createProjectiles(id, 9, Position(x, y), Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
 
     manager.getCurrentScene().addEntity(proj);
 }
