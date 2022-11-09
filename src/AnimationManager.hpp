@@ -12,6 +12,7 @@
 #include "SceneManager.hpp"
 #include "Player.hpp"
 #include "Ennemy.hpp"
+#include "Nono.hpp"
 #include "Projectiles.hpp"
 #include <memory>
 
@@ -23,6 +24,7 @@ namespace R_TYPE {
             void update_player(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
             void update_ennemy(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
             void update_projectile(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
+            void update_nono(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
 
         protected:
         private:

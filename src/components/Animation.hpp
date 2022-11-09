@@ -27,12 +27,15 @@ namespace R_TYPE {
                 DOWN_PRESS,
                 LEFT,
                 RIGHT,
+                LV1,
+                LV2,
+                LV3
             };
             /// @brief Init Animation class
             /// @param id identifier of the entity
             /// @param state State of the Animation
             /// @param rect Rectangle of the texture
-            Animation(State state, sf::IntRect rect, int y, int x, int xMax, bool doAction);
+            Animation(State state, sf::IntRect rect, int y, int x, int xMax, bool doAction, int posX = 0, int posY = 0);
             ~Animation();
 
             /// @brief Getter Animation
@@ -74,6 +77,14 @@ namespace R_TYPE {
             sf::Time getCurrentFrame();
 
             sf::Clock getClock();
+
+            int getPosX();
+
+            int getPosY();
+
+            void setPosX(int posX);
+
+            void setPosY(int posY);
         private:
             State _state;
             sf::IntRect _rect;
@@ -85,6 +96,8 @@ namespace R_TYPE {
             int _nbFrame;
             sf::Clock _clock;
             sf::Time _currentFrame;
+            int _posX;
+            int _posY;
     };
 }
 

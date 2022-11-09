@@ -159,12 +159,20 @@ namespace R_TYPE {
         auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
         sprite->getSprite().setScale(0.7, 0.7);
         std::shared_ptr<Nono> comp = std::make_shared<Nono>();
+        comp->setState(Animation::State::LV1);
+        std::shared_ptr<Animation> anim_lv1 = std::make_shared<Animation>(Animation::State::LV1, sprite->getRect(), 0, 0, 4, true);
+        std::shared_ptr<Animation> anim_lv2 = std::make_shared<Animation>(Animation::State::LV2, sprite->getRect(), 0, 0, 4, true);
+        std::shared_ptr<Animation> anim_lv3 = std::make_shared<Animation>(Animation::State::LV3, sprite->getRect(), 0, 0, 4, true);
+
 
         // TODO: add velocity to player
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
 
         entity->addComponent(velocity)
-            .addComponent(comp);
+            .addComponent(comp)
+            .addComponent(anim_lv1)
+            .addComponent(anim_lv2)
+            .addComponent(anim_lv3);
 
         return entity;
     }

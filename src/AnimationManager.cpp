@@ -17,8 +17,7 @@ namespace R_TYPE {
             sprite->setRect(anim->getRect());
         } else {
             anim->setCurrentFrame(anim->getClock().getElapsedTime());
-            if (anim->getCurrentFrame().asSeconds() > 0.1) {
-                std::cout << (int)anim->getState() << std::endl;
+            if (anim->getCurrentFrame().asSeconds() > 4) {
                 anim->setRect(sf::IntRect(anim->getNbFrame() * anim->getRect().width,anim->getY() * anim->getRect().height,anim->getRect().width,anim->getRect().height));
                 if (anim->getNbFrame() >= anim->getXmax())
                     anim->setNbFrame(anim->getX());
@@ -49,7 +48,21 @@ namespace R_TYPE {
         for (int i = 0; i < anims.size(); i++) {
             auto anim_cast = Component::castComponent<Animation>(anims[i]);
             if (anim_cast->getState() == ennemy->getState()) {
-                playAnim(anim_cast, sprite); 
+                playAnim(anim_cast, sprite);
+            }
+        }
+    }
+
+    void AnimationManager::update_nono(std::shared_ptr<IEntity> &e, uint64_t deltaTime)
+    {
+        auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+        auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+        auto anims = e->getFilteredComponents(IComponent::Type::ANIMATION);
+        for (int i = 0; i < anims.size(); i++) {
+            auto anim_cast = Component::castComponent<Animation>(anims[i]);
+            if (anim_cast->getState() == nono->getState()) {
+                playAnim(anim_cast, sprite);
+                std::cout << anim_cast->getRect().left << "    " <<anim_cast->getRect().top << std::endl;
             }
         }
     }

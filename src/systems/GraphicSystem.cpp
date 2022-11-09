@@ -11,6 +11,7 @@
 #include "Component.hpp"
 #include "Sprite.hpp"
 #include "Player.hpp"
+#include "Nono.hpp"
 #include "Text.hpp"
 #include "Ennemy.hpp"
 
@@ -135,6 +136,16 @@ namespace R_TYPE {
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
                 amanager.update_player(e, deltaTime);
+                if (player->getNono() == true) {
+                    for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
+                        auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+                        auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+                        auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                        amanager.update_nono(e, deltaTime);
+                        sprite->getSprite().setPosition(pos->getPosition());
+                        window->draw(sprite->getSprite());
+                    }
+                }
                 player->getSprite().setPosition(player->getPosition());
                 window->draw(player->getSprite());
             }
@@ -147,6 +158,7 @@ namespace R_TYPE {
                 sprite->getSprite().setPosition(pos->getPosition());
                 window->draw(sprite->getSprite());
             }
+
         }
         window->display();
     }

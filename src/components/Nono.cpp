@@ -79,4 +79,14 @@ namespace R_TYPE {
             }
         }
     }
+
+    void Nono::setState(Animation::State state)
+    {
+        _state = state;
+    }
+
+    Animation::State Nono::getState()
+    {
+        return _state;
+    }
 }
