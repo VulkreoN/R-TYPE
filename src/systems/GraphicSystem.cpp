@@ -16,7 +16,7 @@
 
 namespace R_TYPE {
 
-    sf::RenderWindow *GraphicSystem::window;
+    std::shared_ptr<sf::RenderWindow> GraphicSystem::window;
     std::vector<std::shared_ptr<sf::Texture>> GraphicSystem::_textures;
     bool EventSystem::isInit;
 
@@ -37,12 +37,12 @@ namespace R_TYPE {
         std::string line;
         std::cout << "Graphic System init" << std::endl;
 
-        window = new sf::RenderWindow(sf::VideoMode(800, 600), "SFML window");
+        window = std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600), "SFML window");
         window->setFramerateLimit(60);
         // eventSystem->init(manager);
         // eventSystem->setWindow(window);
-        camera = new sf::View(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
-        window->setView(*camera);
+        camera = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
+        normalView = std::make_shared<sf::View>(sf::FloatRect(0.f, 0.f, 800.f, 600.f));
         input_file.open("assets/sprites_sheets/pathText.txt");
         while (getline(input_file, line)) {
             std::istringstream ss_line(line);
@@ -76,7 +76,7 @@ namespace R_TYPE {
             // }
 
 
-            for (auto &entity : (*scene.second)[IEntity::Tags::SPRITE_2D]) { 
+            for (auto &entity : (*scene.second)[IEntity::Tags::SPRITE_2D]) {
                 auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
                 if (sprite->isInit == true)
                     continue;
@@ -94,12 +94,10 @@ namespace R_TYPE {
     void GraphicSystem::setCamera(SceneManager &manager)
     {
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1 && _isInit == false) {
-            camera = new sf::View(sf::FloatRect(0.f, 0.f, 270.f, 205.f));
             window->setView(*camera);
             _isInit = true;
         } else if (manager.getCurrentSceneType() != SceneManager::SceneType::LEVEL1 && _isInit == true) {
-            camera = new sf::View(sf::FloatRect(0.f, 0.f, 800.f, 600.f));
-            window->setView(*camera);
+            window->setView(*normalView);
             _isInit = false;
         }
     }
@@ -109,7 +107,7 @@ namespace R_TYPE {
         initAllSprites(manager);
         if (EventSystem::isInit == false) {
             eventSystem->init(manager);
-            eventSystem->setWindow(window);
+            eventSystem->setWindow(window, camera, normalView);
             EventSystem::isInit = true;
         }
         eventSystem->update(manager, deltaTime);
@@ -126,12 +124,12 @@ namespace R_TYPE {
             auto text = Component::castComponent<Text>((*e)[IComponent::Type::TEXT]);
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
-            text->printText(window, *pos.get());
+            text->printText(window.get(), *pos.get());
         }
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             camera->move(0.25f, 0.f);
             window->setView(*camera);
-        
+
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
                 player->getSprite().setPosition(player->getPosition());

@@ -38,12 +38,27 @@ namespace R_TYPE {
         }
     }
 
+    void EventSystem::setWindow(std::shared_ptr<sf::RenderWindow> _window, std::shared_ptr<sf::View> _camera,
+        std::shared_ptr<sf::View> _normalView)
+    {
+        window = _window;
+        camera = _camera;
+        normalView = _normalView;
+    }
+
     void EventSystem::update(SceneManager &manager, uint64_t deltaTime)
     {
         sf::Event event;
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 manager.setShouldClose(true);
+            else if (event.type == sf::Event::Resized) {
+                normalView->setSize(event.size.width, event.size.height);
+                normalView->zoom((float)600.0 / event.size.height);
+                window->setView(*normalView);
+                camera->setSize(event.size.width, event.size.height);
+                camera->zoom((float)205.0 / event.size.height);
+            }
             for (auto &listener : _event[(int)manager.getCurrentSceneType()]) {
                 handleKeyboard(manager, listener, event);
                 handleMouse(manager, listener, event);

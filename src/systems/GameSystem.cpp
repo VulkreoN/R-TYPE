@@ -38,7 +38,7 @@ namespace R_TYPE {
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
         sceneManager.addScene(createSceneLose(), SceneManager::SceneType::LOSE);
         sceneManager.addScene(createSceneWin(), SceneManager::SceneType::WIN);
-        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
+        sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -336,7 +336,8 @@ namespace R_TYPE {
             [entity, goTo, click](SceneManager &sceneManager) {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
-                sf::Vector2<int> mousePosition = sf::Mouse::getPosition(*GraphicSystem::getWindow());
+                sf::Vector2<int> mousePixel = sf::Mouse::getPosition(*GraphicSystem::getWindow());
+                sf::Vector2f mousePosition = GraphicSystem::getWindow()->mapPixelToCoords(mousePixel);
 
                 if (mousePosition.x > pos->getPosition().x && mousePosition.x < pos->getPosition().x + click.x &&
                     mousePosition.y > pos->getPosition().y && mousePosition.y < pos->getPosition().y + click.y) {
