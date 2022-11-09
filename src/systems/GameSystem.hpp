@@ -30,6 +30,7 @@ namespace R_TYPE {
             void updateClient(SceneManager &sceneManager, uint64_t deltaTime);
             void updateServeur(SceneManager &sceneManager, uint64_t deltaTime);
 
+            static sf::FloatRect getRectWindow() { return rectWindow; };
             static std::shared_ptr<Entity> createProjectiles(int id, int name, Position pos, Velocity velocity, bool byPlayer, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
         protected:
 
@@ -51,7 +52,7 @@ namespace R_TYPE {
 
             void updateRectWindow();
         private:
-            sf::FloatRect rectWindow;
+            static sf::FloatRect rectWindow;
     };
 }
 

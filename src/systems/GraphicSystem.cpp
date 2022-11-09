@@ -20,6 +20,7 @@ namespace R_TYPE {
     sf::RenderWindow *GraphicSystem::window;
     std::vector<std::shared_ptr<sf::Texture>> GraphicSystem::_textures;
     bool EventSystem::isInit;
+    sf::View *GraphicSystem::camera;
 
     GraphicSystem::GraphicSystem(std::unique_ptr<ClientSystem> client)
     {
@@ -131,10 +132,16 @@ namespace R_TYPE {
         }
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             // camera->move(0.25f, 0.f);
-            // window->setView(*camera);
+            window->setView(*camera);
         }
 
         window->display();
+    }
+
+    void GraphicSystem::updateCamera(float offset)
+    {
+        std::cout << "offset : " << offset << std::endl;
+        camera->move(offset, 0.f);
     }
 
     void GraphicSystem::destroy()

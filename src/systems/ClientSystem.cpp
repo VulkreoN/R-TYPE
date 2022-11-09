@@ -36,6 +36,7 @@ void ClientSystem::init(SceneManager &manager)
 
 void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
 {
+    size_t i = 0;
     _ping_cooldown += deltaTime;
     if (_ping_cooldown >= NETWORK_PING_FREQUENCY) {
         _ping_cooldown = 0;
@@ -46,7 +47,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
             uint8_t msg[MAX_MSG_LENGTH];
             memcpy(msg, *msg_tmp, MAX_MSG_LENGTH);
             if ((protocol::Header)msg[0] == protocol::Header::GAME_INFO) {
-                for (size_t i = sizeof(protocol::Header); readInt(msg, i); i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
+                for (i = sizeof(protocol::Header); readInt(msg, i); i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
                     float tags = readInt(msg, i);
                     i += sizeof(float);
                     int id = readInt(msg, i + sizeof(float) * 2);
@@ -82,6 +83,9 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                                 manager.getCurrentScene().removeEntity(e);
                             }
                         }
+                    }
+                    if (tags == (int)IEntity::Tags::CAMERA) {
+                        GraphicSystem::updateCamera(readFloat(msg, i) / 100);
                     }
                 }
             }

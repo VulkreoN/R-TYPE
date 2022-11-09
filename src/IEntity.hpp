@@ -20,6 +20,7 @@ namespace R_TYPE {
             PLAYER,
             UI,
             ENNEMY,
+            CAMERA,
         };
 
         virtual ~IEntity() = default;

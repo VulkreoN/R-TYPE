@@ -11,6 +11,7 @@
 #include "EventSystem.hpp"
 #include "network/protocol.h"
 #include "Projectiles.hpp"
+#include "GameSystem.hpp"
 #include "Ennemy.hpp"
 
 namespace R_TYPE {
@@ -167,6 +168,10 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
                 Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->nextTimeSend();
         }
     }
+    putInt((int)IEntity::Tags::CAMERA, buff, c);
+    c += sizeof(float);
+    putInt(25, buff, c);
+    c += sizeof(float);
 }
 
 std::list<std::pair<int, NetworkSystem::ButtonState>> ServerSystem::getKeys() const
