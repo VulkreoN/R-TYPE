@@ -47,6 +47,7 @@
                 std::list<std::pair<int, int>> _mousePositions;
                 std::unique_ptr<EventSystem> eventSystem;
                 std::vector<size_t> _player_id_add_queue;
+                std::vector<std::pair<size_t, std::pair<int, NetworkSystem::ButtonState>>> _event_queue;
 
                 // functions to create messages to send
                 void create_start_game_msg(uint8_t *buff, std::unique_ptr<Connection> &connection);

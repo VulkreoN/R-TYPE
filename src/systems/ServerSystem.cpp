@@ -46,6 +46,35 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
             manager.getCurrentScene().addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
         _player_id_add_queue.clear();
     }
+    if (_event_queue.size() != 0) {
+        for (auto &i : _event_queue) {
+            for (auto &e : manager.getCurrentScene().get_by_id(i.first)) {
+                auto listener = Component::castComponent<Event>((*e)[IComponent::Type::EVENT]);
+                if (listener) {
+                    auto call = listener->getKeyboardMap()[static_cast<sf::Keyboard::Key>(i.second.first)];
+                    switch (i.second.second) {
+                        case NetworkSystem::ButtonState::PRESSED:
+                            if (call.pressed)
+                                call.pressed(manager);
+                            break;
+                        case NetworkSystem::ButtonState::DOWN:
+                            if (call.down)
+                                call.down(manager);
+                            break;
+                        case NetworkSystem::ButtonState::UP:
+                            if (call.up)
+                                call.up(manager);
+                            break;
+                        case NetworkSystem::ButtonState::RELEASED:
+                            if (call.released)
+                                call.released(manager);
+                            break;
+                    }
+                }
+            }
+        }
+        _event_queue.clear();
+    }
     eventSystem->update(manager, deltaTime);
 }
 
@@ -59,10 +88,12 @@ void ServerSystem::handle_incomming_message()
     bool new_client = true;
     bool isKey = false;
     size_t c = 0;
+    size_t id = 0;
 
     for (size_t i = 0; i < _connections.size(); i++)
         if (_connections[i]->get_endpoint() == _edp_buff) {
             new_client = false;
+            id = _connections[i]->get_id();
             if ((protocol::Header)_buffer[0] == protocol::Header::GAME_INFO) {
                 std::cout << "Recieving info for player : " << _connections[i]->get_id() << ", new crds : x = " << (float)_buffer[sizeof(protocol::Header)]
                     << ", y = " << (float)_buffer[sizeof(protocol::Header) + sizeof(float)] << std::endl;
@@ -71,14 +102,16 @@ void ServerSystem::handle_incomming_message()
     if (new_client && _connections.size() < MAX_NUMBER_OF_CONNECTIONS) {
         _connections.push_back(std::make_unique<Connection> (_edp_buff, _connections.size() + 1));
         _player_id_add_queue.push_back(_connections.back()->get_id());
+        id = _connections.back()->get_id();
     }
-    // here, handle the recienved message stored in _buffer
-    if ((protocol::Header)_buffer[c] == protocol::Header::EVENT) {
+    if ((protocol::Header)_buffer[c] == protocol::Header::EVENT && id != 0) {
         c += sizeof(uint8_t);
         isKey = (bool)_buffer[c];
         c += sizeof(bool);
         if (isKey) {
-            _keys.push_back(std::make_pair(readInt(_buffer, c), static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
+            _event_queue.push_back(std::make_pair(id,
+            std::make_pair(readInt(_buffer, c), static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)]))));
+            //_keys.push_back(std::make_pair(readInt(_buffer, c), static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
         } else {
             _mouseButtons.push_back(std::make_pair(readInt(_buffer, c), static_cast<NetworkSystem::ButtonState>(_buffer[c + sizeof(int)])));
             c += sizeof(int);
