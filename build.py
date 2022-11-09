@@ -80,11 +80,18 @@ if os.name == 'nt':
 
     # building the project
     print("\nBuilding the project...")
-    os.system("cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
-    os.system("cmake --build build")
+    os.system("cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release")
+    os.system("cmake --build build --config Release")
     if os.system("msbuild -m build\R-TYPE.sln") != 0:
         print("Error while building the project")
         sys.exit(1)
+    # copy asset folder to the build folder
+    os.system("xcopy /E /I /Y assets build\Release\\assets")
+    # copy font.ttf to the build folder
+    os.system("copy font.ttf build\Release\\font.ttf")
+    # create a shortcut of the game
+    os.system("powershell -NoProfile -ExecutionPolicy ByPass New-Item -ItemType SymbolicLink -Path '.' -Name 'r-type_client.lnk' -Value 'build\Release\\r-type_client.exe'")
+    os.system("powershell -NoProfile -ExecutionPolicy ByPass New-Item -ItemType SymbolicLink -Path '.' -Name 'r-type_server.lnk' -Value 'build\Release\\r-type_server.exe'")
     print("\nProject built successfully")
     sys.exit(0)
 
