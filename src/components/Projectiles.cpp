@@ -7,6 +7,7 @@ namespace R_TYPE {
         byPlayer = _byPlayer;
         isActive = true;
         type = Type::BASIC;
+        timeSend = 0;
     }
 
     Projectiles::~Projectiles() 

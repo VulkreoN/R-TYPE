@@ -64,6 +64,10 @@ namespace R_TYPE {
                     velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
                     projectile->setType(Projectiles::Type::BASIC);
                 }
+                if (projectile->getTimeSend() > 4) {
+                    sceneManager.getCurrentScene().removeEntity(e);
+                    break;
+                }
             }
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
@@ -87,20 +91,6 @@ namespace R_TYPE {
     void GameSystem::updateClient(SceneManager &sceneManager, uint64_t deltaTime)
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
-            // for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
-            //     auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
-            //     auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-            //     auto projectile = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
-
-            //     pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
-            //     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
-            //     std::cout << "projectile x: " << pos->getPosition().x << " y: " << pos->getPosition().y << std::endl;
-            //     if (projectile->getType() == Projectiles::Type::ROCKET && pos->getPosition().y < 100) {
-            //         velocity->setX(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().x); 
-            //         velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
-            //         projectile->setType(Projectiles::Type::BASIC);
-            //     }
-            // }
 
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
@@ -112,35 +102,21 @@ namespace R_TYPE {
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
                 // }
             }
-            // for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
-            //     auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
-            //     auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
-            //     auto position = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-            //     std::cout << "Position : " << position->getPosition().x << " " << position->getPosition().y << std::endl;
-            // }
-            //     if (player->isAlive() == false) {
-            //         sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
-            //     }
-            //     Position moved(0,0);
-            //     moved.setX(position->getPosition().x + velocity->getVelocity().x * deltaTime);
-            //     moved.setY(position->getPosition().y + velocity->getVelocity().y * deltaTime);
-
-            //     if (CollideSystem::canMove(moved, sceneManager, velocity->getVelocity())) {
-            //         position->setX(moved.getPosition().x);
-            //         position->setY(moved.getPosition().y);
-            //     }
-            // }
 
             // delete all projectiles if they are out of the screen
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
                 auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
 
-                int min = GraphicSystem::getWindow()->getView().getCenter().x - 135;
-                int max = GraphicSystem::getWindow()->getView().getCenter().x + 135;
+                // int min = GraphicSystem::getWindow()->getView().getCenter().x - 135;
+                // int max = GraphicSystem::getWindow()->getView().getCenter().x + 135;
 
-                if (pos->getPosition().x < min || pos->getPosition().x > max) {
-                    proj->setIsActive(false);
+                // if (pos->getPosition().x < min || pos->getPosition().x > max) {
+                //     proj->setIsActive(false);
+                // }
+                if (proj->getIsActive() == false) {
+                    sceneManager.getCurrentScene().removeEntity(e);
+                    std::cout << "remove projectile" << std::endl;
                 }
             }
         }

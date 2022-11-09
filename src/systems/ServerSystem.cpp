@@ -121,9 +121,9 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
     c += sizeof(protocol::Header);
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
         auto comp = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
-        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
-            buff[c] = (uint8_t)1;
-            c += sizeof(uint8_t);
+        if (c + sizeof(size_t) + sizeof(float) * 3 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::PLAYER, buff, c);
+            c += sizeof(float);
             putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().x, buff, c); // entity's X crd
             c += sizeof(float);
             putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().y, buff, c); // entity's Y crd
@@ -135,17 +135,19 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
         }
     }
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
-        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
-            buff[c] = (uint8_t)1;
-            c += sizeof(uint8_t);
+        if (c + sizeof(size_t) + sizeof(float) * 3 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::PROJECTILES, buff, c);
+            c += sizeof(float);
             putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().x, buff, c); // entity's X crd
             c += sizeof(float);
              putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().y, buff, c); // entity's Y crd
             c += sizeof(float);
             putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]))->getIsActive(); // to change, entity's status
+            buff[c] = (uint8_t)Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->getIsActive(); // to change, entity's status
             c += sizeof(uint8_t);
+            if (Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->getIsActive() == false)
+                Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->nextTimeSend();
         }
     }
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {

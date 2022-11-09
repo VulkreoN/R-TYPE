@@ -24,10 +24,14 @@ namespace R_TYPE {
             void setType(Type _type) {type = _type;};
             Type getType() {return (type);};
 
+            void nextTimeSend() {timeSend += 1;};
+            int getTimeSend() {return (timeSend);};
+
         private:
             bool byPlayer;
             bool isActive;
             Type type;
+            int timeSend;
     };
 }
 

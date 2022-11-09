@@ -10,6 +10,7 @@
 #include "GraphicSystem.hpp"
 #include "ClientSystem.hpp"
 #include "GameSystem.hpp"
+#include "Projectiles.hpp"
 
 namespace R_TYPE {
 
@@ -45,18 +46,33 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
             uint8_t msg[MAX_MSG_LENGTH];
             memcpy(msg, *msg_tmp, MAX_MSG_LENGTH);
             if ((protocol::Header)msg[0] == protocol::Header::GAME_INFO) {
-                for (size_t i = sizeof(protocol::Header); (uint8_t)msg[i]; i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
-                    i += sizeof(uint8_t);
+                for (size_t i = sizeof(protocol::Header); readInt(msg, i); i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
+                    float tags = readInt(msg, i);
+                    i += sizeof(float);
                     int id = readInt(msg, i + sizeof(float) * 2);
-                    if (id >= 6010 && manager.getCurrentScene().get_by_id(id).size() == 0) {
+                    if (id >= 6010 && manager.getCurrentScene().get_by_id(id).size() == 0 && (bool)msg[i + sizeof(float) * 2 + sizeof(size_t)] == true) {
                         createProjectile(manager, id, readFloat(msg, i), readFloat(msg, i + sizeof(float)));
+                        std::cout << "Creating projectile : " << id << std::endl;
                     }
 
                     // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
                     // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
-                    for (auto &e : manager.getCurrentScene().get_by_id(id)) {
-                        (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
-                        (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
+                    if ((int)tags == (int)IEntity::Tags::PLAYER) {
+                        for (auto &e : manager.getCurrentScene().get_by_id(id)) {
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
+                        }
+                    }
+                    if (tags == (int)IEntity::Tags::PROJECTILES) {
+                        for (auto &e : manager.getCurrentScene().get_by_id(id)) {
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
+                            (Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]))->setIsActive((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)]);
+                            if ((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)] == false) {
+                                manager.getCurrentScene().removeEntity(e);
+                                std::cout << "Removing projectile : " << id << std::endl;
+                            }
+                        }
                     }
                 }
             }
@@ -69,7 +85,6 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
 void ClientSystem::createProjectile(SceneManager &manager, int id, float x, float y)
 {
     std::shared_ptr<Entity> proj = std::make_shared<Entity>();
-    std::cout << "pos x: " << x << " pos y: " << y << std::endl;
 
     if (id == 6010)
         proj = GameSystem::createProjectiles(id, 1, Position(x, y), Velocity(0.5f, 0), true, sf::IntRect(233, 120, 31, 11));
