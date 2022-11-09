@@ -117,12 +117,22 @@ namespace R_TYPE {
             auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
             sf::IntRect box = sprite->getRect();
 
-            if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width 
-            && pos->getPosition().y > posEnnemi->getPosition().y && pos->getPosition().y < posEnnemi->getPosition().y + box.height) {
-                if (projectile->getType() != Projectiles::Type::CHARGED)
-                    projectile->setIsActive(false);
-                ennemy->setIsAlive(false);
-                return;
+            if (sprite->getAngle() == 0) {
+                if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width 
+                && pos->getPosition().y > posEnnemi->getPosition().y && pos->getPosition().y < posEnnemi->getPosition().y + box.height) {
+                    if (projectile->getType() != Projectiles::Type::CHARGED)
+                        projectile->setIsActive(false);
+                    ennemy->setIsAlive(false);
+                    return;
+                }
+            } else if (sprite->getAngle() == 180) {
+                if (pos->getPosition().x < posEnnemi->getPosition().x && pos->getPosition().x > posEnnemi->getPosition().x - box.width 
+                && pos->getPosition().y < posEnnemi->getPosition().y && pos->getPosition().y > posEnnemi->getPosition().y - box.height) {
+                    if (projectile->getType() != Projectiles::Type::CHARGED)
+                        projectile->setIsActive(false);
+                    ennemy->setIsAlive(false);
+                    return;
+                }
             }
         }
     }
