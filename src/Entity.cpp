@@ -19,8 +19,12 @@ namespace R_TYPE {
          {{IComponent::Type::EVENT}}},
         {Entity::Tags::ENNEMY,
          {{IComponent::Type::ENNEMY}}},
+        {Entity::Tags::BONUS,
+         {{IComponent::Type::BONUS}}},
         {Entity::Tags::PROJECTILES,
-         {{IComponent::Type::POSITION, IComponent::Type::VELOCITY, IComponent::Type::PROJECTILES}}}
+         {{IComponent::Type::POSITION, IComponent::Type::VELOCITY, IComponent::Type::PROJECTILES}}},
+        {Entity::Tags::NONO,
+         {{IComponent::Type::NONO}}}
     };
 
     IEntity &Entity::addComponent(std::shared_ptr<IComponent> component) {

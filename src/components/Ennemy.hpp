@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "Position.hpp"
 #include "Velocity.hpp"
+#include "Bonus.hpp"
 #include "Animation.hpp"
 
 namespace R_TYPE {
@@ -33,6 +34,9 @@ namespace R_TYPE {
 
             Type getType() {return (type);};
 
+            Bonus::BonusType getLoot() {return (isLooting);};
+            void setLoot(Bonus::BonusType loot) {isLooting = loot;};
+
             void setState(Animation::State state);
 
             Animation::State getState();
@@ -40,6 +44,7 @@ namespace R_TYPE {
             void updateAngle(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
         private:
             bool isAlive;
+            Bonus::BonusType isLooting;
             Type type;
             Script scripts;
             Animation::State _state;

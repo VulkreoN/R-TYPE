@@ -20,6 +20,8 @@ namespace R_TYPE {
             PLAYER,
             UI,
             ENNEMY,
+            BONUS,
+            NONO,
             ANIMATED,
         };
 
