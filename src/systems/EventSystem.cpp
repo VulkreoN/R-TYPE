@@ -49,6 +49,8 @@ namespace R_TYPE {
     void EventSystem::update(SceneManager &manager, uint64_t deltaTime)
     {
         sf::Event event;
+        float result = 0;
+
         while (window->pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 manager.setShouldClose(true);
@@ -56,8 +58,8 @@ namespace R_TYPE {
                 normalView->setSize(event.size.width, event.size.height);
                 normalView->zoom((float)600.0 / event.size.height);
                 window->setView(*normalView);
-                camera->setSize(event.size.width, event.size.height);
-                camera->zoom((float)205.0 / event.size.height);
+                result = event.size.width * 205.0 / event.size.height;
+                camera->setViewport(sf::FloatRect(((result - 270.0) / 2) / result, 0, 270.0 / (event.size.width * 205.0 / event.size.height), 1));
             }
             for (auto &listener : _event[(int)manager.getCurrentSceneType()]) {
                 handleKeyboard(manager, listener, event);
