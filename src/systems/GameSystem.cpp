@@ -21,6 +21,8 @@
 namespace R_TYPE {
 
     sf::FloatRect GameSystem::rectWindow;
+    int GameSystem::nbrBasicShoot;
+    int GameSystem::nbrTurretShoot;
 
     GameSystem::GameSystem()
     {
@@ -42,6 +44,8 @@ namespace R_TYPE {
         sceneManager.addScene(createSceneLose(), SceneManager::SceneType::LOSE);
         sceneManager.addScene(createSceneWin(), SceneManager::SceneType::WIN);
         sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
+        nbrBasicShoot = 0;
+        nbrTurretShoot = 0;
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -72,6 +76,10 @@ namespace R_TYPE {
                     projectile->setIsActive(false);
                 }
                 if (projectile->getTimeSend() > 4) {
+                    if (projectile->getType() == Projectiles::Type::BASIC && projectile->shootByPlayer()) {
+                        GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() - 1);
+                    } else if (projectile->shootByPlayer() == 2)
+                        GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -128,6 +136,10 @@ namespace R_TYPE {
                 auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
 
                 if (proj->getIsActive() == false) {
+                    if (proj->getType() == Projectiles::Type::BASIC && proj->shootByPlayer()) {
+                        GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() - 1);
+                    } else if (proj->shootByPlayer() == 2)
+                        GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                 }
             }
@@ -327,9 +339,9 @@ namespace R_TYPE {
                     scene.getCurrentScene().addEntity(shoot);
                 } else {
                     std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                        (6011, 1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
+                        (6011 + GameSystem::getNbrBasicShoot(), 1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
-
+                    GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() + 1);
                     scene.getCurrentScene().addEntity(shoot);
                 }
             },
@@ -361,7 +373,6 @@ namespace R_TYPE {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
 
-                std::cout << "enter mouse callback" << std::endl;
                 if (mousePosition.x > pos->getPosition().x && mousePosition.x < pos->getPosition().x + click.x &&
                     mousePosition.y > pos->getPosition().y && mousePosition.y < pos->getPosition().y + click.y) {
                         if (goTo != SceneManager::SceneType::NONE)

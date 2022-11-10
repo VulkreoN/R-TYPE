@@ -132,7 +132,7 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             c += sizeof(float);
             putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)Component::castComponent<Player>((*e)[IComponent::Type::PLAYER])->isAlive(); // to change, entity's status
+            buff[c] = (uint8_t)Component::castComponent<Player>((*e)[IComponent::Type::PLAYER])->isAlive(); // entity's status
             c += sizeof(uint8_t);
         }
     }
@@ -146,7 +146,7 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             c += sizeof(float);
             putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->getIsActive(); // to change, entity's status
+            buff[c] = (uint8_t)Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->getIsActive(); // entity's status
             c += sizeof(uint8_t);
             if (Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->getIsActive() == false)
                 Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->nextTimeSend();

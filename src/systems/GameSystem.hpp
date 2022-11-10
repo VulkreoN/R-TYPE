@@ -31,6 +31,10 @@ namespace R_TYPE {
             void updateServeur(SceneManager &sceneManager, uint64_t deltaTime);
 
             static sf::FloatRect getRectWindow() { return rectWindow; };
+            static void setNbrBasicShoot(int nbr) { nbrBasicShoot = nbr; };
+            static int getNbrBasicShoot() { return nbrBasicShoot; };
+            static void setNbrTurretShoot(int nbr) { nbrTurretShoot = nbr; };
+            static int getNbrTurretShoot() { return nbrTurretShoot; };
             static std::shared_ptr<Entity> createProjectiles(int id, int name, Position pos, Velocity velocity, bool byPlayer, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
         protected:
 
@@ -53,6 +57,8 @@ namespace R_TYPE {
             void updateRectWindow();
         private:
             static sf::FloatRect rectWindow;
+            static int nbrBasicShoot;
+            static int nbrTurretShoot;
     };
 }
 

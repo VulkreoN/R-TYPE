@@ -22,7 +22,8 @@ namespace R_TYPE {
 
         if (type == Ennemy::Type::TURRET) {
             if (scripts.turretScript()) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6021, 54, *selfPos, getVelocityTarget(distance), false, sf::IntRect(0, 0, 14, 12));
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6021 + GameSystem::getNbrTurretShoot(), 54, *selfPos, getVelocityTarget(distance), false, sf::IntRect(0, 0, 14, 12));
+                GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() + 1);
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
@@ -34,7 +35,7 @@ namespace R_TYPE {
             }
         } else if (type == Ennemy::Type::ROBOT_DINO) {
             if (scripts.robotScript(distance, selfVel)) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(600, 10, *selfPos, Velocity(0, -0.1f), false, sf::IntRect(191, 63, 6, 12));
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6022, 10, *selfPos, Velocity(0, -0.1f), false, sf::IntRect(191, 63, 6, 12));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::SPATIAL) {

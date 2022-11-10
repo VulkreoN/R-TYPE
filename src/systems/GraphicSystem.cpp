@@ -140,7 +140,6 @@ namespace R_TYPE {
 
     void GraphicSystem::updateCamera(float offset)
     {
-        std::cout << "offset : " << offset << std::endl;
         camera->move(offset, 0.f);
     }
 
