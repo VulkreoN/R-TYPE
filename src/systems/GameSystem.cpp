@@ -23,6 +23,7 @@ namespace R_TYPE {
     sf::FloatRect GameSystem::rectWindow;
     int GameSystem::nbrBasicShoot;
     int GameSystem::nbrTurretShoot;
+    int GameSystem::nbrRocketShoot;
 
     GameSystem::GameSystem()
     {
@@ -46,6 +47,7 @@ namespace R_TYPE {
         sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
         nbrBasicShoot = 0;
         nbrTurretShoot = 0;
+        nbrRocketShoot = 0;
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -67,10 +69,10 @@ namespace R_TYPE {
 
                 pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                 pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
-                if (projectile->getType() == Projectiles::Type::ROCKET && pos->getPosition().y < 100) {
+                if (projectile->getType() == Projectiles::Type::PRE_ROCKET && pos->getPosition().y < 100) {
                     velocity->setX(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().x); 
                     velocity->setY(Ennemy::getVelocityTarget(Ennemy::getDistance(sceneManager, pos->getPosition())).getVelocity().y);
-                    projectile->setType(Projectiles::Type::BASIC);
+                    projectile->setType(Projectiles::Type::ROCKET);
                 }
                 if (pos->getPosition().x < rectWindow.left || pos->getPosition().x > rectWindow.left + 270) {
                     projectile->setIsActive(false);
@@ -78,8 +80,11 @@ namespace R_TYPE {
                 if (projectile->getTimeSend() > 4) {
                     if (projectile->getType() == Projectiles::Type::BASIC && projectile->shootByPlayer()) {
                         GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() - 1);
-                    } else if (projectile->shootByPlayer() == 2)
+                    } else if (projectile->getType() == Projectiles::Type::TURRET) {
                         GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() - 1);
+                    } else if (projectile->getType() == Projectiles::Type::ROCKET) {
+                        GameSystem::setNbrRocketShoot(GameSystem::getNbrRocketShoot() - 1);
+                    }
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -138,8 +143,10 @@ namespace R_TYPE {
                 if (proj->getIsActive() == false) {
                     if (proj->getType() == Projectiles::Type::BASIC && proj->shootByPlayer()) {
                         GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() - 1);
-                    } else if (proj->shootByPlayer() == 2)
+                    } else if (proj->getType() == Projectiles::Type::TURRET)
                         GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() - 1);
+                    else if (proj->getType() == Projectiles::Type::ROCKET)
+                        GameSystem::setNbrRocketShoot(GameSystem::getNbrRocketShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                 }
             }
@@ -222,12 +229,14 @@ namespace R_TYPE {
         std::shared_ptr<Projectiles> component3 = std::make_shared<Projectiles>(byPlayer);
         std::shared_ptr<Velocity> component4 = std::make_shared<Velocity>(velocity);
 
-        if (name == 10)
-            component3->setType(Projectiles::Type::ROCKET);
+        if (name == 10) 
+            component3->setType(Projectiles::Type::PRE_ROCKET);
         else if (id == 6010)
             component3->setType(Projectiles::Type::CHARGED);
-        else if (id == 6021)
+        else if (id >= 6011 && id <= 6019)
             component3->setType(Projectiles::Type::BASIC);
+        else if (id >= 6021 && id <= 6029)
+            component3->setType(Projectiles::Type::TURRET);
         
         component->getSprite().setScale(0.7, 0.7);
 
@@ -492,9 +501,9 @@ namespace R_TYPE {
                 .addEntity(tower10)
                 .addEntity(tower11)
                 .addEntity(tower12)
-                // .addEntity(tower13)
-                // .addEntity(tower14)
-                // .addEntity(dino1)
+                .addEntity(tower13)
+                .addEntity(tower14)
+                .addEntity(dino1)
                 .addEntity(joryde1);
                 // .addEntities(spatial1);
         return (scene);

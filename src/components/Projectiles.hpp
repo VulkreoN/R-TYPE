@@ -10,9 +10,11 @@ namespace R_TYPE {
         public:
             enum class Type {
                 LASER,
+                PRE_ROCKET,
                 ROCKET,
                 BASIC,
                 CHARGED,
+                TURRET,
             };
             Projectiles(bool _byPlayer);
             ~Projectiles();

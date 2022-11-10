@@ -107,8 +107,8 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
         proj = GameSystem::createProjectiles(id, 9, Position(x, y), Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
     else if (id >= 6021 && id <= 6029)
         proj = GameSystem::createProjectiles(id, 54, Position(x, y), Velocity(0, 0), 2, sf::IntRect(0, 0, 14, 12));
-    // else if (id == 6022)
-    //     proj = GameSystem::createProjectiles(id, 10, Position(x, y), Velocity(0, 0), false, sf::IntRect(191, 63, 6, 12));
+    else if (id >= 6030 && id <= 6045)
+        proj = GameSystem::createProjectiles(id, 10, Position(x, y), Velocity(0, 0), false, sf::IntRect(191, 63, 6, 12));
     manager.getCurrentScene().addEntity(proj);
 }
 
