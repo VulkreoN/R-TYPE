@@ -68,16 +68,6 @@ namespace R_TYPE {
     void GraphicSystem::initAllSprites(SceneManager &manager)
     {
         for (auto &scene : manager.getScenes()) {
-            // for (auto &entity : (*scene.second)[IEntity::Tags::PLAYER]) {
-            //     auto sprite = Component::castComponent<Player>((*entity)[IComponent::Type::PLAYER]);
-            //     sprite->getSprite().setTexture(*_textures[0]);
-            //     sprite->getSprite().setTextureRect(sprite->getSprite().getTextureRect());
-            //     sprite->getSprite().setOrigin(sprite->getSprite().getTextureRect().width / 2, sprite->getSprite().getTextureRect().height / 2);
-            //     sprite->getSprite().setPosition(sprite->getSprite().getPosition().x, sprite->getSprite().getPosition().y);
-            //     sprite->getSprite().setRotation(sprite->getSprite().getRotation());
-            // }
-
-
             for (auto &entity : (*scene.second)[IEntity::Tags::SPRITE_2D]) {
                 auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
                 if (sprite->isInit == true)

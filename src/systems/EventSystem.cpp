@@ -42,6 +42,13 @@ namespace R_TYPE {
         }
     }
 
+    void EventSystem::putCallback(SceneManager &manager, std::shared_ptr<IEntity> entity)
+    {
+        auto listener = Component::castComponent<Event>((*entity)[IComponent::Type::EVENT]);
+        if (listener)
+            _event[(int)manager.getCurrentSceneType()].push_back(listener);
+    }
+
     void EventSystem::setWindow(std::shared_ptr<sf::RenderWindow> _window, std::shared_ptr<sf::View> _camera,
         std::shared_ptr<sf::View> _normalView)
     {

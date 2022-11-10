@@ -44,7 +44,7 @@ namespace R_TYPE {
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
         sceneManager.addScene(createSceneLose(), SceneManager::SceneType::LOSE);
         sceneManager.addScene(createSceneWin(), SceneManager::SceneType::WIN);
-        sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
+        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
         nbrBasicShoot = 0;
         nbrTurretShoot = 0;
         nbrRocketShoot = 0;
@@ -61,7 +61,7 @@ namespace R_TYPE {
     void GameSystem::updateServeur(SceneManager &sceneManager, uint64_t deltaTime)
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
-            updateRectWindow();
+            // updateRectWindow();
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
@@ -254,7 +254,7 @@ namespace R_TYPE {
         std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
         std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(name, *player_pos, 0, sf::IntRect(66, 0, 32, 12));
         std::shared_ptr<Event> event_p = std::make_shared<Event>();
-        std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0,0);
+        std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
 
         player_e->addComponent(player)
             .addComponent(velocity)
@@ -469,7 +469,6 @@ namespace R_TYPE {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createFirstLevel, this));
         std::shared_ptr<Entity> top_wall = createSprite(400, 48, 100, 0);
         std::shared_ptr<Entity> bottom_wall = createSprite(401, 49, 100, 127);
-        std::shared_ptr<Entity> player = createPlayer(1, 53, 50, 100);
         std::shared_ptr<Entity> tower1 = createEnnemy(50, 55, 333, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower2 = createEnnemy(51, 55, 385, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower3 = createEnnemy(52, 55, 428, 19, 180.f, Ennemy::Type::TURRET);
@@ -490,7 +489,6 @@ namespace R_TYPE {
 
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
-                .addEntity(player)
                 .addEntity(tower1)
                 .addEntity(tower2)
                 .addEntity(tower3)

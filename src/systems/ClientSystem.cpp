@@ -54,6 +54,12 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                     if (id >= 6010 && manager.getCurrentScene().get_by_id(id).size() == 0 && (bool)msg[i + sizeof(float) * 2 + sizeof(size_t)] == true) {
                         createProjectile(manager, id, readFloat(msg, i), readFloat(msg, i + sizeof(float)));
                     }
+                    if (manager.getCurrentScene().get_by_id(id).size() == 0 && id > 0 && id < 5) {
+                        std::shared_ptr<Entity> player = GameSystem::createPlayer(id, 53, 50, 40 + 20 * id);
+                        manager.getCurrentScene().addEntity(player);
+                        EventSystem::putCallback(manager, player);
+                        std::cout << "player id : " << id << std::endl;
+                    }
 
                     // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
                     // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
