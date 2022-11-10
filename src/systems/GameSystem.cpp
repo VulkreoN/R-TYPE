@@ -62,6 +62,7 @@ namespace R_TYPE {
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             updateRectWindow();
+            // std::cout << "serveur nbrTurret : " << nbrTurretShoot << std::endl;
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
@@ -128,7 +129,6 @@ namespace R_TYPE {
     void GameSystem::updateClient(SceneManager &sceneManager, uint64_t deltaTime)
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
-
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
                 if (player->isAlive() == false)
@@ -143,11 +143,12 @@ namespace R_TYPE {
                 if (proj->getIsActive() == false) {
                     if (proj->getType() == Projectiles::Type::BASIC && proj->shootByPlayer()) {
                         GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() - 1);
-                    } else if (proj->getType() == Projectiles::Type::TURRET)
+                    } else if (proj->getType() == Projectiles::Type::TURRET) {
                         GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() - 1);
-                    else if (proj->getType() == Projectiles::Type::ROCKET)
+                    } else if (proj->getType() == Projectiles::Type::ROCKET)
                         GameSystem::setNbrRocketShoot(GameSystem::getNbrRocketShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
+                    break;
                 }
             }
         }
