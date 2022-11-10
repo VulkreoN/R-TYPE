@@ -1,28 +1,42 @@
-# R-TYPE
-    This project aims to be a R-TYPE clone using SFML graphical library
+# **R-TYPE** - *User Documentation*
 
-# Compilation
-    cmake -B build
-    cmake --build build
+## **Introduction**
 
-# Language:
-    Use english for comments!
+This project is a remake of the famous R-Type game. It is a 2D space shooter game where you have to destroy enemies and bosses to progress in the game. You can play alone or with a friend in cooperative mode.
 
-# Pull requests:
-    A pull request needs to be made before merging on dev and main.
-    To create a pull request:
-        - Go on https://github.com/Mfolio2004/R-TYPE
-        - Click on the "Pull requests" tab -> "New pull request"
-        - Select dev as "base:" and the branch you want to merge as "compare:"
-        - Click on "Create pull request"
-        - Enter a title and a description for your pull request
-        - Select 2 reviewers fitted to review your code (Reviewers tab is at the right of the description)
-        - Click again on "Create pull request" => Your pull request is created
-        - If one or more reviewers asked for changes, just push your changes and your pull request will update accordingly
-        - Once your pull request is validated by all the reviewers you can click on "Merge pull request" => Your pull
-        request is merged
+<details>
+    <summary> Installation </summary>
 
-# Commit norm:
-    Conjugated verb in preterit form and in upper case
-    Examples -> ADDED: run() function in Core.cpp
-             -> MODIFIED: Entity class in Entity.hpp
+### **Requirements**
+
+- python3
+- pip3
+
+### **Installation**
+
+- Clone the repository
+- (*windows only*) Install the requirements with `pip3 install -r requirements.txt`
+- Run the install script with `python3 build.py`
+
+</details>
+
+<details>
+    <summary> Usage </summary>
+
+- Run the server `r-type_server`
+- Run the client `r-type_client`
+
+## **Controls**
+
+- **Movement**: `Z`, `Q`, `S`, `D`
+- **Shoot**: `Space`
+- **Pause**: `Escape`
+
+</details>
+
+## **Authors**
+- **[Maxence FOLIO](https://github.com/Mfolio2004)**
+- **[Adrien THIBAULT](github.com/)**
+- **[Hakim REDJEM](github.com/VulkreoN)**
+- **[Matéo BALDASSI](https://github.com/MateoBaldassi)**
+- **[Maylis DUCOURNAU](github.com/)**
