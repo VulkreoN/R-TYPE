@@ -27,8 +27,9 @@ jobs:
         - uses: actions/checkout@v3
         - name: install dependencies and compile
           run: |
-            python pip install -r requirements.txt
-            python build.py
+            pip install -r requirements.txt
+            pip3 install -r requirements.txt
+            python3 build.py
 
     Push_Main:
         needs: [Compile_Unix, Compile_Windows]
