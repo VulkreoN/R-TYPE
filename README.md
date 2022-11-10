@@ -1,8 +1,16 @@
 # **R-TYPE** - *User Documentation*
 
+the developper documentation is available [here](Documentation/DevelopperDocumentation.md)
+
 ## **Introduction**
 
 This project is a remake of the famous R-Type game. It is a 2D space shooter game where you have to destroy enemies and bosses to progress in the game. You can play alone or with a friend in cooperative mode.
+
+### **System Requirements**
+
+This game is compatible with Windows and Linux.
+
+You'll need to be connected to the internet during the installation of the game.
 
 <details>
     <summary> Installation </summary>
@@ -33,6 +41,8 @@ This project is a remake of the famous R-Type game. It is a 2D space shooter gam
 - **Pause**: `Escape`
 
 </details>
+
+
 
 ## **Authors**
 - **[Maxence FOLIO](https://github.com/Mfolio2004)**
