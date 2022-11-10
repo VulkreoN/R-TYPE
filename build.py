@@ -66,31 +66,38 @@ if os.name == 'nt':
         print("vcpkg is not installed..\n")
         print("Installing vcpkg...")
         # download vcpkg
-        url = ""
-        r = requests.get(url, allow_redirects=True)
-        open('vcpkg.zip', 'wb').write(r.content)
+        os.system("git clone https://github.com/Microsoft/vcpkg.git")
         # install vcpkg
+        os.system("cd vcpkg && .\\bootstrap-vcpkg.bat")
     else:
         print("\nvcpkg is already installed")
     # installing dependencies
     print("\nInstalling dependencies...")
     os.system("vcpkg install sfml:x64-windows")
     os.system("vcpkg install asio:x64-windows")
-    os.system("vcpkg install boost:x64-windows")
+    os.system("vcpkg integrate install")
     print("\nDependencies installed successfully")
 
     # building the project
     print("\nBuilding the project...")
-    os.system("cmake -S . -B build")
-    os.system("cmake --build build")
-    if os.system("msbuild build\ALL_BUILD.vcxproj") != 0:
+    os.system("cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release")
+    os.system("cmake --build build --config Release")
+    if os.system("msbuild -m build\R-TYPE.sln") != 0:
         print("Error while building the project")
         sys.exit(1)
+    # copy asset folder to the build folder
+    os.system("xcopy /E /I /Y assets build\Release\\assets")
+    # copy font.ttf to the build folder
+    os.system("copy font.ttf build\Release\\font.ttf")
+    # create a shortcut of the game
+    os.system("powershell -NoProfile -ExecutionPolicy ByPass New-Item -ItemType SymbolicLink -Path '.' -Name 'r-type_client.lnk' -Value 'build\Release\\r-type_client.exe'")
+    os.system("powershell -NoProfile -ExecutionPolicy ByPass New-Item -ItemType SymbolicLink -Path '.' -Name 'r-type_server.lnk' -Value 'build\Release\\r-type_server.exe'")
     print("\nProject built successfully")
     sys.exit(0)
 
 elif os.name == 'posix':
     # check if the script is run as root
+    vcpkg_install = True
     if os.geteuid() != 0:
         print("You need to have root privileges to run this script.")
         sys.exit(1)
@@ -109,6 +116,7 @@ elif os.name == 'posix':
     # check if vcpkg is installed
     print("Checking if vcpkg is installed...\n")
     if os.system("vcpkg --version") != 0:
+        vcpgk_install = False
         print("\n\nvcpkg is not installed")
         print("installing vcpkg...")
         # os.system("git clone https://github.com/Microsoft/vcpkg.git")
@@ -116,15 +124,15 @@ elif os.name == 'posix':
         print("\n\nvcpkg installed")
 
     else :
-        print("vcpkg is installed\n")
+        print("vcpkg is already installed\n")
     # install dependencies with vcpkg
     print("Installing dependencies with vcpkg...\n")
-    # get ports list
-    # os.system("git clone https://github.com/microsoft/vcpkg.git vcpkg_tmp")
-    # os.system("vcpkg install sfml --overlay-ports=vcpkg_tmp/ports/alsa")
-    os.system("./vcpkg/vcpkg install sfml")
-    os.system("./vcpkg/vcpkg install asio")
-    os.system("./vcpkg/vcpkg install boost")
+    if vcpkg_install:
+        os.system("./vcpkg/vcpkg install sfml")
+        os.system("./vcpkg/vcpkg install asio")
+    else:
+        os.system("vcpkg install sfml")
+        os.system("vcpkg install asio")
     # os.system("rm -rf vcpkg_tmp")
     print("Dependencies installed successfully\n")
     # building the project

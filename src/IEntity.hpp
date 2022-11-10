@@ -35,11 +35,11 @@ namespace R_TYPE {
          * @brief Get entity's components
          * @return Returns a reference of the entity's components vector
          */
-        virtual std::map<IComponent::Type, std::shared_ptr<IComponent>> &getComponents() = 0;
-        /**
-         * @brief Get entity's tags
-         * @return Returns a reference of the entity's tags vector
-         */
+        // virtual std::map<IComponent::Type, std::shared_ptr<IComponent>> &getComponents() = 0;
+        // /**
+        //  * @brief Get entity's tags
+        //  * @return Returns a reference of the entity's tags vector
+        //  */
         virtual const std::vector<Tags> &getTags() const = 0;
         /**
          * @brief [] Operator overload that returns a pointer to a component or null
