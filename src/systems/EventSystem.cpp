@@ -42,6 +42,13 @@ namespace R_TYPE {
         }
     }
 
+    void EventSystem::putCallback(SceneManager &manager, std::shared_ptr<IEntity> entity)
+    {
+        auto listener = Component::castComponent<Event>((*entity)[IComponent::Type::EVENT]);
+        if (listener)
+            _event[(int)manager.getCurrentSceneType()].push_back(listener);
+    }
+
     void EventSystem::setWindow(std::shared_ptr<sf::RenderWindow> _window, std::shared_ptr<sf::View> _camera,
         std::shared_ptr<sf::View> _normalView)
     {
@@ -70,15 +77,15 @@ namespace R_TYPE {
                 handleMouse(manager, listener, event);
             }
         }
-        for (auto &script : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
-            auto pos = Component::castComponent<Position>((*script)[IComponent::Type::POSITION]);
-            auto ennemy = Component::castComponent<Ennemy>((*script)[IComponent::Type::ENNEMY]);
-            float windowPosX = window->getView().getCenter().x - 135;
+        // for (auto &script : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+        //     auto pos = Component::castComponent<Position>((*script)[IComponent::Type::POSITION]);
+        //     auto ennemy = Component::castComponent<Ennemy>((*script)[IComponent::Type::ENNEMY]);
+        //     float windowPosX = window->getView().getCenter().x - 135;
 
-            if (pos->getPosition().x < windowPosX + 270 && pos->getPosition().x > windowPosX) {
-                ennemy->launchScript(manager, script);
-            }
-        }
+        //     if (pos->getPosition().x < windowPosX + 270 && pos->getPosition().x > windowPosX) {
+        //         ennemy->launchScript(manager, script);
+        //     }
+        // }
     }
 
     void EventSystem::update(SceneManager &manager, uint64_t deltaTime)

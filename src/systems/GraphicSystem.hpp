@@ -34,11 +34,13 @@ namespace R_TYPE {
 
             void setCamera(SceneManager &manager);
 
+            static void updateCamera(float offset);
+
         protected:
         private:
             static std::shared_ptr<sf::RenderWindow> window;
             std::unique_ptr<EventSystem> eventSystem;
-            std::shared_ptr<sf::View> camera;
+            static std::shared_ptr<sf::View> camera;
             std::shared_ptr<sf::View> normalView;
             static std::vector<std::shared_ptr<sf::Texture>> _textures;
             std::vector<std::string> _pathTextures;

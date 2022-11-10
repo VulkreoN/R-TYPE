@@ -23,6 +23,9 @@ namespace R_TYPE {
             /// @brief check if ennemy is alive 
             bool IsAlive() {return (isAlive);};
 
+            /// @brief set ennemy alive
+            void setIsAlive(bool _isAlive) {isAlive = _isAlive;};
+
             /// @brief Launch the good script with the type of the ennemy
             void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy);
 
@@ -31,10 +34,14 @@ namespace R_TYPE {
             static Velocity getVelocityTarget(sf::Vector2f distance);
 
             Type getType() {return (type);};
+
+            void nextTimeSend() {timeSend += 1;};
+            int getTimeSend() {return (timeSend);};
         private:
             bool isAlive;
             Type type;
             Script scripts;
+            int timeSend;
     };
 }
 

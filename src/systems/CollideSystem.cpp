@@ -36,14 +36,6 @@ namespace R_TYPE {
             } else if (component->shootByPlayer() == true)
                 didHitEnnemi(sceneManager, e);
         }
-        for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
-            auto component = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
-
-            if (component->getIsActive() == false) {
-                sceneManager.getCurrentScene().removeEntity(e);
-                return;
-            }
-        }
         for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             collideEnnemyPlayer(sceneManager, player);
         }
@@ -53,7 +45,7 @@ namespace R_TYPE {
             auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            sf::IntRect box = sprite->getRect();
 
             if (component->getType() == Ennemy::Type::ROBOT_DINO) {
                 if (pos->getPosition().y > 32)
@@ -68,12 +60,15 @@ namespace R_TYPE {
     {
         auto component = Component::castComponent<Player>((*player)[IComponent::Type::PLAYER]);
         auto spritePlayer = Component::castComponent<Sprite>((*player)[IComponent::Type::SPRITE]);
+        auto pos = Component::castComponent<Position>((*player)[IComponent::Type::POSITION]);
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            sf::FloatRect playerBox = spritePlayer->getSprite().getGlobalBounds();
+            auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+            // sf::IntRect box = sprite->getRect();
+            sf::IntRect playerBox = spritePlayer->getRect();
 
-            if (box.intersects(playerBox)) {
+            if (posEnnemi->getPosition().x > pos->getPosition().x && posEnnemi->getPosition().x < pos->getPosition().x + playerBox.width 
+            && posEnnemi->getPosition().y > pos->getPosition().y && posEnnemi->getPosition().y < pos->getPosition().y + playerBox.height) {
                 component->setAlive(false);
             }
         }
@@ -86,11 +81,10 @@ namespace R_TYPE {
         auto sprite = Component::castComponent<Sprite>((*project)[IComponent::Type::SPRITE]);
         auto velocity = Component::castComponent<Velocity>((*project)[IComponent::Type::VELOCITY]);
         
-        sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-        if (pos->getPosition().y > 32)
-            if (isBlack(*pos, box) == false) {
-                component->setIsActive(false);
-            }
+        sf::IntRect box = sprite->getRect();
+        if (isBlack(*pos, box) == false) {
+            component->setIsActive(false);
+        }
     }
 
     void CollideSystem::didHitProj(SceneManager &sceneManager, std::shared_ptr<IEntity> project)
@@ -101,8 +95,7 @@ namespace R_TYPE {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto proj = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
             auto posProj = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            
+            sf::IntRect box = sprite->getRect();
 
             if (box.contains(pos->getPosition().x, pos->getPosition().y) && pos != posProj) {
                 if (projectile->getType() != Projectiles::Type::CHARGED)
@@ -121,13 +114,25 @@ namespace R_TYPE {
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
+            sf::IntRect box = sprite->getRect();
 
-            if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
-                if (projectile->getType() != Projectiles::Type::CHARGED)
-                    projectile->setIsActive(false);
-                sceneManager.getCurrentScene().removeEntity(e);
-                return;
+            if (sprite->getAngle() == 0) {
+                if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width 
+                && pos->getPosition().y > posEnnemi->getPosition().y && pos->getPosition().y < posEnnemi->getPosition().y + box.height) {
+                    if (projectile->getType() != Projectiles::Type::CHARGED)
+                        projectile->setIsActive(false);
+                    ennemy->setIsAlive(false);
+                    return;
+                }
+            } else if (sprite->getAngle() == 180) {
+                if (pos->getPosition().x < posEnnemi->getPosition().x && pos->getPosition().x > posEnnemi->getPosition().x - box.width 
+                && pos->getPosition().y < posEnnemi->getPosition().y && pos->getPosition().y > posEnnemi->getPosition().y - box.height) {
+                    if (projectile->getType() != Projectiles::Type::CHARGED)
+                        projectile->setIsActive(false);
+                    ennemy->setIsAlive(false);
+                    return;
+                }
             }
         }
     }
@@ -139,10 +144,12 @@ namespace R_TYPE {
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
             auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+            auto posPlayer = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
-            
-            if (box.contains(pos->getPosition().x, pos->getPosition().y)) {
+            sf::IntRect box = sprite->getRect();
+
+            if (pos->getPosition().x > posPlayer->getPosition().x && pos->getPosition().x < posPlayer->getPosition().x + box.width 
+            && pos->getPosition().y > posPlayer->getPosition().y && pos->getPosition().y < posPlayer->getPosition().y + box.height) {
                 projectile->setIsActive(false);
                 player->setAlive(false);
                 return;
@@ -150,7 +157,7 @@ namespace R_TYPE {
         }
     }
     
-    bool CollideSystem::isBlack(Position pos, sf::FloatRect box)
+    bool CollideSystem::isBlack(Position pos, sf::IntRect box)
     {
         sf::Image imageUp;
         sf::Image imageDown;
@@ -195,7 +202,7 @@ namespace R_TYPE {
 
         real.setX((800 * pos.getPosition().x / 270));
         real.setY((600 * pos.getPosition().y / 205));
-        sf::FloatRect playerBox(0, 0, 32, 12);
+        sf::IntRect playerBox(0, 0, 32, 12);
 
         if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
@@ -204,7 +211,7 @@ namespace R_TYPE {
                 continue;
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
-            sf::FloatRect box = {posEnnemi->getPosition().x, posEnnemi->getPosition().y, 2608, 80};
+            sf::IntRect box = {posEnnemi->getPosition().x, posEnnemi->getPosition().y, 2608, 80};
             if (pos.getPosition().x + toAdd.getPosition().x > posEnnemi->getPosition().x && pos.getPosition().x + toAdd.getPosition().x < posEnnemi->getPosition().x + box.width
             && pos.getPosition().y + toAdd.getPosition().y > posEnnemi->getPosition().y && pos.getPosition().y + toAdd.getPosition().y < posEnnemi->getPosition().y + box.height)  {
                 if (isBlack(pos, playerBox) == false)

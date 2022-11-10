@@ -28,6 +28,7 @@ namespace R_TYPE {
 
             void setWindow(std::shared_ptr<sf::RenderWindow> _window, std::shared_ptr<sf::View> _camera, std::shared_ptr<sf::View> _normalView);
             static bool isInit;
+            static void putCallback(SceneManager &manager, std::shared_ptr<IEntity> entity);
 
         protected:
         private:

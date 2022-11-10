@@ -10,9 +10,11 @@ namespace R_TYPE {
         public:
             enum class Type {
                 LASER,
+                PRE_ROCKET,
                 ROCKET,
                 BASIC,
                 CHARGED,
+                TURRET,
             };
             Projectiles(bool _byPlayer);
             ~Projectiles();
@@ -24,10 +26,14 @@ namespace R_TYPE {
             void setType(Type _type) {type = _type;};
             Type getType() {return (type);};
 
+            void nextTimeSend() {timeSend += 1;};
+            int getTimeSend() {return (timeSend);};
+
         private:
             bool byPlayer;
             bool isActive;
             Type type;
+            int timeSend;
     };
 }
 

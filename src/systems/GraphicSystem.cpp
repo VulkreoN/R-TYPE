@@ -20,6 +20,7 @@ namespace R_TYPE {
     std::shared_ptr<sf::RenderWindow> GraphicSystem::window;
     std::vector<std::shared_ptr<sf::Texture>> GraphicSystem::_textures;
     bool EventSystem::isInit;
+    std::shared_ptr<sf::View> GraphicSystem::camera;
 
     GraphicSystem::GraphicSystem(std::unique_ptr<ClientSystem> client)
     {
@@ -67,16 +68,6 @@ namespace R_TYPE {
     void GraphicSystem::initAllSprites(SceneManager &manager)
     {
         for (auto &scene : manager.getScenes()) {
-            // for (auto &entity : (*scene.second)[IEntity::Tags::PLAYER]) {
-            //     auto sprite = Component::castComponent<Player>((*entity)[IComponent::Type::PLAYER]);
-            //     sprite->getSprite().setTexture(*_textures[0]);
-            //     sprite->getSprite().setTextureRect(sprite->getSprite().getTextureRect());
-            //     sprite->getSprite().setOrigin(sprite->getSprite().getTextureRect().width / 2, sprite->getSprite().getTextureRect().height / 2);
-            //     sprite->getSprite().setPosition(sprite->getSprite().getPosition().x, sprite->getSprite().getPosition().y);
-            //     sprite->getSprite().setRotation(sprite->getSprite().getRotation());
-            // }
-
-
             for (auto &entity : (*scene.second)[IEntity::Tags::SPRITE_2D]) {
                 auto sprite = Component::castComponent<Sprite>((*entity)[IComponent::Type::SPRITE]);
                 if (sprite->isInit == true)
@@ -129,10 +120,15 @@ namespace R_TYPE {
         }
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             // camera->move(0.25f, 0.f);
-            // window->setView(*camera);
+            window->setView(*camera);
         }
 
         window->display();
+    }
+
+    void GraphicSystem::updateCamera(float offset)
+    {
+        camera->move(offset, 0.f);
     }
 
     void GraphicSystem::destroy()
