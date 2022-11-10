@@ -46,12 +46,13 @@ namespace R_TYPE {
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             sf::IntRect box = sprite->getRect();
+            box.width = box.width * 0.7;
+            box.height = box.height * 0.7;
 
             if (component->getType() == Ennemy::Type::ROBOT_DINO) {
-                if (pos->getPosition().y > 32)
-                    if (isBlack(*pos, box) == false) {
-                        velocity->setX(-velocity->getVelocity().x);
-                    }
+                if (isBlack(*pos, box) == false) {
+                    velocity->setX(-velocity->getVelocity().x);
+                }
             }
         }
     }

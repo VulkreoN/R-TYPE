@@ -58,7 +58,6 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                         std::shared_ptr<Entity> player = GameSystem::createPlayer(id, 53, 50, 40 + 20 * id);
                         manager.getCurrentScene().addEntity(player);
                         EventSystem::putCallback(manager, player);
-                        std::cout << "player id : " << id << std::endl;
                     }
 
                     // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
