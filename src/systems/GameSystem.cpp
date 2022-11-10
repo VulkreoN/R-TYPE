@@ -572,62 +572,60 @@ namespace R_TYPE {
         std::shared_ptr<Entity> top_wall = createSprite(48, 100, 0);
         std::shared_ptr<Entity> bottom_wall = createSprite(49, 100, 127);
         std::shared_ptr<Entity> player = createPlayer(53, 50, 100);
-        //std::shared_ptr<Entity> tower1 = createEnnemy(55, 333, 19, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower2 = createEnnemy(55, 385, 19, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower3 = createEnnemy(55, 428, 19, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower4 = createEnnemy(55, 529, 19, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower5 = createEnnemy(55, 573, 19, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower6 = createEnnemy(55, 720, 43, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower7 = createEnnemy(55, 772, 43, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower8 = createEnnemy(55, 823, 43, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower9 = createEnnemy(55, 702, 163, 0.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower10 = createEnnemy(55, 754, 163, 0.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower11 = createEnnemy(55, 806, 163, 0.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower12 = createEnnemy(55, 145, 19, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower13 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower14 = createEnnemy(55, 905, 17, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower15 = createEnnemy(55, 1075, 67, 180.f, Ennemy::Type::TURRET);
-        //std::shared_ptr<Entity> tower16 = createEnnemy(55, 1210, 67, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower1 = createEnnemy(55, 333, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower2 = createEnnemy(55, 385, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower3 = createEnnemy(55, 428, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower4 = createEnnemy(55, 529, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower5 = createEnnemy(55, 573, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower6 = createEnnemy(55, 720, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower7 = createEnnemy(55, 772, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower8 = createEnnemy(55, 823, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower9 = createEnnemy(55, 702, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower10 = createEnnemy(55, 754, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower11 = createEnnemy(55, 806, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower12 = createEnnemy(55, 145, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower13 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower14 = createEnnemy(55, 905, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower15 = createEnnemy(55, 1075, 67, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower16 = createEnnemy(55, 1210, 67, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy(9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
         std::shared_ptr<Entity> joryde2 = createEnnemy(9, 260, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
-        std::shared_ptr<Entity> joryde3 = createEnnemy(9, 400, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
-        //std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::SPEED);
-        //std::shared_ptr<Entity> dino2 = createEnnemy(10, 545, 179, 0.f, Ennemy::Type::ROBOT_DINO);
-        //std::shared_ptr<Entity> dino3 = createEnnemy(10, 1160, 182, 0.f, Ennemy::Type::ROBOT_DINO);
-        //std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
-        //std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(5, 700, 90, 0.f, Ennemy::Type::SPATIAL);
-        //std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(5, 1250, 95, 0.f, Ennemy::Type::SPATIAL);
-        //std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(5, 1250, 75, 0.f, Ennemy::Type::SPATIAL);
+        std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::SPEED);
+        std::shared_ptr<Entity> dino2 = createEnnemy(10, 545, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino3 = createEnnemy(10, 1160, 182, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(5, 700, 90, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(5, 1250, 95, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(5, 1250, 75, 0.f, Ennemy::Type::SPATIAL);
 
         scene->addEntity(top_wall)
                 .addEntity(bottom_wall)
                 .addEntity(player)
-                //.addEntity(tower1)
-                //.addEntity(tower2)
-                //.addEntity(tower3)
-                //.addEntity(tower4)
-                //.addEntity(tower5)
-                //.addEntity(tower6)
-                //.addEntity(tower7)
-                //.addEntity(tower8)
-                //.addEntity(tower9)
-                //.addEntity(tower10)
-                //.addEntity(tower11)
-                //.addEntity(tower12)
-                //.addEntity(tower13)
-                //.addEntity(tower14)
-                //.addEntity(tower15)
-                //.addEntity(tower16)
-                //.addEntity(dino1)
-                //.addEntity(dino2)
-                //.addEntity(dino3)
+                .addEntity(tower1)
+                .addEntity(tower2)
+                .addEntity(tower3)
+                .addEntity(tower4)
+                .addEntity(tower5)
+                .addEntity(tower6)
+                .addEntity(tower7)
+                .addEntity(tower8)
+                .addEntity(tower9)
+                .addEntity(tower10)
+                .addEntity(tower11)
+                .addEntity(tower12)
+                .addEntity(tower13)
+                .addEntity(tower14)
+                .addEntity(tower15)
+                .addEntity(tower16)
+                .addEntity(dino1)
+                .addEntity(dino2)
+                .addEntity(dino3)
                 .addEntity(joryde1)
-                .addEntity(joryde3)
-                .addEntity(joryde2);
-                //.addEntities(spatial1)
-                //.addEntities(spatial2)
-                //.addEntities(spatial3)
-                //.addEntities(spatial4);
+                .addEntity(joryde2)
+                .addEntities(spatial1)
+                .addEntities(spatial2)
+                .addEntities(spatial3)
+                .addEntities(spatial4);
         return (scene);
     }
 
