@@ -1,0 +1,4 @@
+name: CI-R-TYPE
+on:
+    workflow_displatch:
+    
