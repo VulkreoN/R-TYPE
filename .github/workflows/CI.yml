@@ -1,4 +1,26 @@
 name: CI-R-TYPE
 on:
-    workflow_displatch:
-    
+    workflow_dispatch:
+    push:
+        branches:
+            - Dev
+
+jobs:
+    Compile_Unix:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: Compile
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y python3 python3-pip
+            sudo pip3 install -r requirements.txt
+            sudo python3 build.py
+
+    Compile_Windows:
+        runs-on: windows-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: Compile
+          run: |
+            python build.py
