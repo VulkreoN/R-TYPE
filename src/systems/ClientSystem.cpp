@@ -58,7 +58,6 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                         std::shared_ptr<Entity> player = GameSystem::createPlayer(id, 53, 50, 40 + 20 * id);
                         manager.getCurrentScene().addEntity(player);
                         EventSystem::putCallback(manager, player);
-                        std::cout << "player id : " << id << std::endl;
                     }
 
                     // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
@@ -75,9 +74,6 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
                             (Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]))->setIsActive((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)]);
-                            if ((bool)msg[i + sizeof(float) * 2 + sizeof(size_t)] == false) {
-                                manager.getCurrentScene().removeEntity(e);
-                            }
                         }
                     }
                     if (tags == (int)IEntity::Tags::ENNEMY) {
@@ -111,9 +107,10 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
         proj = GameSystem::createProjectiles(id, 1, Position(x, y), Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
     else if (id == 6020)
         proj = GameSystem::createProjectiles(id, 9, Position(x, y), Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
-    else if (id >= 6021 && id <= 6029)
+    else if (id >= 6021 && id <= 6029) {
         proj = GameSystem::createProjectiles(id, 54, Position(x, y), Velocity(0, 0), 2, sf::IntRect(0, 0, 14, 12));
-    else if (id >= 6030 && id <= 6045)
+        GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() + 1);
+    } else if (id >= 6030 && id <= 6045)
         proj = GameSystem::createProjectiles(id, 10, Position(x, y), Velocity(0, 0), false, sf::IntRect(191, 63, 6, 12));
     manager.getCurrentScene().addEntity(proj);
 }

@@ -128,6 +128,8 @@ namespace R_TYPE {
 
     void GraphicSystem::updateCamera(float offset)
     {
+        if (camera->getCenter().x + offset - 135 > 1925)
+            return;
         camera->move(offset, 0.f);
     }
 

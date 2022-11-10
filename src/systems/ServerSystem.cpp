@@ -44,8 +44,7 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
     }
     if (_player_id_add_queue.size() > 0) {
         for (size_t id : _player_id_add_queue) {
-            manager.getCurrentScene().addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
-            std::cout << "id : " << id << std::endl;
+            manager.getScene(SceneManager::SceneType::LEVEL1).addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
         }
         _player_id_add_queue.clear();
     }
@@ -195,12 +194,15 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
         }
     }
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+        auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+        if (pos->getPosition().x < GameSystem::getRectWindow().left - 50 || pos->getPosition().x > GameSystem::getRectWindow().left + 300)
+            continue;
         if (c + sizeof(size_t) + sizeof(float) * 3 + sizeof(uint8_t)) {
             putInt((int)IEntity::Tags::ENNEMY, buff, c);
             c += sizeof(float);
-            putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().x, buff, c); // entity's X crd
+            putInt(pos->getPosition().x, buff, c); // entity's X crd
             c += sizeof(float);
-            putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().y, buff, c); // entity's Y crd
+            putInt(pos->getPosition().y, buff, c); // entity's Y crd
             c += sizeof(float);
             putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
@@ -210,10 +212,11 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
                 Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->nextTimeSend();
         }
     }
-    // putInt((int)IEntity::Tags::CAMERA, buff, c);
-    // c += sizeof(float);
-    // putInt(25, buff, c);
-    // c += sizeof(float);
+    putInt((int)IEntity::Tags::CAMERA, buff, c);
+    c += sizeof(float);
+    // a remettre a 25
+    putInt(75, buff, c);
+    c += sizeof(float);
 }
 
 std::list<std::pair<int, NetworkSystem::ButtonState>> ServerSystem::getKeys() const
