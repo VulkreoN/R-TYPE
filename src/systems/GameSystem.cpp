@@ -80,6 +80,7 @@ namespace R_TYPE {
 
                 if (pos->getPosition().x < windowPosX + 270) {
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
+                    pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                 }
             }
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
@@ -572,24 +573,23 @@ namespace R_TYPE {
         std::shared_ptr<Entity> top_wall = createSprite(48, 100, 0);
         std::shared_ptr<Entity> bottom_wall = createSprite(49, 100, 127);
         std::shared_ptr<Entity> player = createPlayer(53, 50, 100);
-        std::shared_ptr<Entity> tower1 = createEnnemy(55, 333, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower2 = createEnnemy(55, 385, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower3 = createEnnemy(55, 428, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower4 = createEnnemy(55, 529, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower5 = createEnnemy(55, 573, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower6 = createEnnemy(55, 720, 43, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower7 = createEnnemy(55, 772, 43, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower8 = createEnnemy(55, 823, 43, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower9 = createEnnemy(55, 702, 163, 0.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower10 = createEnnemy(55, 754, 163, 0.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower11 = createEnnemy(55, 806, 163, 0.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower12 = createEnnemy(55, 145, 19, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower13 = createEnnemy(55, 957, 17, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower14 = createEnnemy(55, 905, 17, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower15 = createEnnemy(55, 1075, 67, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower16 = createEnnemy(55, 1210, 67, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower1 = createEnnemy(12, 333, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower2 = createEnnemy(12, 385, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower3 = createEnnemy(12, 428, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower4 = createEnnemy(12, 529, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower5 = createEnnemy(12, 573, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower6 = createEnnemy(12, 720, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower7 = createEnnemy(12, 772, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower8 = createEnnemy(12, 823, 43, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower9 = createEnnemy(12, 702, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower10 = createEnnemy(12, 754, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower11 = createEnnemy(12, 806, 163, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower12 = createEnnemy(12, 145, 19, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower13 = createEnnemy(12, 957, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower14 = createEnnemy(12, 905, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower15 = createEnnemy(12, 1075, 67, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower16 = createEnnemy(12, 1210, 67, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy(9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
-        std::shared_ptr<Entity> joryde2 = createEnnemy(9, 260, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
         std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::SPEED);
         std::shared_ptr<Entity> dino2 = createEnnemy(10, 545, 179, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> dino3 = createEnnemy(10, 1160, 182, 0.f, Ennemy::Type::ROBOT_DINO);
@@ -621,7 +621,6 @@ namespace R_TYPE {
                 .addEntity(dino2)
                 .addEntity(dino3)
                 .addEntity(joryde1)
-                .addEntity(joryde2)
                 .addEntities(spatial1)
                 .addEntities(spatial2)
                 .addEntities(spatial3)
