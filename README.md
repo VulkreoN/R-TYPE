@@ -1,6 +1,6 @@
 # **R-TYPE** - *User Documentation*
 
-the developper documentation is available [here](Documentation/DevelopperDocumentation.md)
+The developer documentation is available [here](Documentation/DevelopperDocumentation.md)
 
 ## **Introduction**
 

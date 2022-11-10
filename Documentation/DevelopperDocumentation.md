@@ -1,8 +1,8 @@
-# Developper Documentation
+# Developer Documentation
 
 ## **Introduction**
 
-This project is developped in C++ using the SFML library for the graphical part and Asio for the Network part.
+This project is developed in C++ using the SFML library for the graphical part and Asio for the Network part.
 
 there is a link to their documentation below:
 - [ASIO](https://think-async.com/Asio/asio-1.24.0/doc/)
@@ -71,7 +71,7 @@ We follow a specific commit message format, you can find it below:
 ```
 Conjugated verb in preterit form and in upper case
 > [TYPE]: [MESSAGE]
-    Exemples: > FIX: Fixed Network lag input
+    Examples: > FIX: Fixed Network lag input
              > ADD: Added New boss on stage 3
 ```
 
