@@ -10,9 +10,12 @@ namespace R_TYPE {
         public:
             enum class Type {
                 LASER_BOUCLE,
+                LASER,
+                PRE_ROCKET,
                 ROCKET,
                 BASIC,
                 CHARGED,
+                TURRET,
             };
             Projectiles(bool _byPlayer);
             ~Projectiles();
@@ -25,11 +28,14 @@ namespace R_TYPE {
             Type getType() {return (type);};
 
             void setSpriteAngle(sf::Vector2f distance, std::shared_ptr<IEntity> entity);
+            void nextTimeSend() {timeSend += 1;};
+            int getTimeSend() {return (timeSend);};
 
         private:
             bool byPlayer;
             bool isActive;
             Type type;
+            int timeSend;
     };
 }
 

@@ -2,6 +2,7 @@
 #define MOUSECALLBACK_HPP_
 
 #include <functional>
+#include <SFML/System/Vector2.hpp>
 
 namespace R_TYPE
 {
@@ -20,11 +21,11 @@ namespace R_TYPE
          * @param released callback to be called when a button is released
          */
         MouseCallback(
-            std::function<void(SceneManager &)> pressed,
-            std::function<void(SceneManager &)> released);
+            std::function<void(SceneManager &, sf::Vector2i pos)> pressed,
+            std::function<void(SceneManager &, sf::Vector2i pos)> released);
         ~MouseCallback();
-        std::function<void(SceneManager &)> _pressed;
-        std::function<void(SceneManager &)> _released;
+        std::function<void(SceneManager &, sf::Vector2i pos)> _pressed;
+        std::function<void(SceneManager &, sf::Vector2i pos)> _released;
 
     protected:
     private:

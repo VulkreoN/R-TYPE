@@ -7,8 +7,8 @@ namespace R_TYPE
     {
     }
 
-    MouseCallback::MouseCallback(std::function<void(SceneManager &)> pressed,
-                                 std::function<void(SceneManager &)> released):
+    MouseCallback::MouseCallback(std::function<void(SceneManager &, sf::Vector2i pos)> pressed,
+                                 std::function<void(SceneManager &, sf::Vector2i pos)> released):
     _pressed(pressed),
     _released(released)
     {

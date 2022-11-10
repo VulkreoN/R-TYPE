@@ -4,6 +4,11 @@
 #include "Entity.hpp"
 
 namespace R_TYPE {
+    Entity::Entity(size_t id)
+    {
+        _id = id;
+    }
+
     const std::map<Entity::Tags, std::vector<std::vector<IComponent::Type>>> Entity::entityTags = {
         {IEntity::Tags::SPRITE_2D,
          {{IComponent::Type::SPRITE, IComponent::Type::POSITION}}},
@@ -92,5 +97,10 @@ namespace R_TYPE {
         }
         return res;
 
+    }
+
+    size_t Entity::get_id()
+    {
+        return (_id);
     }
 }

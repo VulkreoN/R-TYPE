@@ -25,6 +25,9 @@ namespace R_TYPE {
             /// @brief check if ennemy is alive 
             bool IsAlive() {return (isAlive);};
 
+            /// @brief set ennemy alive
+            void setIsAlive(bool _isAlive) {isAlive = _isAlive;};
+
             /// @brief Launch the good script with the type of the ennemy
             void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy);
 
@@ -42,6 +45,8 @@ namespace R_TYPE {
             Animation::State getState();
 
             void updateAngle(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
+            void nextTimeSend() {timeSend += 1;};
+            int getTimeSend() {return (timeSend);};
         private:
             bool isAlive;
             Bonus::BonusType isLooting;
@@ -49,6 +54,7 @@ namespace R_TYPE {
             Script scripts;
             Animation::State _state;
             float angle;
+            int timeSend;
     };
 }
 
