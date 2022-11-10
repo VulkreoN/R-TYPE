@@ -29,15 +29,17 @@ namespace R_TYPE {
     {
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
             auto component = Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]);
+            if (component->getIsActive() == false)
+                continue;
             didHitWall(sceneManager, e);
             didHitProj(sceneManager, e);
             if (component->shootByPlayer() == false) {
-                didHitPlayer(sceneManager, e);
+                // didHitPlayer(sceneManager, e);
             } else if (component->shootByPlayer() == true)
                 didHitEnnemi(sceneManager, e);
         }
         for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
-            collideEnnemyPlayer(sceneManager, player);
+            // collideEnnemyPlayer(sceneManager, player);
         }
 
         for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {

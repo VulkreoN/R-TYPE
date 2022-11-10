@@ -42,7 +42,7 @@ namespace R_TYPE {
         lastFrame = CurrentFrame;
         CurrentFrame = clock.getElapsedTime();
 
-        if (repeat == 5)
+        if (repeat == 2)
             repeat = 0;
         if (CurrentFrame.asMilliseconds() > 375 && repeat > 0) {
             // selfVel->setX(0);
@@ -54,7 +54,7 @@ namespace R_TYPE {
         if (CurrentFrame.asSeconds() > 5 && repeat == 0) {
             // if (selfVel->getVelocity().x == 0)
             //     selfVel->setX(-0.03f);
-            std::cout << "5 Roquettes" << std::endl;
+            std::cout << "3 Roquettes" << std::endl;
             repeat = 1;
             clock.restart();
             return (true);

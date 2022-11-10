@@ -483,10 +483,17 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower11 = createEnnemy(60, 55, 806, 163, 0.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower12 = createEnnemy(61, 55, 145, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower13 = createEnnemy(62, 55, 957, 17, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower14 = createEnnemy(63, 55, 957, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower14 = createEnnemy(63, 55, 4622, 17, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> joryde1 = createEnnemy(64, 9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde2 = createEnnemy(65, 9, 900, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde3 = createEnnemy(66, 9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> dino1 = createEnnemy(67, 10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino2 = createEnnemy(68, 10, 545, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino3 = createEnnemy(69, 10, 1160, 182, 0.f, Ennemy::Type::ROBOT_DINO);
         std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(70, 5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
-        std::shared_ptr<Entity> dino1 = createEnnemy(80, 10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(71, 5, 700, 90, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(72, 5, 1250, 95, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(73, 5, 1250, 75, 0.f, Ennemy::Type::SPATIAL);
 
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
@@ -503,10 +510,16 @@ namespace R_TYPE {
                 .addEntity(tower11)
                 .addEntity(tower12)
                 .addEntity(tower13)
-                .addEntity(tower14)
                 .addEntity(dino1)
-                .addEntity(joryde1);
-                // .addEntities(spatial1);
+                .addEntity(dino2)
+                .addEntity(dino3)
+                .addEntity(joryde1)
+                .addEntity(joryde2)
+                .addEntity(joryde3)
+                .addEntities(spatial1)
+                .addEntities(spatial2)
+                .addEntities(spatial3)
+                .addEntities(spatial4);
         return (scene);
     }
 
@@ -544,6 +557,8 @@ namespace R_TYPE {
 
     void GameSystem::updateRectWindow()
     {
-        rectWindow.left += 0.25f;
+        // a remettre a 0.25f
+        if (rectWindow.left < 1925)
+            rectWindow.left += 0.75f;
     }
 }

@@ -211,7 +211,8 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
     }
     putInt((int)IEntity::Tags::CAMERA, buff, c);
     c += sizeof(float);
-    putInt(25, buff, c);
+    // a remettre a 25
+    putInt(75, buff, c);
     c += sizeof(float);
 }
 
