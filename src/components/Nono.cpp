@@ -6,7 +6,7 @@ namespace R_TYPE {
     Component(Component::Type::NONO)
     {
         // A remmettre a 0
-        upgrade = 1;
+        upgrade = 0;
         isSnap = false;
         unKillable = true;
     }

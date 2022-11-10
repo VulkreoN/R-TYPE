@@ -124,23 +124,23 @@ namespace R_TYPE {
                 nono->nextUpgrade();
             }
             if (nono->getUpgrade() == 1) {
-                sprite->setRect(sf::IntRect(120, 69, 28, 21));
+                sprite->setRect(sf::IntRect(120, 69, 30, 21));
                 nono->setState(Animation::State::LV2);
                 auto anims = e->getFilteredComponents(IComponent::Type::ANIMATION);
                 for (int i = 0; i < anims.size(); i++) {
                     auto anim_cast = Component::castComponent<Animation>(anims[i]);
                     if (anim_cast->getState() == nono->getState()) {
-                        anim_cast->setRect(sf::IntRect(120, 69, 28, 21));
+                        anim_cast->setRect(sf::IntRect(120, 69, 30, 21));
                     }
                 }
             } else if (nono->getUpgrade() == 2) {
-                sprite->setRect(sf::IntRect(270, 342, 28, 31));
+                sprite->setRect(sf::IntRect(170, 342, 32, 31));
                 nono->setState(Animation::State::LV3);
                 auto anims = e->getFilteredComponents(IComponent::Type::ANIMATION);
                 for (int i = 0; i < anims.size(); i++) {
                     auto anim_cast = Component::castComponent<Animation>(anims[i]);
                     if (anim_cast->getState() == nono->getState()) {
-                        anim_cast->setRect(sf::IntRect(270, 342, 28, 31));
+                        anim_cast->setRect(sf::IntRect(170, 342, 32, 31));
                     }
                 }
             }

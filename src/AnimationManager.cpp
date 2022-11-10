@@ -17,8 +17,8 @@ namespace R_TYPE {
             sprite->setRect(anim->getRect());
         } else {
             anim->setCurrentFrame(anim->getClock().getElapsedTime());
-            if (anim->getCurrentFrame().asSeconds() > 1) {
-                anim->setRect(sf::IntRect(anim->getNbFrame() * anim->getRect().width + anim->getPosX(),anim->getY() * anim->getRect().height + anim->getPosY(),anim->getRect().width,anim->getRect().height));
+            if (anim->getCurrentFrame().asSeconds() > 0.1) {
+                anim->setRect(sf::IntRect(anim->getNbFrame() * anim->getRect().width + anim->getPosX() - anim->getRect().width,anim->getY() * anim->getRect().height + anim->getPosY(),anim->getRect().width,anim->getRect().height));
                 if (anim->getNbFrame() >= anim->getXmax())
                     anim->setNbFrame(anim->getX());
                 anim->setNbFrame(anim->getNbFrame() + 1);
@@ -62,7 +62,6 @@ namespace R_TYPE {
             auto anim_cast = Component::castComponent<Animation>(anims[i]);
             if (anim_cast->getState() == nono->getState()) {
                 playAnim(anim_cast, sprite);
-                std::cout << anim_cast->getRect().left << "    " <<anim_cast->getRect().top << std::endl;
             }
         }
     }
