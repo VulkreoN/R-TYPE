@@ -21,7 +21,7 @@ namespace R_TYPE {
         CurrentFrame = clock.getElapsedTime();
 
         if (distance.x != 0 && distance.y != 0) {
-            selfVel->setX((distance.x + 100) * 0.001);
+            selfVel->setX((distance.x + 75) * 0.001);
             selfVel->setY(distance.y * 0.001);
         }
         if (CurrentFrame.asSeconds() < 0.5f) {
@@ -42,7 +42,7 @@ namespace R_TYPE {
         lastFrame = CurrentFrame;
         CurrentFrame = clock.getElapsedTime();
 
-        if (repeat == 2)
+        if (repeat == 3)
             repeat = 0;
         if (CurrentFrame.asMilliseconds() > 375 && repeat > 0) {
             // selfVel->setX(0);
@@ -68,6 +68,10 @@ namespace R_TYPE {
         CurrentFrame = clock.getElapsedTime();
 
         if (CurrentFrame.asSeconds() > 0.5f) {
+            if (selfVel->getVelocity().x == 0) {
+                selfVel->setX(-0.05f);
+                selfVel->setY(0.05f);
+            }
             selfVel->setY(selfVel->getVelocity().y * -1);
             clock.restart();
         }

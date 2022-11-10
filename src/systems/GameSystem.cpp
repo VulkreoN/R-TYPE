@@ -44,7 +44,7 @@ namespace R_TYPE {
         sceneManager.addScene(createFirstLevel(), SceneManager::SceneType::LEVEL1);
         sceneManager.addScene(createSceneLose(), SceneManager::SceneType::LOSE);
         sceneManager.addScene(createSceneWin(), SceneManager::SceneType::WIN);
-        sceneManager.setCurrentScene(SceneManager::SceneType::LEVEL1);
+        sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
         nbrBasicShoot = 0;
         nbrTurretShoot = 0;
         nbrRocketShoot = 0;
@@ -200,7 +200,7 @@ namespace R_TYPE {
             velocity = std::make_shared<Velocity>(-0.03f, 0);
         } else if (type == Ennemy::Type::SPATIAL) {
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(5, 6, 20, 23));
-            velocity = std::make_shared<Velocity>(-0.05f, -0.05f);
+            velocity = std::make_shared<Velocity>(0, 0);
             component->getSprite().setScale(0.7, 0.7);
         }
         std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
@@ -382,8 +382,9 @@ namespace R_TYPE {
             [entity, goTo, click](SceneManager &sceneManager, sf::Vector2i mousePosition) {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
-                sf::Vector2<int> mousePixel = sf::Mouse::getPosition(*GraphicSystem::getWindow());
-                mousePosition = (sf::Vector2i)GraphicSystem::getWindow()->mapPixelToCoords(mousePixel);
+
+                // sf::Vector2<int> mousePixel = sf::Mouse::getPosition(*GraphicSystem::getWindow());
+                // mousePosition = (sf::Vector2i)GraphicSystem::getWindow()->mapPixelToCoords(mousePixel);
 
                 if (mousePosition.x > pos->getPosition().x && mousePosition.x < pos->getPosition().x + click.x &&
                     mousePosition.y > pos->getPosition().y && mousePosition.y < pos->getPosition().y + click.y) {
@@ -483,17 +484,31 @@ namespace R_TYPE {
         std::shared_ptr<Entity> tower11 = createEnnemy(60, 55, 806, 163, 0.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower12 = createEnnemy(61, 55, 145, 19, 180.f, Ennemy::Type::TURRET);
         std::shared_ptr<Entity> tower13 = createEnnemy(62, 55, 957, 17, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> tower14 = createEnnemy(63, 55, 4622, 17, 180.f, Ennemy::Type::TURRET);
-        std::shared_ptr<Entity> joryde1 = createEnnemy(64, 9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
-        std::shared_ptr<Entity> joryde2 = createEnnemy(65, 9, 900, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
-        std::shared_ptr<Entity> joryde3 = createEnnemy(66, 9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
-        std::shared_ptr<Entity> dino1 = createEnnemy(67, 10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
-        std::shared_ptr<Entity> dino2 = createEnnemy(68, 10, 545, 179, 0.f, Ennemy::Type::ROBOT_DINO);
-        std::shared_ptr<Entity> dino3 = createEnnemy(69, 10, 1160, 182, 0.f, Ennemy::Type::ROBOT_DINO);
-        std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(70, 5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
-        std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(71, 5, 700, 90, 0.f, Ennemy::Type::SPATIAL);
-        std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(72, 5, 1250, 95, 0.f, Ennemy::Type::SPATIAL);
-        std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(73, 5, 1250, 75, 0.f, Ennemy::Type::SPATIAL);
+        std::shared_ptr<Entity> tower14 = createEnnemy(63, 55, 1400, 17, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower15 = createEnnemy(64, 55, 1380, 186, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower16 = createEnnemy(65, 55, 1555, 155, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower17 = createEnnemy(66, 55, 1573, 50, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower18 = createEnnemy(67, 55, 1635, 50, 180.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower19 = createEnnemy(68, 55, 1618, 155, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower20 = createEnnemy(69, 55, 1681, 155, 0.f, Ennemy::Type::TURRET);
+        std::shared_ptr<Entity> tower21 = createEnnemy(70, 55, 1700, 50, 180.f, Ennemy::Type::TURRET);
+
+
+        std::shared_ptr<Entity> joryde1 = createEnnemy(71, 9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde2 = createEnnemy(72, 9, 900, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde3 = createEnnemy(73, 9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde4 = createEnnemy(74, 9, 1450, 90, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde5 = createEnnemy(75, 9, 1780, 90, 0.f, Ennemy::Type::JORYDE_ALIEN);
+
+        std::shared_ptr<Entity> dino1 = createEnnemy(76, 10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino2 = createEnnemy(77, 10, 560, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino3 = createEnnemy(78, 10, 900, 180, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino4 = createEnnemy(79, 10, 1158, 180, 0.f, Ennemy::Type::ROBOT_DINO);
+
+        std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(80, 5, 300, 102, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(85, 5, 700, 102, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(90, 5, 1200, 122, 0.f, Ennemy::Type::SPATIAL);
+        std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(95, 5, 1200, 102, 0.f, Ennemy::Type::SPATIAL);
 
         scene-> addEntity(top_wall)
                 .addEntity(bottom_wall)
@@ -510,12 +525,23 @@ namespace R_TYPE {
                 .addEntity(tower11)
                 .addEntity(tower12)
                 .addEntity(tower13)
+                .addEntity(tower14)
+                .addEntity(tower15)
+                .addEntity(tower16)
+                .addEntity(tower17)
+                .addEntity(tower18)
+                .addEntity(tower19)
+                .addEntity(tower20)
+                .addEntity(tower21)
                 .addEntity(dino1)
                 .addEntity(dino2)
                 .addEntity(dino3)
+                .addEntity(dino4)
                 .addEntity(joryde1)
                 .addEntity(joryde2)
                 .addEntity(joryde3)
+                .addEntity(joryde4)
+                .addEntity(joryde5)
                 .addEntities(spatial1)
                 .addEntities(spatial2)
                 .addEntities(spatial3)

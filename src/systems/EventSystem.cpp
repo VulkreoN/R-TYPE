@@ -133,8 +133,9 @@ namespace R_TYPE {
                 auto call = listener->getMouseMappings()[static_cast<sf::Mouse::Button>(mouseButtons.front().first)];
                 switch (mouseButtons.front().second) {
                     case NetworkSystem::ButtonState::PRESSED:
-                        if (call._pressed)
+                        if (call._pressed) {
                             call._pressed(manager, sf::Vector2i(mousePositions.front().first, mousePositions.front().second));
+                        }
                         break;
                     case NetworkSystem::ButtonState::RELEASED:
                         if (call._released)
@@ -187,6 +188,7 @@ namespace R_TYPE {
     void EventSystem::handleMouse(SceneManager &manager, std::shared_ptr<Event> listener, sf::Event event)
     {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*GraphicSystem::getWindow());
+        mousePosition = (sf::Vector2i)GraphicSystem::getWindow()->mapPixelToCoords(mousePosition);
 
         for (auto &it : listener->getMouseMappings()) {
             if (it.second._pressed && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == it.first) {
