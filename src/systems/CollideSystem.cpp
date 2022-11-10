@@ -200,12 +200,11 @@ namespace R_TYPE {
         if (real.getPosition().x < 0 || real.getPosition().y < 0 || real.getPosition().y > 585)
             return (false);
         for (auto &e : sceneManger.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
-            if (e->hasTag(IEntity::Tags::PLAYER))
+            if (e->hasTag(IEntity::Tags::PLAYER) || e->hasTag(IEntity::Tags::PROJECTILES) || e->hasTag(IEntity::Tags::ENNEMY))
                 continue;
-            auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
-            sf::FloatRect box = sprite->getSprite().getGlobalBounds();
+            sf::FloatRect box = {posEnnemi->getPosition().x, posEnnemi->getPosition().y, 2608, 80};
             if (pos.getPosition().x + toAdd.getPosition().x > posEnnemi->getPosition().x && pos.getPosition().x + toAdd.getPosition().x < posEnnemi->getPosition().x + box.width
             && pos.getPosition().y + toAdd.getPosition().y > posEnnemi->getPosition().y && pos.getPosition().y + toAdd.getPosition().y < posEnnemi->getPosition().y + box.height)  {
                 if (isBlack(pos, playerBox) == false)

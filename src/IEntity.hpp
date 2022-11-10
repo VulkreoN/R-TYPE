@@ -49,6 +49,12 @@ namespace R_TYPE {
         virtual bool hasTag(Tags tag) const = 0;
 
         virtual std::shared_ptr<IComponent> &operator[](IComponent::Type type) = 0;
+
+        /**
+         * @brief Each entity has an ID, this function lets us access it
+         * @return Returns the entity's ID
+         */
+        virtual size_t get_id() = 0;
     };
 }
 #endif /* IENTITY_HPP */

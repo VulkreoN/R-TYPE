@@ -56,6 +56,19 @@ namespace R_TYPE {
         return taggedEntities;
     }
 
+    std::vector<std::shared_ptr<IEntity>> Scene::get_by_id(size_t id)
+    {
+        std::vector<std::shared_ptr<IEntity>> entities;
+
+        for (auto &iterator : _taggedEntities) {
+            for (auto &entity : iterator.second) {
+                if (entity->get_id() == id)
+                    entities.push_back(entity);
+            }
+        }
+        return (entities);
+    }
+
     std::vector<std::shared_ptr<IEntity>> &Scene::operator[](IEntity::Tags tag)
     {
         return _taggedEntities[tag];

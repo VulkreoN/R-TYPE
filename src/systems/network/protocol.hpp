@@ -10,17 +10,14 @@
 
     namespace protocol {
 
+        #define MAX_MSG_LENGTH  1024
+
         enum Header {
             PING,
             GAME_INFO,
             PLAYER_ACTION,
-            START_GAME
-        };
-
-        enum Action {
-            FIRE,
-            MOVE,
-            BOTH
+            START_GAME,
+            EVENT
         };
 
     }

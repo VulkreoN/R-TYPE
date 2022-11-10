@@ -12,6 +12,12 @@
 namespace R_TYPE {
     class Entity : public IEntity {
         public:
+            /**
+             * @brief Constructor that sets the ID
+             * @param entity's ID
+             */
+            Entity(size_t id = 0);
+
             ///@brief Map between Entity tags and combinaisons of Components tags
             static const std::map<Tags, std::vector<std::vector<IComponent::Type>>> entityTags;
 
@@ -40,10 +46,18 @@ namespace R_TYPE {
             std::shared_ptr<IComponent> &operator[](IComponent::Type type);
 
             bool hasTag(Tags tag) const;
+
+            /**
+             * @brief Each entity has an ID, this function lets us access it
+             * @return Returns the entity's ID
+             */
+            size_t get_id();
         private:
             std::vector<Tags> _tags;
             std::map<IComponent::Type, std::shared_ptr<IComponent>> _components;
             std::vector<IComponent::Type> _componentsType;
+        protected:
+            size_t _id;
     };
 }
 #endif  // ENTITY_HPP

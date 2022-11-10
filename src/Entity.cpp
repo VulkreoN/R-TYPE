@@ -4,6 +4,11 @@
 #include "Entity.hpp"
 
 namespace R_TYPE {
+    Entity::Entity(size_t id)
+    {
+        _id = id;
+    }
+
     const std::map<Entity::Tags, std::vector<std::vector<IComponent::Type>>> Entity::entityTags = {
         {IEntity::Tags::SPRITE_2D,
          {{IComponent::Type::SPRITE, IComponent::Type::POSITION}}},
@@ -61,8 +66,8 @@ namespace R_TYPE {
         return *this;
     }
 
-    std::map<IComponent::Type, std::shared_ptr<IComponent>> &Entity::getComponents() {
-    }
+    // std::map<IComponent::Type, std::shared_ptr<IComponent>> &Entity::getComponents() {
+    // }
 
     std::shared_ptr<IComponent> &Entity::operator[](IComponent::Type type)
     {
@@ -73,5 +78,10 @@ namespace R_TYPE {
         if (_components.find(type) != _components.end())
             return _components.at(type);
         return null;
+    }
+
+    size_t Entity::get_id()
+    {
+        return (_id);
     }
 }

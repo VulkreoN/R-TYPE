@@ -30,16 +30,16 @@ namespace R_TYPE {
             void updateClient(SceneManager &sceneManager, uint64_t deltaTime);
             void updateServeur(SceneManager &sceneManager, uint64_t deltaTime);
 
-            static std::shared_ptr<Entity> createProjectiles(int name, Position pos, Velocity velocity, bool byPlayer, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
+            static std::shared_ptr<Entity> createPlayer(int id, int name, int posX, int posY);
+            static std::shared_ptr<Entity> createProjectiles(int id, int name, Position pos, Velocity velocity, bool byPlayer, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
         protected:
 
-            std::shared_ptr<Entity> createSprite(int name, int posX, int posY);
-            std::shared_ptr<Entity> createPlayer(int name, int posX, int posY);
-            std::shared_ptr<Entity> createText(std::string text, int posX, int posY, int size);
-            std::shared_ptr<Entity> createEnnemy(int name, int posX, int posY, float angle, Ennemy::Type type);
+            std::shared_ptr<Entity> createSprite(int id, int name, int posX, int posY);
+            std::shared_ptr<Entity> createText(int id, std::string text, int posX, int posY, int size);
+            std::shared_ptr<Entity> createEnnemy(int id, int name, int posX, int posY, float angle, Ennemy::Type type);
             void createButtonEvent(std::shared_ptr<Entity> &entity, SceneManager::SceneType goTo, sf::Vector2i click);
-            std::shared_ptr<Entity> createCamera(int posX, int posY, int rectX, int rectY);
-            std::vector<std::shared_ptr<IEntity>>  createWavesEnnemy(int name, int posX, int posY, float angle, Ennemy::Type type);
+            std::shared_ptr<Entity> createCamera(int id, int posX, int posY, int rectX, int rectY);
+            std::vector<std::shared_ptr<IEntity>>  createWavesEnnemy(int first_id, int name, int posX, int posY, float angle, Ennemy::Type type);
 
             std::unique_ptr<R_TYPE::IScene> createSceneTest();
             std::unique_ptr<R_TYPE::IScene> createMainMenu();

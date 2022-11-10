@@ -13,6 +13,7 @@
 #include "Player.hpp"
 #include "Text.hpp"
 #include "Ennemy.hpp"
+#include "ClientSystem.hpp"
 
 namespace R_TYPE {
 
@@ -20,10 +21,10 @@ namespace R_TYPE {
     std::vector<std::shared_ptr<sf::Texture>> GraphicSystem::_textures;
     bool EventSystem::isInit;
 
-    GraphicSystem::GraphicSystem()
+    GraphicSystem::GraphicSystem(std::unique_ptr<ClientSystem> client)
     {
         std::cout << "Graphic System create" << std::endl;
-        eventSystem = std::make_unique<EventSystem>();
+        eventSystem = std::make_unique<EventSystem>(std::move(client));
 
     }
 
@@ -127,15 +128,10 @@ namespace R_TYPE {
             text->printText(window.get(), *pos.get());
         }
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
-            camera->move(0.25f, 0.f);
-            window->setView(*camera);
-
-            for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
-                auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
-                player->getSprite().setPosition(player->getPosition());
-                window->draw(player->getSprite());
-            }
+            // camera->move(0.25f, 0.f);
+            // window->setView(*camera);
         }
+
         window->display();
     }
 
