@@ -9,9 +9,9 @@
 #include "Player.hpp"
 #include "ServerSystem.hpp"
 #include "EventSystem.hpp"
-#include "network/protocol.h"
 #include "Projectiles.hpp"
 #include "GameSystem.hpp"
+#include "network/protocol.hpp"
 
 namespace R_TYPE {
 

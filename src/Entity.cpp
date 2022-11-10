@@ -66,8 +66,8 @@ namespace R_TYPE {
         return *this;
     }
 
-    std::map<IComponent::Type, std::shared_ptr<IComponent>> &Entity::getComponents() {
-    }
+    // std::map<IComponent::Type, std::shared_ptr<IComponent>> &Entity::getComponents() {
+    // }
 
     std::shared_ptr<IComponent> &Entity::operator[](IComponent::Type type)
     {

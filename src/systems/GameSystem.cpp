@@ -372,6 +372,8 @@ namespace R_TYPE {
             [entity, goTo, click](SceneManager &sceneManager, sf::Vector2i mousePosition) {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
+                sf::Vector2<int> mousePixel = sf::Mouse::getPosition(*GraphicSystem::getWindow());
+                mousePosition = (sf::Vector2i)GraphicSystem::getWindow()->mapPixelToCoords(mousePixel);
 
                 std::cout << "enter mouse callback" << std::endl;
                 if (mousePosition.x > pos->getPosition().x && mousePosition.x < pos->getPosition().x + click.x &&
