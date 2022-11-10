@@ -34,7 +34,7 @@ The project is managed through Jira, you can find the link to the board below:
 
 You'll find in there all the tasks that need to be done, and the current sprint status like so.
 
-![Jira](./Images/jira.png)
+![Jira](./Images/Jira.png)
 
 The project is also managed through Github, you can find the link to the repository below:
 
@@ -53,7 +53,7 @@ Your Branch name should be using the ID of your Jira Task like so `TYP-XXX-Issue
 
 When you'll finish your work you'll have to create a pull request to merge your branch into the `Dev` branch.
 
-![BranchName](./Images/branchName.png)
+![BranchName](./Images/BranchName.png)
 
 Assign 2 reviewers to your pull request, and wait for them to review your code, the last of the two reviewers will merge it if it's approved.
 
