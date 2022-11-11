@@ -53,3 +53,5 @@ assets/menus/play.png
 assets/player/player.png
 projectile.png
 ennemy.png
+assets/sprites_sheets/bonus.png
+assets/sprites_statics/endscreen.jpg
