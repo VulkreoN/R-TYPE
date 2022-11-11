@@ -26,6 +26,7 @@ namespace R_TYPE {
     int GameSystem::nbrTurretShoot;
     int GameSystem::nbrRocketShoot;
     int GameSystem::nbrLaserShoot;
+    int GameSystem::nbrLaserBoucleShoot;
 
     GameSystem::GameSystem()
     {
@@ -93,7 +94,8 @@ namespace R_TYPE {
                         setNbrRocketShoot(getNbrRocketShoot() - 1);
                     } else if (projectile->getType() == Projectiles::Type::LASER) {
                         setNbrLaserShoot(getNbrLaserShoot() - 1);
-                    }
+                    } else if (projectile->getType() == Projectiles::Type::LASER_BOUCLE)
+                        GameSystem::setNbrLaserBoucleShoot(GameSystem::getNbrLaserBoucleShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -173,6 +175,8 @@ namespace R_TYPE {
                         GameSystem::setNbrRocketShoot(GameSystem::getNbrRocketShoot() - 1);
                     else if (proj->getType() == Projectiles::Type::LASER)
                         GameSystem::setNbrLaserShoot(GameSystem::getNbrLaserShoot() - 1);
+                    else if (proj->getType() == Projectiles::Type::LASER_BOUCLE)
+                        GameSystem::setNbrLaserBoucleShoot(GameSystem::getNbrLaserBoucleShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -362,8 +366,10 @@ namespace R_TYPE {
             component3->setType(Projectiles::Type::BASIC);
         else if (id >= 6021 && id <= 6029)
             component3->setType(Projectiles::Type::TURRET);
-        else if (id >= 6046 && id <= 6065)
+        else if (id >= 6046 && id <= 6055)
             component3->setType(Projectiles::Type::LASER);
+        else if (id >= 6056 && id <= 6065)
+            component3->setType(Projectiles::Type::LASER_BOUCLE);
         
         component->getSprite().setScale(0.7, 0.7);
 
@@ -508,9 +514,6 @@ namespace R_TYPE {
                     projectiles->setType(Projectiles::Type::CHARGED);
                     scene.getCurrentScene().addEntity(shoot);
                 } else {
-                    std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                        (6011 + GameSystem::getNbrBasicShoot(), 1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
-                        Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
                     if (player->getLevelNono() == 1) {
                         std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
                             (6046 + nbrLaserShoot, 2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
@@ -522,13 +525,17 @@ namespace R_TYPE {
                         scene.getCurrentScene().addEntity(shoot2);
                         scene.getCurrentScene().addEntity(shoot3);
                         nbrLaserShoot++;
-                    // } else if (player->getLevelNono() == 2) {
-                    //     std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
-                    //         (2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
-                    //         Velocity(0.5f, 0), true, sf::IntRect(37, 608, 63, 55));
-                    //     scene.getCurrentScene().addEntity(shoot2);
-                    //     return;
+                    } else if (player->getLevelNono() == 2) {
+                        std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
+                            (6056 + nbrLaserBoucleShoot, 2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
+                            Velocity(0.5f, 0), true, sf::IntRect(37, 608, 63, 55));
+                        nbrLaserBoucleShoot++;
+                        scene.getCurrentScene().addEntity(shoot2);
+                        return;
                     }
+                    std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
+                        (6011 + GameSystem::getNbrBasicShoot(), 1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
+                        Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
                     GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() + 1);
                     scene.getCurrentScene().addEntity(shoot);
                 }

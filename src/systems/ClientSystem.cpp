@@ -163,7 +163,7 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
         GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() + 1);
     } else if (id >= 6030 && id <= 6045)
         proj = GameSystem::createProjectiles(id, 10, Position(x, y), Velocity(0, 0), false, sf::IntRect(191, 63, 6, 12));
-    else if (id >= 6046 && id <= 6065) {
+    else if (id >= 6046 && id <= 6055) {
         if (firstLaser) {
             proj = GameSystem::createProjectiles(id, 2, Position(x, y), Velocity(0, 0), false, sf::IntRect(242, 183, 15, 17));
             firstLaser = false;
@@ -172,7 +172,8 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
             firstLaser = true;
         }
         GameSystem::setNbrLaserShoot(GameSystem::getNbrLaserShoot() + 1);
-    }
+    } else if (id >= 6056 && id <= 6065)
+        proj = GameSystem::createProjectiles(id, 2, Position(x, y), Velocity(0, 0), false, sf::IntRect(37, 608, 63, 55));
     manager.getCurrentScene().addEntity(proj);
 }
 
