@@ -2,12 +2,6 @@ name: CI-R-TYPE
 on:
     workflow_dispatch:
     push:
-        branches:
-            - Dev
-            - Main
-    pull_request:
-        branches:
-            - Dev
 
 jobs:
     Compile_Unix:
