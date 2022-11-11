@@ -45,7 +45,7 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
     }
     if (_player_id_add_queue.size() > 0) {
         for (size_t id : _player_id_add_queue) {
-            manager.getScene(SceneManager::SceneType::LEVEL1).addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
+            manager.getScene(SceneManager::SceneType::LEVEL1).addEntity(GameSystem::createPlayer(id, 42, 50, 40 + 20 * id));
         }
         _player_id_add_queue.clear();
     }
@@ -182,6 +182,14 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
 
     buff[c] = protocol::Header::GAME_INFO;
     c += sizeof(protocol::Header);
+    putInt((int)IEntity::Tags::CAMERA, buff, c);
+    c += sizeof(float);
+    // a remettre a 25
+    putInt(75, buff, c);
+    c += sizeof(float);
+    putInt((int)manager.getCurrentSceneType(), buff, c);
+    c += sizeof(float);
+    c += sizeof(float) + sizeof(size_t) + sizeof(uint8_t);
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
         auto comp = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
         if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
@@ -282,13 +290,6 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             }
         }
     }
-    putInt((int)IEntity::Tags::CAMERA, buff, c);
-    c += sizeof(float);
-    // a remettre a 25
-    putInt(75, buff, c);
-    c += sizeof(float);
-    putInt((int)manager.getCurrentSceneType(), buff, c);
-    c += sizeof(float);
 }
 
 std::list<std::pair<int, NetworkSystem::ButtonState>> ServerSystem::getKeys() const

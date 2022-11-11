@@ -201,14 +201,14 @@ void ClientSystem::handle_incomming_message()
         std::cout << "Starting game, ID: " << (size_t)_buffer[sizeof(protocol::Header)] << " and there are : " << (size_t)_buffer[sizeof(protocol::Header) + sizeof(size_t)] << " players." << std::endl;
         _id = (size_t)_buffer[sizeof(protocol::Header)];
     }
-    if ((protocol::Header)_buffer[0] == protocol::Header::GAME_INFO) {
-        // std::cout << "Game Info is being sent, here are the entities to display :" << std::endl;
-        for (size_t i = sizeof(protocol::Header); (uint8_t)_buffer[i]; i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
-            i += sizeof(uint8_t);
-            // std::cout << "Entity x: " << (float)_buffer[i] << ", y: " << (float)_buffer[i + sizeof(float)] <<
-            //     ", ID: " << (size_t)_buffer[i + sizeof(float) * 2] << ", status" << (size_t)_buffer[i + sizeof(size_t) + sizeof(float) * 2] << std::endl;
-        }
-    }
+    //if ((protocol::Header)_buffer[0] == protocol::Header::GAME_INFO) {
+    //    // std::cout << "Game Info is being sent, here are the entities to display :" << std::endl;
+    //    for (size_t i = sizeof(protocol::Header); (uint8_t)_buffer[i]; i += sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t)) {
+    //        i += sizeof(uint8_t);
+    //        // std::cout << "Entity x: " << (float)_buffer[i] << ", y: " << (float)_buffer[i + sizeof(float)] <<
+    //        //     ", ID: " << (size_t)_buffer[i + sizeof(float) * 2] << ", status" << (size_t)_buffer[i + sizeof(size_t) + sizeof(float) * 2] << std::endl;
+    //    }
+    //}
 }
 
 void ClientSystem::broadcast(SceneManager &manager)

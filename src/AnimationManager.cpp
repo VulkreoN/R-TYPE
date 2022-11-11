@@ -35,8 +35,9 @@ namespace R_TYPE {
         auto anims = e->getFilteredComponents(IComponent::Type::ANIMATION);
         for (int i = 0; i < anims.size(); i++) {
             auto anim_cast = Component::castComponent<Animation>(anims[i]);
-            if (anim_cast->getState() == player->getState())
+            if (anim_cast->getState() == player->getState()) {
                 playAnim(anim_cast, sprite);
+            }
         }
     }
 

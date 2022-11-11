@@ -28,9 +28,6 @@ namespace R_TYPE {
             /// @brief Get the position of the player
             sf::Vector2f getPosition();
 
-            /// @brief Get the sprite of the player
-            sf::Sprite &getSprite() const;
-
             /// @brief Return the player's life state
             bool isAlive() const;
 
@@ -72,7 +69,6 @@ namespace R_TYPE {
             sf::Time chargedTime;
         private:
             int8_t _id;
-            std::unique_ptr<Sprite> _spritesheet;
             std::map<Bonus::BonusType, bool> bonus;
             Position _pos;
             bool _attacking;

@@ -120,7 +120,7 @@ namespace R_TYPE {
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             // camera->move(0.25f, 0.f);
             window->setView(*camera);
-        
+
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
                 amanager.update_nono(e, deltaTime);
             }
