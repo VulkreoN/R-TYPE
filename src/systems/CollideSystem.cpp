@@ -161,7 +161,7 @@ namespace R_TYPE {
             auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
             sf::IntRect nonoBox = sprite->getRect();
 
-            if (boxCollide(playerBox, posPlayer->getPosition(), nonoBox, pos->getPosition())) {
+            if (boxCollide(playerBox, posPlayer->getPosition(), nonoBox, pos->getPosition()) && nono->isAlive == true) {
                 pos->setX(posPlayer->getPosition().x + playerBox.width);
                 pos->setY(posPlayer->getPosition().y);
                 nono->isSnap = true;
@@ -288,7 +288,6 @@ namespace R_TYPE {
                 projectile->setIsActive(false);
                 nono->disableNonoPlayer(sceneManager);
                 nono->isAlive = false;
-                std::cout << "NONO IS DEAD in collide" << std::endl;
                 return;
             }
         }

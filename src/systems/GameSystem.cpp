@@ -154,7 +154,6 @@ namespace R_TYPE {
                 auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
 
                 if (nono->getTimeSend() > 4 && nono->isAlive == false) {
-                    std::cout << "delete in serveur" << std::endl;
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -523,7 +522,7 @@ namespace R_TYPE {
                     projectiles->setType(Projectiles::Type::CHARGED);
                     scene.getCurrentScene().addEntity(shoot);
                 } else {
-                    if (player->getLevelNono() >= 1) {
+                    if (player->getLevelNono() >= 1 && player->getNono()) {
                         std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
                             (6046 + nbrLaserShoot, 2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
                             Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
@@ -535,7 +534,7 @@ namespace R_TYPE {
                         scene.getCurrentScene().addEntity(shoot3);
                         nbrLaserShoot++;
                     }
-                    if (player->getLevelNono() == 2) {
+                    if (player->getLevelNono() == 2 && player->getNono()) {
                         std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
                             (6056 + nbrLaserBoucleShoot, 2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
                             Velocity(0.3f, 0), true, sf::IntRect(37, 470, 63, 31));
@@ -549,11 +548,6 @@ namespace R_TYPE {
                         GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() + 1);
                         scene.getCurrentScene().addEntity(shoot);
                     }
-                    // std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
-                    //     (6011 + GameSystem::getNbrBasicShoot(), 1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
-                    //     Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
-                    // GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() + 1);
-                    // scene.getCurrentScene().addEntity(shoot);
                 }
             },
             [](SceneManager &) {
@@ -583,9 +577,6 @@ namespace R_TYPE {
             [entity, goTo, click](SceneManager &sceneManager, sf::Vector2i mousePosition) {
                 auto comp = (*entity)[IComponent::Type::POSITION];
                 auto pos = Component::castComponent<Position>(comp);
-
-                // sf::Vector2<int> mousePixel = sf::Mouse::getPosition(*GraphicSystem::getWindow());
-                // mousePosition = (sf::Vector2i)GraphicSystem::getWindow()->mapPixelToCoords(mousePixel);
 
                 if (mousePosition.x > pos->getPosition().x && mousePosition.x < pos->getPosition().x + click.x &&
                     mousePosition.y > pos->getPosition().y && mousePosition.y < pos->getPosition().y + click.y) {
@@ -657,7 +648,6 @@ namespace R_TYPE {
     {
         std::unique_ptr<Scene> scene = std::make_unique<Scene>(std::bind(&GameSystem::createSceneTest, this));
         std::shared_ptr<Entity> player = createPlayer(1, 42, 50, 100);
-        // std::shared_ptr<Entity> tower1 = createEnnemy("assets/sprites_sheets/r-typesheet9.gif", 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::shared_ptr<Entity> tower2 = createEnnemy(120, 10, 53, 150, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> tower3 = createEnnemy(121, 5, 183, 50, 0.f, Ennemy::Type::SPATIAL);
 

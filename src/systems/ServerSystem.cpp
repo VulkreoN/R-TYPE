@@ -263,7 +263,6 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             buff[c] = (uint8_t)Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive; // to change, entity's status
             c += sizeof(uint8_t);
             if (Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive == false) {
-                std::cout << "serveur : nono disable" << std::endl;
                 Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->nextTimeSend();
             }
         }

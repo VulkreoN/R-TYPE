@@ -110,7 +110,6 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                             (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->isAlive = ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)]);
                             if ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)] == false) {
                                 manager.getCurrentScene().removeEntity(e);
-                                std::cout << "Nono is dead" << std::endl;
                             }
                         }
                     }
