@@ -6,6 +6,8 @@ namespace R_TYPE {
     Component(IComponent::Type::BONUS)
     {
         type = _type;
+        isActive = true;
+        timeSend = 0;
     }
 
     Bonus::~Bonus()

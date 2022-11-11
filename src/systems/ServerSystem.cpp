@@ -13,6 +13,7 @@
 #include "GameSystem.hpp"
 #include "Ennemy.hpp"
 #include "network/protocol.hpp"
+#include "Nono.hpp"
 
 namespace R_TYPE {
 
@@ -216,6 +217,49 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             c += sizeof(uint8_t);
             if (Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->IsAlive() == false)
                 Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->nextTimeSend();
+        }
+    }
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::BONUS]) {
+        auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+        if (pos->getPosition().x < GameSystem::getRectWindow().left - 50 || pos->getPosition().x > GameSystem::getRectWindow().left + 300)
+            continue;
+        if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::BONUS, buff, c);
+            c += sizeof(float);
+            putInt(pos->getPosition().x, buff, c); // entity's X crd
+            c += sizeof(float);
+            putInt(pos->getPosition().y, buff, c); // entity's Y crd
+            c += sizeof(float);
+            putInt((int)Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS])->getType(), buff, c); // entity's status
+            c += sizeof(float);
+            putInt(e->get_id(), buff, c); // entity's ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS])->getActive(); // to change, entity's status
+            c += sizeof(uint8_t);
+            if (Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS])->getActive() == false)
+                Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS])->nextTimeSend();
+        }
+    }
+
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
+        auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+        if (pos->getPosition().x < GameSystem::getRectWindow().left - 50 || pos->getPosition().x > GameSystem::getRectWindow().left + 300)
+            continue;
+        if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::NONO, buff, c);
+            c += sizeof(float);
+            putInt(pos->getPosition().x, buff, c); // entity's X crd
+            c += sizeof(float);
+            putInt(pos->getPosition().y, buff, c); // entity's Y crd
+            c += sizeof(float);
+            putInt((int)Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->getState(), buff, c); // entity's status
+            c += sizeof(float);
+            putInt(e->get_id(), buff, c); // entity's ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive; // to change, entity's status
+            c += sizeof(uint8_t);
+            if (Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive == false)
+                Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->nextTimeSend();
         }
     }
     putInt((int)IEntity::Tags::CAMERA, buff, c);

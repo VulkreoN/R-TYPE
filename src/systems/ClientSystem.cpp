@@ -58,9 +58,15 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                         std::shared_ptr<Entity> player = GameSystem::createPlayer(id, 53, 50, 40 + 20 * id);
                         manager.getCurrentScene().addEntity(player);
                         EventSystem::putCallback(manager, player);
+                    } else if (manager.getCurrentScene().get_by_id(id).size() == 0 && id == 800) {
+                        std::shared_ptr<Entity> nono = GameSystem::createNono(2, Position(readFloat(msg, i), readFloat(msg, i + sizeof(float))));
+                        manager.getCurrentScene().addEntity(nono);
+                    } else if (manager.getCurrentScene().get_by_id(id).size() == 0 && id == 300) {
+                        std::shared_ptr<Entity> bonus = GameSystem::createBonus(id, 56, Position(readFloat(msg, i), readFloat(msg, i + sizeof(float))), 
+                        (Bonus::BonusType)readInt(msg, i + sizeof(float) * 2));
+                        manager.getCurrentScene().addEntity(bonus);
                     }
-                    // if ((size_t)msg[i + sizeof(float) * 2] > 6000)
-                    // std::cout << "\tHandelling ID: " << (size_t)msg[i + sizeof(float) * 2] << std::endl;
+
                     if ((int)tags == (int)IEntity::Tags::PLAYER) {
                         for (auto &e : manager.getCurrentScene().get_by_id(id)) {
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
@@ -85,6 +91,22 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                             if ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)] == false) {
                                 manager.getCurrentScene().removeEntity(e);
                             }
+                        }
+                    }
+                    if (tags == (int)IEntity::Tags::BONUS) {
+                        for (auto &e : manager.getCurrentScene().get_by_id(id)) {
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
+                            (Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS]))->setType((Bonus::BonusType)msg[i + sizeof(float) * 2]);
+                            (Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS]))->setActive((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)]);
+                        }
+                    }
+                    if (tags == (int)IEntity::Tags::NONO) {
+                        for (auto &e : manager.getCurrentScene().get_by_id(id)) {
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
+                            (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
+                            (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->setState((Animation::State)readInt(msg, i + sizeof(float) * 2));
+                            (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->isAlive = ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)]);
                         }
                     }
                     if (tags == (int)IEntity::Tags::CAMERA) {

@@ -134,6 +134,14 @@ namespace R_TYPE {
                     break;
                 }
             }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::BONUS]) {
+                auto bonus = Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS]);
+
+                if (bonus->getTimeSend() > 4) {
+                    sceneManager.getCurrentScene().removeEntity(e);
+                    break;
+                }
+            }
         }
     }
 
@@ -157,6 +165,14 @@ namespace R_TYPE {
                         GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() - 1);
                     } else if (proj->getType() == Projectiles::Type::ROCKET)
                         GameSystem::setNbrRocketShoot(GameSystem::getNbrRocketShoot() - 1);
+                    sceneManager.getCurrentScene().removeEntity(e);
+                    break;
+                }
+            }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::BONUS]) {
+                auto bonus = Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS]);
+
+                if (bonus->getActive() == false) {
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -205,7 +221,6 @@ namespace R_TYPE {
         std::shared_ptr<Animation> anim_lv2 = std::make_shared<Animation>(Animation::State::LV2, sprite->getRect(), 0, 0, 6, true, 120, 69);
         std::shared_ptr<Animation> anim_lv3 = std::make_shared<Animation>(Animation::State::LV3, sprite->getRect(), 0, 0, 4, true, 170, 342);
 
-        // TODO: add velocity to player
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
 
         entity->addComponent(velocity)
@@ -228,9 +243,9 @@ namespace R_TYPE {
         return(entity);
     }
 
-    std::shared_ptr<Entity> GameSystem::createBonus(int name, Position pos, Bonus::BonusType type, sf::IntRect rect)
+    std::shared_ptr<Entity> GameSystem::createBonus(int id, int name, Position pos, Bonus::BonusType type, sf::IntRect rect)
     {
-        std::shared_ptr<Entity> entity = std::make_shared<Entity>();
+        std::shared_ptr<Entity> entity = std::make_shared<Entity>(id);
         std::shared_ptr<Position> component2 = std::make_shared<Position>(pos);
         std::shared_ptr<Sprite> component;
         std::shared_ptr<Bonus> component3 = std::make_shared<Bonus>(type);
@@ -644,12 +659,12 @@ namespace R_TYPE {
 
 
         std::shared_ptr<Entity> joryde1 = createEnnemy(71, 9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
-        std::shared_ptr<Entity> joryde2 = createEnnemy(72, 9, 900, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde2 = createEnnemy(72, 9, 900, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
         std::shared_ptr<Entity> joryde3 = createEnnemy(73, 9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::shared_ptr<Entity> joryde4 = createEnnemy(74, 9, 1450, 90, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::shared_ptr<Entity> joryde5 = createEnnemy(75, 9, 1780, 90, 0.f, Ennemy::Type::JORYDE_ALIEN);
 
-        std::shared_ptr<Entity> dino1 = createEnnemy(76, 10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino1 = createEnnemy(76, 10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::NONO_LE_ROBOT);
         std::shared_ptr<Entity> dino2 = createEnnemy(77, 10, 560, 179, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> dino3 = createEnnemy(78, 10, 900, 180, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> dino4 = createEnnemy(79, 10, 1158, 180, 0.f, Ennemy::Type::ROBOT_DINO);
