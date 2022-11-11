@@ -55,7 +55,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                         createProjectile(manager, id, readFloat(msg, i), readFloat(msg, i + sizeof(float)));
                     }
                     if (manager.getCurrentScene().get_by_id(id).size() == 0 && id > 0 && id < 5) {
-                        std::shared_ptr<Entity> player = GameSystem::createPlayer(id, 53, 50, 40 + 20 * id);
+                        std::shared_ptr<Entity> player = GameSystem::createPlayer(id, 42, 50, 40 + 20 * id);
                         manager.getCurrentScene().addEntity(player);
                         EventSystem::putCallback(manager, player);
                     }
@@ -117,6 +117,10 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
 
 void ClientSystem::destroy()
 {
+    uint8_t buff[1] = {0};
+
+    buff[0] = protocol::Header::DECONNECT;
+    _socket.send_to(asio::buffer(buff), _server_endpoint);
     std::cout << "Network System destroyed" << std::endl;
 }
 

@@ -253,7 +253,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> player_e = std::make_shared<Entity>(id);
         std::shared_ptr<Position> player_pos = std::make_shared<Position>(posX, posY);
         std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
-        std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(name, *player_pos, 0, sf::IntRect(66, 0, 32, 12));
+        std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(name, *player_pos, 0, sf::IntRect(67, 3 + (17 * (id - 1)), 32, 12));
         std::shared_ptr<Event> event_p = std::make_shared<Event>();
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
 
