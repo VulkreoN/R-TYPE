@@ -11,6 +11,7 @@ jobs:
         - name: install dependencies and compile
           run: |
             sudo pip3 install -r requirements.txt
+            sudo apt-get install libx11-dev libxrandr-dev libxi-dev libudev-dev libgl1-mesa-dev
             sudo python3 build.py
 
     Compile_Windows:

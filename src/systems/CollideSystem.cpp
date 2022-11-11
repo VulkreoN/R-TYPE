@@ -10,17 +10,17 @@
 
 namespace R_TYPE {
 
-    CollideSystem::CollideSystem() 
+    CollideSystem::CollideSystem()
     {
         std::cout << "Collide System create" << std::endl;
     }
 
-    CollideSystem::~CollideSystem() 
+    CollideSystem::~CollideSystem()
     {
 
     }
 
-    void CollideSystem::init(SceneManager &sceneManager) 
+    void CollideSystem::init(SceneManager &sceneManager)
     {
         std::cout << "Collide System init" << std::endl;
     }
@@ -70,7 +70,7 @@ namespace R_TYPE {
             // sf::IntRect box = sprite->getRect();
             sf::IntRect playerBox = spritePlayer->getRect();
 
-            if (posEnnemi->getPosition().x > pos->getPosition().x && posEnnemi->getPosition().x < pos->getPosition().x + playerBox.width 
+            if (posEnnemi->getPosition().x > pos->getPosition().x && posEnnemi->getPosition().x < pos->getPosition().x + playerBox.width
             && posEnnemi->getPosition().y > pos->getPosition().y && posEnnemi->getPosition().y < pos->getPosition().y + playerBox.height) {
                 component->setAlive(false);
             }
@@ -83,7 +83,7 @@ namespace R_TYPE {
         auto pos = Component::castComponent<Position>((*project)[IComponent::Type::POSITION]);
         auto sprite = Component::castComponent<Sprite>((*project)[IComponent::Type::SPRITE]);
         auto velocity = Component::castComponent<Velocity>((*project)[IComponent::Type::VELOCITY]);
-        
+
         sf::IntRect box = sprite->getRect();
         if (isBlack(*pos, box) == false) {
             component->setIsActive(false);
@@ -121,7 +121,7 @@ namespace R_TYPE {
             sf::IntRect box = sprite->getRect();
 
             if (sprite->getAngle() == 0) {
-                if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width 
+                if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width
                 && pos->getPosition().y > posEnnemi->getPosition().y && pos->getPosition().y < posEnnemi->getPosition().y + box.height) {
                     if (projectile->getType() != Projectiles::Type::CHARGED)
                         projectile->setIsActive(false);
@@ -129,7 +129,7 @@ namespace R_TYPE {
                     return;
                 }
             } else if (sprite->getAngle() == 180) {
-                if (pos->getPosition().x < posEnnemi->getPosition().x && pos->getPosition().x > posEnnemi->getPosition().x - box.width 
+                if (pos->getPosition().x < posEnnemi->getPosition().x && pos->getPosition().x > posEnnemi->getPosition().x - box.width
                 && pos->getPosition().y < posEnnemi->getPosition().y && pos->getPosition().y > posEnnemi->getPosition().y - box.height) {
                     if (projectile->getType() != Projectiles::Type::CHARGED)
                         projectile->setIsActive(false);
@@ -151,7 +151,7 @@ namespace R_TYPE {
 
             sf::IntRect box = sprite->getRect();
 
-            if (pos->getPosition().x > posPlayer->getPosition().x && pos->getPosition().x < posPlayer->getPosition().x + box.width 
+            if (pos->getPosition().x > posPlayer->getPosition().x && pos->getPosition().x < posPlayer->getPosition().x + box.width
             && pos->getPosition().y > posPlayer->getPosition().y && pos->getPosition().y < posPlayer->getPosition().y + box.height) {
                 projectile->setIsActive(false);
                 player->setAlive(false);
@@ -159,7 +159,7 @@ namespace R_TYPE {
             }
         }
     }
-    
+
     bool CollideSystem::isBlack(Position pos, sf::IntRect box)
     {
         sf::Image imageUp;
@@ -214,7 +214,7 @@ namespace R_TYPE {
                 continue;
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
 
-            sf::IntRect box = {posEnnemi->getPosition().x, posEnnemi->getPosition().y, 2608, 80};
+            sf::IntRect box = {static_cast<int>(posEnnemi->getPosition().x), static_cast<int>(posEnnemi->getPosition().y), 2608, 80};
             if (pos.getPosition().x + toAdd.getPosition().x > posEnnemi->getPosition().x && pos.getPosition().x + toAdd.getPosition().x < posEnnemi->getPosition().x + box.width
             && pos.getPosition().y + toAdd.getPosition().y > posEnnemi->getPosition().y && pos.getPosition().y + toAdd.getPosition().y < posEnnemi->getPosition().y + box.height)  {
                 if (isBlack(pos, playerBox) == false)
