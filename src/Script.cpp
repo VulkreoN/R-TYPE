@@ -23,7 +23,7 @@ namespace R_TYPE {
         CurrentFrame = clock.getElapsedTime();
 
         if (distance.x != 0 && distance.y != 0) {
-            selfVel->setX((distance.x + 100) * 0.001);
+            selfVel->setX((distance.x + 75) * 0.001);
             if (selfVel->getVelocity().x < 0) {
                 auto comp_e = (*ennemy)[IComponent::Type::ENNEMY];
                 auto ennemy = Component::castComponent<Ennemy>(comp_e);
@@ -57,7 +57,7 @@ namespace R_TYPE {
         lastFrame = CurrentFrame;
         CurrentFrame = clock.getElapsedTime();
 
-        if (repeat == 5) {
+        if (repeat == 3) {
             repeat = 0;
             if (selfVel->getVelocity().x == 0)
                 selfVel->setX(-0.03f);
@@ -69,8 +69,8 @@ namespace R_TYPE {
         }
 
         if (CurrentFrame.asSeconds() > 5 && repeat == 0) {
-            std::cout << "5 Roquettes" << std::endl;
             selfVel->setX(0);
+            std::cout << "3 Roquettes" << std::endl;
             repeat = 1;
             clock.restart();
             return (true);
@@ -85,6 +85,10 @@ namespace R_TYPE {
         CurrentFrame = clock.getElapsedTime();
 
         if (CurrentFrame.asSeconds() > 0.5f) {
+            if (selfVel->getVelocity().x == 0) {
+                selfVel->setX(-0.05f);
+                selfVel->setY(0.05f);
+            }
             selfVel->setY(selfVel->getVelocity().y * -1);
             clock.restart();
         }

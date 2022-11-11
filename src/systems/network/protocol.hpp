@@ -5,24 +5,21 @@
 ** protocol
 */
 
-#ifndef PROTOCOL_H_
-    #define PROTOCOL_H_
+#ifndef PROTOCOL_HPP_
+    #define PROTOCOL_HPP_
 
     namespace protocol {
+
+        #define MAX_MSG_LENGTH  1024
 
         enum Header {
             PING,
             GAME_INFO,
             PLAYER_ACTION,
-            START_GAME
-        };
-
-        enum Action {
-            FIRE,
-            MOVE,
-            BOTH
+            START_GAME,
+            EVENT
         };
 
     }
 
-#endif /* !PROTOCOL_H_ */
+#endif /* !PROTOCOL_HPP_ */

@@ -20,8 +20,17 @@ namespace R_TYPE {
             ~Bonus();
         
             BonusType getType();
+            void setType(BonusType type) { this->type = type; };
+
+            void setActive(bool active) {isActive = active;};
+            bool getActive() {return isActive;};
+
+            void nextTimeSend() {timeSend += 1;};
+            int getTimeSend() {return (timeSend);};
         private:
             BonusType type;
+            bool isActive;
+            int timeSend;
     };
 }
 

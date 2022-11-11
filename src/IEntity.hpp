@@ -23,6 +23,7 @@ namespace R_TYPE {
             BONUS,
             NONO,
             ANIMATED,
+            CAMERA,
         };
 
         virtual ~IEntity() = default;
@@ -54,6 +55,11 @@ namespace R_TYPE {
         virtual std::shared_ptr<IComponent> &operator[](IComponent::Type type) = 0;
 
         virtual std::vector<std::shared_ptr<IComponent>> getFilteredComponents(IComponent::Type components) = 0;
+        /**
+         * @brief Each entity has an ID, this function lets us access it
+         * @return Returns the entity's ID
+         */
+        virtual size_t get_id() = 0;
     };
 }
 #endif /* IENTITY_HPP */

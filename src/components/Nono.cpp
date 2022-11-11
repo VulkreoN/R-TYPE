@@ -9,6 +9,7 @@ namespace R_TYPE {
         upgrade = 0;
         isSnap = false;
         unKillable = true;
+        isAlive = true;
     }
 
     Nono::~Nono()

@@ -11,6 +11,14 @@ namespace R_TYPE {
         public:
             virtual ~IScene() = default;
 
+            /**
+             * @brief retrieves the entities for a given id
+             *
+             * @param id to filter by
+             * @return std::vector<std::shared_ptr<IEntity>>&
+             */
+            virtual std::vector<std::shared_ptr<IEntity>> get_by_id(size_t id) = 0;
+
             /// @brief Add entity to scene, you MUST call this function AFTER adding all the components to an entity
             virtual IScene &addEntity(std::shared_ptr<IEntity> entity) = 0;
 

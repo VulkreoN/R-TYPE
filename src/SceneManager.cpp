@@ -1,5 +1,6 @@
 #include "SceneManager.hpp"
 #include <iostream>
+#include <string>
 
 namespace R_TYPE {
 

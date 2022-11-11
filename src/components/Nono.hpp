@@ -28,13 +28,18 @@ namespace R_TYPE {
 
             Animation::State getState();
 
+            void nextTimeSend() {timeSend += 1;};
+            int getTimeSend() {return (timeSend);};
+
             void disableNonoPlayer(SceneManager &manager);
             bool isSnap;
             bool unKillable;
+            bool isAlive;
         private:
             int upgrade;
             std::shared_ptr<Position> posPlayer;
             Animation::State _state;
+            int timeSend;
     };
 }
 

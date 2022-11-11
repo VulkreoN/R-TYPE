@@ -5,3 +5,7 @@ r-type_server
 r-type_client
 Makefile
 make
+.idea
+vcpkg/
+r-type_client.lnk
+r-type_server.lnk
