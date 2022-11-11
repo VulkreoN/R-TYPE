@@ -18,6 +18,7 @@ namespace R_TYPE {
                 JORYDE_ALIEN,
                 ROBOT_DINO,
                 SPATIAL,
+                BOSS,
             };
             Ennemy(Ennemy::Type type);
             ~Ennemy();

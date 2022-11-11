@@ -258,6 +258,8 @@ namespace R_TYPE {
             compoment3->setState(Animation::State::MOVE);
             entity->addComponent(anim_move);
             component->getSprite().setScale(0.7, 0.7);
+        } else if (type == Ennemy::Type::BOSS) {
+            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(0, 0, 167, 208));
         }
         component3->setLoot(bonusType);
 
@@ -593,6 +595,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> dino1 = createEnnemy(10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::SPEED);
         std::shared_ptr<Entity> dino2 = createEnnemy(10, 545, 179, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> dino3 = createEnnemy(10, 1160, 182, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> boss = createEnnemy(30, 300, 20, 0.f, Ennemy::Type::BOSS);
         std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(5, 300, 90, 0.f, Ennemy::Type::SPATIAL);
         std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(5, 700, 90, 0.f, Ennemy::Type::SPATIAL);
         std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(5, 1250, 95, 0.f, Ennemy::Type::SPATIAL);
