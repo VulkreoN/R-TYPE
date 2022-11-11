@@ -150,6 +150,15 @@ namespace R_TYPE {
                     break;
                 }
             }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::NONO]) {
+                auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
+
+                if (nono->getTimeSend() > 4 && nono->isAlive == false) {
+                    std::cout << "delete in serveur" << std::endl;
+                    sceneManager.getCurrentScene().removeEntity(e);
+                    break;
+                }
+            }
         }
     }
 
@@ -514,7 +523,7 @@ namespace R_TYPE {
                     projectiles->setType(Projectiles::Type::CHARGED);
                     scene.getCurrentScene().addEntity(shoot);
                 } else {
-                    if (player->getLevelNono() == 1) {
+                    if (player->getLevelNono() >= 1) {
                         std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
                             (6046 + nbrLaserShoot, 2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
                             Velocity(0.25f, -0.25f), true, sf::IntRect(208, 183, 15, 17));
@@ -525,19 +534,26 @@ namespace R_TYPE {
                         scene.getCurrentScene().addEntity(shoot2);
                         scene.getCurrentScene().addEntity(shoot3);
                         nbrLaserShoot++;
-                    } else if (player->getLevelNono() == 2) {
+                    }
+                    if (player->getLevelNono() == 2) {
                         std::shared_ptr<Entity> shoot2 = GameSystem::createProjectiles
                             (6056 + nbrLaserBoucleShoot, 2, Position(pos->getPosition().x + 32, pos->getPosition().y - 5), 
-                            Velocity(0.5f, 0), true, sf::IntRect(37, 608, 63, 55));
+                            Velocity(0.3f, 0), true, sf::IntRect(37, 470, 63, 31));
                         nbrLaserBoucleShoot++;
                         scene.getCurrentScene().addEntity(shoot2);
                         return;
-                    }
-                    std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
+                    } else {
+                        std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
                         (6011 + GameSystem::getNbrBasicShoot(), 1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
                         Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
-                    GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() + 1);
-                    scene.getCurrentScene().addEntity(shoot);
+                        GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() + 1);
+                        scene.getCurrentScene().addEntity(shoot);
+                    }
+                    // std::shared_ptr<Entity> shoot = GameSystem::createProjectiles
+                    //     (6011 + GameSystem::getNbrBasicShoot(), 1, Position(pos->getPosition().x + 32, pos->getPosition().y + 5), 
+                    //     Velocity(0.5f, 0), true, sf::IntRect(249, 90, 15, 3));
+                    // GameSystem::setNbrBasicShoot(GameSystem::getNbrBasicShoot() + 1);
+                    // scene.getCurrentScene().addEntity(shoot);
                 }
             },
             [](SceneManager &) {

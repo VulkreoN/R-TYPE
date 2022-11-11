@@ -108,6 +108,10 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                             updateNono((Animation::State)readInt(msg, i + sizeof(float) * 2), e);
                             (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->setState((Animation::State)readInt(msg, i + sizeof(float) * 2));
                             (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->isAlive = ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)]);
+                            if ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)] == false) {
+                                manager.getCurrentScene().removeEntity(e);
+                                std::cout << "Nono is dead" << std::endl;
+                            }
                         }
                     }
                     if (tags == (int)IEntity::Tags::CAMERA) {
@@ -173,7 +177,7 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
         }
         GameSystem::setNbrLaserShoot(GameSystem::getNbrLaserShoot() + 1);
     } else if (id >= 6056 && id <= 6065)
-        proj = GameSystem::createProjectiles(id, 2, Position(x, y), Velocity(0, 0), false, sf::IntRect(37, 608, 63, 55));
+        proj = GameSystem::createProjectiles(id, 2, Position(x, y), Velocity(0, 0), false, sf::IntRect(37, 470, 63, 31));
     manager.getCurrentScene().addEntity(proj);
 }
 
