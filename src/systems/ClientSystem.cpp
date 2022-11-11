@@ -61,7 +61,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                     } else if (manager.getCurrentScene().get_by_id(id).size() == 0 && id == 800) {
                         std::shared_ptr<Entity> nono = GameSystem::createNono(2, Position(readFloat(msg, i), readFloat(msg, i + sizeof(float))));
                         manager.getCurrentScene().addEntity(nono);
-                    } else if (manager.getCurrentScene().get_by_id(id).size() == 0 && id == 300) {
+                    } else if (manager.getCurrentScene().get_by_id(id).size() == 0 && id == 300 && (bool)msg[i + sizeof(float) * 3 + sizeof(size_t)] == true) {
                         std::shared_ptr<Entity> bonus = GameSystem::createBonus(id, 56, Position(readFloat(msg, i), readFloat(msg, i + sizeof(float))), 
                         (Bonus::BonusType)readInt(msg, i + sizeof(float) * 2));
                         manager.getCurrentScene().addEntity(bonus);

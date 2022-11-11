@@ -137,7 +137,7 @@ namespace R_TYPE {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::BONUS]) {
                 auto bonus = Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS]);
 
-                if (bonus->getTimeSend() > 4) {
+                if (bonus->getTimeSend() > 4 && bonus->getActive() == false) {
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }

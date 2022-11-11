@@ -101,7 +101,7 @@ namespace R_TYPE {
             && posBonus->getPosition().y > pos->getPosition().y && posBonus->getPosition().y < pos->getPosition().y + playerBox.height) {
                 if (bonus->getType() == Bonus::BonusType::SPEED || component->getNono() == false) {
                     component->addBonus(bonus->getType());
-                } else if (component->getNono() == true){
+                } else if (component->getNono() == true) {
                     addUpddateNono(sceneManager, player);
                     component->setLevelNono(component->getLevelNono() + 1);
                 }
@@ -213,6 +213,9 @@ namespace R_TYPE {
             auto posEnnemi = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
             auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
             sf::IntRect box = sprite->getRect();
+
+            if (ennemy->IsAlive() == false)
+                continue;
 
             if (sprite->getAngle() == 0) {
                 if (pos->getPosition().x > posEnnemi->getPosition().x && pos->getPosition().x < posEnnemi->getPosition().x + box.width 
