@@ -127,7 +127,7 @@ elif os.name == 'posix':
         print("vcpkg is already installed\n")
     # install dependencies with vcpkg
     print("Installing dependencies with vcpkg...\n")
-    if vcpkg_install == False:
+    if not vcpkg_install:
         os.system("./vcpkg/vcpkg install sfml")
         os.system("./vcpkg/vcpkg install asio")
     else:
