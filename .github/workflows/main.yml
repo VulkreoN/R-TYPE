@@ -1,0 +1,45 @@
+name: CI-R-TYPE
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - Dev
+            - Main
+    pull_request:
+        branches:
+            - Dev
+
+jobs:
+    Compile_Unix:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: install dependencies and compile
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y python3 python3-pip
+            sudo pip3 install -r requirements.txt
+            sudo python3 build.py
+
+    Compile_Windows:
+        runs-on: windows-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: install dependencies and compile
+          run: |
+            pip install -r requirements.txt
+            pip3 install -r requirements.txt
+            python3 build.py
+
+    Push_Main:
+        needs: [Compile_Unix, Compile_Windows]
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - name: Push to Main
+          run: |
+            git config --global user.name "R-TYPE"
+            git config --global user.email ""
+            git checkout main
+            git merge dev
+            git push
