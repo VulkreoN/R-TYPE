@@ -49,6 +49,7 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
         }
         _player_id_add_queue.clear();
     }
+    bool passed = false;
     if (_event_queue.size() != 0) {
         for (auto &i : _event_queue) {
             for (auto &e : manager.getCurrentScene().get_by_id(i.first)) {
@@ -69,8 +70,11 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
                                 call.up(manager);
                             break;
                         case NetworkSystem::ButtonState::RELEASED:
-                            if (call.released)
+                            if (call.released && !passed) {
+                                if (static_cast<sf::Keyboard::Key>(i.second.first) == sf::Keyboard::Space)
+                                    passed = true;
                                 call.released(manager);
+                            }
                             break;
                     }
                 }
