@@ -105,6 +105,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                         for (auto &e : manager.getCurrentScene().get_by_id(id)) {
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
+                            updateNono((Animation::State)readInt(msg, i + sizeof(float) * 2), e);
                             (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->setState((Animation::State)readInt(msg, i + sizeof(float) * 2));
                             (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->isAlive = ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)]);
                         }
@@ -118,6 +119,33 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
         _message_queue.clear();
     }
     graphicSystem->update(manager, deltaTime);
+}
+
+void ClientSystem::updateNono(Animation::State state, std::shared_ptr<IEntity> nono)
+{
+    auto nonoComponent = Component::castComponent<Nono>((*nono)[IComponent::Type::NONO]);
+    auto sprite = Component::castComponent<Sprite>((*nono)[IComponent::Type::SPRITE]);
+    auto anims = nono->getFilteredComponents(IComponent::Type::ANIMATION);
+
+    if (state != nonoComponent->getState()) {
+        if (state == Animation::State::LV2) {
+            sprite->setRect(sf::IntRect(120, 69, 30, 21));
+            for (int i = 0; i < anims.size(); i++) {
+                auto anim_cast = Component::castComponent<Animation>(anims[i]);
+                if (anim_cast->getState() == state) {
+                    anim_cast->setRect(sf::IntRect(120, 69, 30, 21));
+                }
+            }
+        } else if (state == Animation::State::LV3) {
+            sprite->setRect(sf::IntRect(170, 342, 32, 31));
+            for (int i = 0; i < anims.size(); i++) {
+                auto anim_cast = Component::castComponent<Animation>(anims[i]);
+                if (anim_cast->getState() == state) {
+                    anim_cast->setRect(sf::IntRect(170, 342, 32, 31));
+                }
+            }
+        }
+    }
 }
 
 void ClientSystem::createProjectile(SceneManager &manager, int id, float x, float y)

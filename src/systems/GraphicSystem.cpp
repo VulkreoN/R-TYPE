@@ -122,14 +122,13 @@ namespace R_TYPE {
             window->setView(*camera);
         
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
-                auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
-
                 amanager.update_nono(e, deltaTime);
             }
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
-                auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
-
                 amanager.update_ennemy(e, deltaTime);
+            }
+            for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                amanager.update_player(e, deltaTime);
             }
         }
 

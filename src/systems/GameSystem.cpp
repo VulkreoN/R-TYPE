@@ -659,8 +659,8 @@ namespace R_TYPE {
 
 
         std::shared_ptr<Entity> joryde1 = createEnnemy(71, 9, 183, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
-        std::shared_ptr<Entity> joryde2 = createEnnemy(72, 9, 900, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
-        std::shared_ptr<Entity> joryde3 = createEnnemy(73, 9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde2 = createEnnemy(72, 9, 900, 50, 0.f, Ennemy::Type::JORYDE_ALIEN);
+        std::shared_ptr<Entity> joryde3 = createEnnemy(73, 9, 600, 50, 0.f, Ennemy::Type::JORYDE_ALIEN, Bonus::BonusType::NONO_LE_ROBOT);
         std::shared_ptr<Entity> joryde4 = createEnnemy(74, 9, 1450, 90, 0.f, Ennemy::Type::JORYDE_ALIEN);
         std::shared_ptr<Entity> joryde5 = createEnnemy(75, 9, 1780, 90, 0.f, Ennemy::Type::JORYDE_ALIEN);
 
