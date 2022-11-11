@@ -79,7 +79,6 @@ namespace R_TYPE {
             if (getPosPlayer() == pos) {
                 player->setNono(false);
                 player->setLevelNono(0);
-                std::cout << "level nono in player : " << player->getLevelNono() << std::endl;
             }
         }
     }

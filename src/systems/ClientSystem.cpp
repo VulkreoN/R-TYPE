@@ -115,6 +115,9 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                     }
                     if (tags == (int)IEntity::Tags::CAMERA) {
                         GraphicSystem::updateCamera(readFloat(msg, i) / 100);
+                        if (manager.getCurrentSceneType() != (SceneManager::SceneType)readInt(msg, i + sizeof(float))) {
+                            manager.setCurrentScene((SceneManager::SceneType)readInt(msg, i + sizeof(float)));
+                        }
                     }
                 }
             }

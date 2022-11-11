@@ -105,8 +105,9 @@ namespace R_TYPE {
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
                 auto position = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
-                if (player->isAlive() == false)
+                if (player->isAlive() == false) {
                     sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
+                }
 
                 Position moved(0,0);
                 moved.setX(position->getPosition().x + velocity->getVelocity().x * deltaTime);

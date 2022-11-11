@@ -138,6 +138,9 @@ void ServerSystem::broadcast(SceneManager &manager)
             case SceneManager::SceneType::LEVEL1:
                 create_game_info_msg(buff, manager);
                 break;
+            case SceneManager::SceneType::LOSE:
+                create_game_info_msg(buff, manager);
+                break;
             default :
                 buff[0] = protocol::Header::PING;
                 break;
@@ -272,6 +275,9 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
     // a remettre a 25
     putInt(75, buff, c);
     c += sizeof(float);
+    putInt((int)manager.getCurrentSceneType(), buff, c);
+    c += sizeof(float);
+    std::cout << (int)manager.getCurrentSceneType() << std::endl;
 }
 
 std::list<std::pair<int, NetworkSystem::ButtonState>> ServerSystem::getKeys() const

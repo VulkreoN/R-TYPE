@@ -35,14 +35,14 @@ namespace R_TYPE {
             didHitWall(sceneManager, e);
             // didHitProj(sceneManager, e);
             if (component->shootByPlayer() == false) {
-                // didHitPlayer(sceneManager, e);
+                didHitPlayer(sceneManager, e);
 
                 didHitNono(sceneManager, e);
             } else if (component->shootByPlayer() == true)
                 didHitEnnemi(sceneManager, e);
         }
         for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
-            // collideEnnemyPlayer(sceneManager, player);
+            collideEnnemyPlayer(sceneManager, player);
             collideBonusPlayer(sceneManager, player);
             collideNonoPlayer(sceneManager, player);
         }
@@ -121,7 +121,6 @@ namespace R_TYPE {
             auto nono = Component::castComponent<Nono>((*e)[IComponent::Type::NONO]);
 
             if (nono->getPosPlayer()->getPosition().x == pos->getPosition().x && nono->getPosPlayer()->getPosition().y == pos->getPosition().y) {
-                // nono->disableNonoPlayer(sceneManager);
                 nono->nextUpgrade();
             }
             if (nono->getUpgrade() == 1) {
