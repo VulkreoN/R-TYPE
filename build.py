@@ -16,8 +16,10 @@ if os.name == 'nt':
         print("Please run this script as administrator")
         sys.exit(1)
     # check if the user has internet connection
+    print("checking internet connection...")
     try:
         requests.get("https://www.google.com")
+        print("internet connection OK")
     except requests.exceptions.ConnectionError:
         print("Please check your internet connection")
         sys.exit(1)
@@ -41,6 +43,7 @@ if os.name == 'nt':
         print("Cmake installed successfully")
     else:
         print("\nCmake is already installed")
+
     # check if the user has msbuild installed
     print("Checking if MSBuild is installed...\n")
     if os.system("msbuild /version") != 0:
@@ -60,6 +63,8 @@ if os.name == 'nt':
         print("MSBuild installed successfully")
     else:
         print("\nMSBuild is already installed")
+
+
     # check if the user has vcpkg installed
     print("Checking if vcpkg is installed...\n")
     if os.system("vcpkg --version") != 0:
@@ -71,12 +76,13 @@ if os.name == 'nt':
         os.system("cd vcpkg && .\\bootstrap-vcpkg.bat")
     else:
         print("\nvcpkg is already installed")
+
+
     # installing dependencies
     print("\nInstalling dependencies...")
     os.system("vcpkg install sfml:x64-windows")
     os.system("vcpkg install asio:x64-windows")
     os.system("vcpkg integrate install")
-    print("\nDependencies installed successfully")
 
     # building the project
     print("\nBuilding the project...")
@@ -146,6 +152,3 @@ elif os.name == 'posix':
         os.system("mv build/r-type_client r-type_client")
         print("Project built successfully\n")
         sys.exit(0)
-
-
-

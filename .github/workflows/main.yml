@@ -18,6 +18,18 @@ jobs:
         runs-on: windows-latest
         steps:
         - uses: actions/checkout@v3
+        - name: install tools
+          run: |
+            choco install msbuild
+            choco install python3
+            choco install visualstudio2019buildtools
+            choco install visualstudio2019-workload-vctools
+            choco install visualstudio2019-workload-nativedesktop
+            choco install visualstudio2019-workload-nativedesktopcore
+            choco install cmake
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+
         - name: install dependencies and compile
           run: |
             pip install -r requirements.txt
