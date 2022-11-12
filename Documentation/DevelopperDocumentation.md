@@ -12,7 +12,7 @@ there is a link to their documentation below:
 
 Here is the current architecture of the project:
 
-![Architecture](./Images/architecture.png)
+![Architecture](./Images/Architecture.png)
 
 ## **How to build**
 
