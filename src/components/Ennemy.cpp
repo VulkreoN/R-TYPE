@@ -49,6 +49,10 @@ namespace R_TYPE {
             scripts.spatialScript(ennemy);
         } else if (type == Ennemy::Type::BOSS) {
             scripts.bossScript(ennemy, leftCamera);
+            if (scripts.bossScript(ennemy, leftCamera)) {
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6066 + GameSystem::getNbrBossShoot(), 30, 
+                *selfPos, Velocity(0, -0.1f), false, sf::IntRect(574, 2062, 24, 22));
+            }
         }
     }
 

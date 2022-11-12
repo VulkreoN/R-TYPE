@@ -16,6 +16,7 @@ namespace R_TYPE {
                 BASIC,
                 CHARGED,
                 TURRET,
+                BOSS,
             };
             Projectiles(bool _byPlayer);
             ~Projectiles();

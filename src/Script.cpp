@@ -94,7 +94,7 @@ namespace R_TYPE {
         }
     }
 
-    void Script::bossScript(std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera)
+    bool Script::bossScript(std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera)
     {
         CurrentFrame = clock.getElapsedTime();
         auto comp_p = (*ennemy)[IComponent::Type::ENNEMY];
@@ -119,5 +119,13 @@ namespace R_TYPE {
             if (CurrentFrame.asSeconds() > 8)
                 boss->setState(Animation::State::BORN8);
         }
+        if (repeat == 5)
+            repeat = 0;
+        if (CurrentFrame.asMilliseconds() > 200 && repeat > 0) {
+            repeat += 1;
+            clock.restart();
+            return(true);
+        }
+        return false;
     }
 }

@@ -186,6 +186,8 @@ namespace R_TYPE {
                         GameSystem::setNbrLaserShoot(GameSystem::getNbrLaserShoot() - 1);
                     else if (proj->getType() == Projectiles::Type::LASER_BOUCLE)
                         GameSystem::setNbrLaserBoucleShoot(GameSystem::getNbrLaserBoucleShoot() - 1);
+                    else if (proj->getType() == Projectiles::Type::BOSS)
+                        GameSystem::setNbrBossShoot(GameSystem::getNbrBossShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -398,6 +400,8 @@ namespace R_TYPE {
             component3->setType(Projectiles::Type::LASER);
         else if (id >= 6056 && id <= 6065)
             component3->setType(Projectiles::Type::LASER_BOUCLE);
+        else if (id >= 6066 && id <= 6076)
+            component3->setType(Projectiles::Type::BOSS); 
         
         component->getSprite().setScale(0.7, 0.7);
 
