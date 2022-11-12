@@ -93,4 +93,36 @@ namespace R_TYPE {
             clock.restart();
         }
     }
+
+    void Script::bossScript(std::shared_ptr<R_TYPE::IEntity> ennemy)
+    {
+        CurrentFrame = clock.getElapsedTime();
+        auto comp_p = (*ennemy)[IComponent::Type::ENNEMY];
+        auto boss = Component::castComponent<Ennemy>(comp_p);
+
+        if (CurrentFrame.asSeconds() > 7) {
+            boss->setState(Animation::State::BORN1);
+        }
+        if (CurrentFrame.asSeconds() > 8) {
+            boss->setState(Animation::State::BORN2);
+        }
+        if (CurrentFrame.asSeconds() > 9) {
+            boss->setState(Animation::State::BORN3);
+        }
+        if (CurrentFrame.asSeconds() > 10) {
+            boss->setState(Animation::State::BORN4);
+        }
+        if (CurrentFrame.asSeconds() > 11) {
+            boss->setState(Animation::State::BORN5);
+        }
+        if (CurrentFrame.asSeconds() > 12) {
+            boss->setState(Animation::State::BORN6);
+        }
+        if (CurrentFrame.asSeconds() > 13) {
+            boss->setState(Animation::State::BORN7);
+        }
+        if (CurrentFrame.asSeconds() > 14) {
+            boss->setState(Animation::State::BORN8);
+        }
+    }
 }

@@ -48,6 +48,8 @@ namespace R_TYPE {
             }
         } else if (type == Ennemy::Type::SPATIAL) {
             scripts.spatialScript(ennemy);
+        } else if (type == Ennemy::Type::BOSS) {
+            scripts.bossScript(ennemy);
         }
     }
 

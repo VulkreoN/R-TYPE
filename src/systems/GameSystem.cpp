@@ -315,7 +315,26 @@ namespace R_TYPE {
             entity->addComponent(anim_move);
             component->getSprite().setScale(0.7, 0.7);
         } else if (type == Ennemy::Type::BOSS) {
-            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(0, 0, 167, 208));
+            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(24, 0, 161, 213));
+            compoment3->setState(Animation::State::BORN1);
+            std::shared_ptr<Animation> anim_born1 = std::make_shared<Animation>(Animation::State::BORN1, component->getRect(), 1, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born2 = std::make_shared<Animation>(Animation::State::BORN2, component->getRect(), 2, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born3 = std::make_shared<Animation>(Animation::State::BORN3, component->getRect(), 3, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born4 = std::make_shared<Animation>(Animation::State::BORN4, component->getRect(), 4, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born5 = std::make_shared<Animation>(Animation::State::BORN5, component->getRect(), 5, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born6 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 6, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born7 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 7, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born8 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 8, 0, 0, false, 24);
+
+            component->getSprite().setScale(0.9, 0.9);
+            entity->addComponent(anim_born1)
+                    .addComponent(anim_born2)
+                    .addComponent(anim_born3)
+                    .addComponent(anim_born4)
+                    .addComponent(anim_born5)
+                    .addComponent(anim_born6)
+                    .addComponent(anim_born7)
+                    .addComponent(anim_born8);
         }
         component3->setLoot(bonusType);
 
@@ -676,6 +695,8 @@ namespace R_TYPE {
         std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(90, 5, 1200, 122, 0.f, Ennemy::Type::SPATIAL);
         std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(95, 5, 1200, 102, 0.f, Ennemy::Type::SPATIAL);
 
+        std::shared_ptr<Entity> boss = createEnnemy(101, 30, 300, 6, 0.f, Ennemy::Type::BOSS);
+
         scene->addEntity(top_wall)
                 .addEntity(bottom_wall)
                 .addEntity(tower1)
@@ -711,7 +732,8 @@ namespace R_TYPE {
                 .addEntities(spatial1)
                 .addEntities(spatial2)
                 .addEntities(spatial3)
-                .addEntities(spatial4);
+                .addEntities(spatial4)
+                .addEntity(boss);
         return (scene);
     }
 
