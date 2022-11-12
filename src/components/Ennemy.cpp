@@ -18,12 +18,11 @@ namespace R_TYPE {
         isLooting = Bonus::BonusType::NONE;
     }
 
-    void Ennemy::launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy)
+    void Ennemy::launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera)
     {
         auto selfPos = Component::castComponent<Position>((*ennemy)[IComponent::Type::POSITION]);
         auto selfVel = Component::castComponent<Velocity>((*ennemy)[IComponent::Type::VELOCITY]);
         sf::Vector2f distance = getDistance(manager, *selfPos);
-
         if (type == Ennemy::Type::TURRET) {
             updateAngle(distance, ennemy);
             if (scripts.turretScript()) {
@@ -49,7 +48,7 @@ namespace R_TYPE {
         } else if (type == Ennemy::Type::SPATIAL) {
             scripts.spatialScript(ennemy);
         } else if (type == Ennemy::Type::BOSS) {
-            scripts.bossScript(ennemy);
+            scripts.bossScript(ennemy, leftCamera);
         }
     }
 

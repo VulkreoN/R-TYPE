@@ -16,7 +16,7 @@ namespace R_TYPE {
         bool jorydeScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
         bool robotScript(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
         void spatialScript(std::shared_ptr<R_TYPE::IEntity> ennemy);
-        void bossScript(std::shared_ptr<R_TYPE::IEntity> ennemy);
+        void bossScript(std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera);
         private:
             sf::Clock clock;
             sf::Time lastFrame;

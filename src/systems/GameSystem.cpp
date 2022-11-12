@@ -124,7 +124,7 @@ namespace R_TYPE {
                 auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
 
                 if (pos->getPosition().x > rectWindow.left - 30 && pos->getPosition().x < rectWindow.left + 300) {
-                    ennemy->launchScript(sceneManager, e);
+                    ennemy->launchScript(sceneManager, e, rectWindow.left);
                     pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
                 }
@@ -695,7 +695,7 @@ namespace R_TYPE {
         std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(90, 5, 1200, 122, 0.f, Ennemy::Type::SPATIAL);
         std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(95, 5, 1200, 102, 0.f, Ennemy::Type::SPATIAL);
 
-        std::shared_ptr<Entity> boss = createEnnemy(101, 30, 300, 6, 0.f, Ennemy::Type::BOSS);
+        std::shared_ptr<Entity> boss = createEnnemy(101, 30, 2022, 6, 0.f, Ennemy::Type::BOSS);
 
         scene->addEntity(top_wall)
                 .addEntity(bottom_wall)

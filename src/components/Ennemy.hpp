@@ -30,7 +30,7 @@ namespace R_TYPE {
             void setIsAlive(bool _isAlive) {isAlive = _isAlive;};
 
             /// @brief Launch the good script with the type of the ennemy
-            void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy);
+            void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera);
 
             static sf::Vector2f getDistance(SceneManager &manager, Position selfPos);
 
