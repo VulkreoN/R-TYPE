@@ -27,6 +27,7 @@ namespace R_TYPE {
     int GameSystem::nbrRocketShoot;
     int GameSystem::nbrLaserShoot;
     int GameSystem::nbrLaserBoucleShoot;
+    int GameSystem::nbrBossShoot;
 
     GameSystem::GameSystem()
     {
@@ -50,7 +51,10 @@ namespace R_TYPE {
         sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
         nbrBasicShoot = 0;
         nbrTurretShoot = 0;
+        nbrLaserShoot = 0;
         nbrRocketShoot = 0;
+        nbrLaserBoucleShoot = 0;
+        nbrBossShoot = 0;
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -96,6 +100,8 @@ namespace R_TYPE {
                         setNbrLaserShoot(getNbrLaserShoot() - 1);
                     } else if (projectile->getType() == Projectiles::Type::LASER_BOUCLE)
                         GameSystem::setNbrLaserBoucleShoot(GameSystem::getNbrLaserBoucleShoot() - 1);
+                    else if (projectile->getType() == Projectiles::Type::BOSS)
+                        GameSystem::setNbrBossShoot(GameSystem::getNbrBossShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -139,6 +145,8 @@ namespace R_TYPE {
                 }
 
                 if (ennemy->getTimeSend() > 4) {
+                    if (ennemy->getType() == Ennemy::Type::BOSS)
+                        sceneManager.setCurrentScene(SceneManager::SceneType::WIN);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }

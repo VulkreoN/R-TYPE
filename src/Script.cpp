@@ -126,6 +126,11 @@ namespace R_TYPE {
             clock.restart();
             return(true);
         }
+        if (CurrentFrame.asSeconds() > 5 && repeat == 0) {
+            repeat = 1;
+            clock.restart();
+            return (true);
+        }
         return false;
     }
 }
