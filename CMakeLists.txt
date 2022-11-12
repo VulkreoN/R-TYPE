@@ -8,7 +8,6 @@ add_executable(r-type_server src/main_server.cpp )
 target_link_libraries(r-type_server ${PROJECT_NAME})
 add_executable(r-type_client src/main_client.cpp)
 target_link_libraries(r-type_client ${PROJECT_NAME})
-find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 
 # Call the cmake that checks and pulls the raylib
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -18,6 +17,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if (MSVC)
+    find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} sfml-system sfml-graphics sfml-window)
 endif (MSVC)
 

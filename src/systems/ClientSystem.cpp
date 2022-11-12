@@ -29,8 +29,8 @@ void ClientSystem::init(SceneManager &manager)
 {
     std::cout << "Client Network System initiating" << std::endl;
     _socket.open(asio::ip::udp::v4());
-    read_setup();
     _threadContext = std::thread([this]() { _context.run(); });
+    read_setup();
     graphicSystem->init(manager);
 }
 
