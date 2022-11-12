@@ -9,7 +9,7 @@ jobs:
         steps:
         - uses: actions/checkout@v3
         - uses: oprypin/install-sfml@v1
-        - uses: chriskohlhoff/asio@v1
+        - uses: chriskohlhoff/asio@master
           with:
             version: 2.5.1
         - name: install dependencies and compile
