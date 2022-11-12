@@ -2,6 +2,7 @@ name: CI-R-TYPE
 on:
     workflow_dispatch:
     push:
+        branches: [Dev]
 
 jobs:
     Compile_Unix:
@@ -42,3 +43,16 @@ jobs:
           run: |
             pip install -r requirements.txt
             python3 build.py
+
+    MergeMain:
+        runs-on: ubuntu-latest
+        needs: [Compile_Unix, Compile_Windows]
+        steps:
+        - uses: actions/checkout@v3
+        - name: Merge to main
+          run: |
+            git config --global user.email ""
+            git config --global user.name "R-type"
+            git checkout main
+            git merge Dev
+            git push
