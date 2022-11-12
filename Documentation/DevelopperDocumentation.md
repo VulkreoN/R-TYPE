@@ -83,4 +83,4 @@ The network protocol is based on the UDP protocol, we use the Asio library to ha
 
 Here is the current network protocol:
 
-- [NetworkProtocol](./NetworkProtocol.md) (WIP)
+- [NetworkProtocol](./NetworkProtocol.md)
