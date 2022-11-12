@@ -20,13 +20,14 @@ jobs:
         - uses: actions/checkout@v3
         - name: install tools
           run: |
-            choco install msbuild
             choco install python3
+            choco install cmake
+            choco install microsoft-build-tools
             choco install visualstudio2019buildtools
             choco install visualstudio2019-workload-vctools
             choco install visualstudio2019-workload-nativedesktop
             choco install visualstudio2019-workload-nativedesktopcore
-            choco install cmake
+            git clone https://github.com/Microsoft/vcpkg.git && .\vcpkg\bootstrap-vcpkg.bat
             python -m pip install --upgrade pip
             pip install -r requirements.txt
 

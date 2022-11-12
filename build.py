@@ -24,21 +24,18 @@ if os.name == 'nt':
         print("Please check your internet connection")
         sys.exit(1)
 
+    # install chocolatey
+    print("installing chocolatey...")
+    os.system("powershell -Command \"Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))\"")
+    print("chocolatey installed")
+
     # check if the user has cmake installed
     print("Checking if CMake is installed...\n")
     if os.system("cmake --version") != 0:
         print("Cmake is not installed..\n")
         print("Installing cmake...")
         # download cmake
-        url = "https://github.com/Kitware/CMake/releases/download/v3.25.0-rc1/cmake-3.25.0-rc1-windows-x86_64.msi"
-        r = requests.get(url, allow_redirects=True)
-        open('cmake.msi', 'wb').write(r.content)
-        # install cmake
-        os.system("msiexec /i cmake.msi /quiet /norestart")
-        # remove cmake.msi
-        os.remove("cmake.msi")
-        # add cmake to the path with $env:path += ";C:\Program Files\cmake\bin"
-        os.system("$env:path += \";C:\Program Files\cmake\bin\"")
+        os.system("choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'")
         os.system("cmake --version")
         print("Cmake installed successfully")
     else:
@@ -50,15 +47,7 @@ if os.name == 'nt':
         print("MSBuild is not installed..\n")
         print("Installing MSBuild...")
         # download MSBuild
-        url = "http://www.microsoft.com/en-us/download/confirmation.aspx?id=40760"
-        r = requests.get(url, allow_redirects=True)
-        open('MSBuild.exe', 'wb').write(r.content)
-        # install MSBuild
-        os.system("MSBuild.exe /quiet /norestart")
-        # remove MSBuild.exe
-        os.remove("MSBuild.exe")
-        # add MSBuild to the path with $env:path += ";C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin"
-        os.system("$env:path += \";C:\Program Files (x86)\Microsoft Visual Studio\\2022\Community\MSBuild\Current\Bin\"")
+        os.system("choco install microsoft-build-tools")
         os.system("msbuild /version")
         print("MSBuild installed successfully")
     else:
@@ -73,7 +62,7 @@ if os.name == 'nt':
         # download vcpkg
         os.system("git clone https://github.com/Microsoft/vcpkg.git")
         # install vcpkg
-        os.system("cd vcpkg && .\\bootstrap-vcpkg.bat")
+        os.system(".\\vcpkg\\bootstrap-vcpkg.bat")
     else:
         print("\nvcpkg is already installed")
 
