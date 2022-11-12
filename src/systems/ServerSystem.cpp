@@ -49,6 +49,7 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
         }
         _player_id_add_queue.clear();
     }
+    bool passed = false;
     if (_event_queue.size() != 0) {
         for (auto &i : _event_queue) {
             for (auto &e : manager.getCurrentScene().get_by_id(i.first)) {
@@ -69,8 +70,11 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
                                 call.up(manager);
                             break;
                         case NetworkSystem::ButtonState::RELEASED:
-                            if (call.released)
+                            if (call.released && !passed) {
+                                if (static_cast<sf::Keyboard::Key>(i.second.first) == sf::Keyboard::Space)
+                                    passed = true;
                                 call.released(manager);
+                            }
                             break;
                     }
                 }
@@ -103,9 +107,21 @@ void ServerSystem::handle_incomming_message()
             }
         }
     if (new_client && _connections.size() < MAX_NUMBER_OF_CONNECTIONS) {
-        _connections.push_back(std::make_unique<Connection> (_edp_buff, _connections.size() + 1));
+        id = 1;
+        for (size_t i = 0; i < _connections.size(); i++) {
+            if (id == _connections[i]->get_id())
+                id += 1;
+        }
+        _connections.push_back(std::make_unique<Connection> (_edp_buff, id));
         _player_id_add_queue.push_back(_connections.back()->get_id());
-        id = _connections.back()->get_id();
+    }
+    if ((protocol::Header)_buffer[c] == protocol::Header::DECONNECT && id != 0) {
+        for (size_t i = 0; i < _connections.size(); i++) {
+            if (_connections[i]->get_id() == id) {
+                _connections.erase(_connections.begin() + i);
+                break;
+            }
+        }
     }
     if ((protocol::Header)_buffer[c] == protocol::Header::EVENT && id != 0) {
         c += sizeof(uint8_t);
@@ -132,6 +148,9 @@ void ServerSystem::broadcast(SceneManager &manager)
     if (true /* not game start */) {
         switch (manager.getCurrentSceneType()) {
             case SceneManager::SceneType::LEVEL1:
+                create_game_info_msg(buff, manager);
+                break;
+            case SceneManager::SceneType::LOSE:
                 create_game_info_msg(buff, manager);
                 break;
             default :
@@ -258,14 +277,17 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             c += sizeof(size_t);
             buff[c] = (uint8_t)Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive; // to change, entity's status
             c += sizeof(uint8_t);
-            if (Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive == false)
+            if (Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive == false) {
                 Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->nextTimeSend();
+            }
         }
     }
     putInt((int)IEntity::Tags::CAMERA, buff, c);
     c += sizeof(float);
     // a remettre a 25
     putInt(75, buff, c);
+    c += sizeof(float);
+    putInt((int)manager.getCurrentSceneType(), buff, c);
     c += sizeof(float);
 }
 

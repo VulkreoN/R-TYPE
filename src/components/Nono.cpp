@@ -10,6 +10,7 @@ namespace R_TYPE {
         isSnap = false;
         unKillable = true;
         isAlive = true;
+        timeSend = 0;
     }
 
     Nono::~Nono()

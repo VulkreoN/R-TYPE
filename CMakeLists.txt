@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 project(R-TYPE VERSION 1.0.0 LANGUAGES CXX)
 
-add_compile_options(-g)
-
 file(GLOB_RECURSE HEADERS "include/*.hpp")
 add_library(${PROJECT_NAME} ${HEADERS})
 add_executable(r-type_server src/main_server.cpp )

@@ -55,7 +55,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                         createProjectile(manager, id, readFloat(msg, i), readFloat(msg, i + sizeof(float)));
                     }
                     if (manager.getCurrentScene().get_by_id(id).size() == 0 && id > 0 && id < 5) {
-                        std::shared_ptr<Entity> player = GameSystem::createPlayer(id, 53, 50, 40 + 20 * id);
+                        std::shared_ptr<Entity> player = GameSystem::createPlayer(id, 42, 50, 40 + 20 * id);
                         manager.getCurrentScene().addEntity(player);
                         EventSystem::putCallback(manager, player);
                     } else if (manager.getCurrentScene().get_by_id(id).size() == 0 && id == 800) {
@@ -108,10 +108,16 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                             updateNono((Animation::State)readInt(msg, i + sizeof(float) * 2), e);
                             (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->setState((Animation::State)readInt(msg, i + sizeof(float) * 2));
                             (Component::castComponent<Nono>((*e)[IComponent::Type::NONO]))->isAlive = ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)]);
+                            if ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)] == false) {
+                                manager.getCurrentScene().removeEntity(e);
+                            }
                         }
                     }
                     if (tags == (int)IEntity::Tags::CAMERA) {
                         GraphicSystem::updateCamera(readFloat(msg, i) / 100);
+                        if (manager.getCurrentSceneType() != (SceneManager::SceneType)readInt(msg, i + sizeof(float))) {
+                            manager.setCurrentScene((SceneManager::SceneType)readInt(msg, i + sizeof(float)));
+                        }
                     }
                 }
             }
@@ -163,11 +169,26 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
         GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() + 1);
     } else if (id >= 6030 && id <= 6045)
         proj = GameSystem::createProjectiles(id, 10, Position(x, y), Velocity(0, 0), false, sf::IntRect(191, 63, 6, 12));
+    else if (id >= 6046 && id <= 6055) {
+        if (firstLaser) {
+            proj = GameSystem::createProjectiles(id, 2, Position(x, y), Velocity(0, 0), false, sf::IntRect(242, 183, 15, 17));
+            firstLaser = false;
+        } else {
+            proj = GameSystem::createProjectiles(id, 2, Position(x, y), Velocity(0, 0), false, sf::IntRect(208, 183, 15, 17));
+            firstLaser = true;
+        }
+        GameSystem::setNbrLaserShoot(GameSystem::getNbrLaserShoot() + 1);
+    } else if (id >= 6056 && id <= 6065)
+        proj = GameSystem::createProjectiles(id, 2, Position(x, y), Velocity(0, 0), false, sf::IntRect(37, 470, 63, 31));
     manager.getCurrentScene().addEntity(proj);
 }
 
 void ClientSystem::destroy()
 {
+    uint8_t buff[1] = {0};
+
+    buff[0] = protocol::Header::DECONNECT;
+    _socket.send_to(asio::buffer(buff), _server_endpoint);
     std::cout << "Network System destroyed" << std::endl;
 }
 

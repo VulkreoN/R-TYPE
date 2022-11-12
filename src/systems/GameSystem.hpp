@@ -39,6 +39,10 @@ namespace R_TYPE {
             static int getNbrTurretShoot() { return nbrTurretShoot; };
             static void setNbrRocketShoot(int nbr) { nbrRocketShoot = nbr; };
             static int getNbrRocketShoot() { return nbrRocketShoot; };
+            static void setNbrLaserShoot(int nbr) { nbrLaserShoot = nbr; };
+            static int getNbrLaserShoot() { return nbrLaserShoot; };
+            static void setNbrLaserBoucleShoot(int nbr) { nbrLaserBoucleShoot = nbr; };
+            static int getNbrLaserBoucleShoot() { return nbrLaserBoucleShoot; };
             static std::shared_ptr<Entity> createPlayer(int id, int name, int posX, int posY);
             static std::shared_ptr<Entity> createProjectiles(int id, int name, Position pos, Velocity velocity, bool byPlayer, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
             static std::shared_ptr<Entity> createNono(int name, Position pos);
@@ -65,6 +69,8 @@ namespace R_TYPE {
             static int nbrBasicShoot;
             static int nbrTurretShoot;
             static int nbrRocketShoot;
+            static int nbrLaserShoot;
+            static int nbrLaserBoucleShoot;
     };
 }
 

@@ -30,7 +30,8 @@ namespace R_TYPE {
             void didHitWall(SceneManager &sceneManager, std::shared_ptr<IEntity> project);
             void addUpddateNono(SceneManager &sceneManager, std::shared_ptr<IEntity> player);
             static bool isBlack(Position pos, sf::IntRect box);
-        
+            bool boxCollide(sf::IntRect box1, Position pos1, sf::IntRect box2, Position pos2);
+
         private:
             std::vector<std::shared_ptr<IEntity>> _collidables2D;
     };
