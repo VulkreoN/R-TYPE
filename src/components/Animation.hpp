@@ -66,7 +66,7 @@ namespace R_TYPE {
 
             bool getDoActions();
 
-            int setNbFrame(int nbFrame);
+            void setNbFrame(int nbFrame);
 
             int getNbFrame();
 

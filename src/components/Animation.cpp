@@ -91,7 +91,7 @@ namespace R_TYPE {
         return (_nbFrame);
     }
 
-    int Animation::setNbFrame(int nbFrame)
+    void Animation::setNbFrame(int nbFrame)
     {
         _nbFrame = nbFrame;
     }
