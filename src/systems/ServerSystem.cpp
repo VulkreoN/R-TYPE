@@ -11,7 +11,9 @@
 #include "EventSystem.hpp"
 #include "Projectiles.hpp"
 #include "GameSystem.hpp"
+#include "Ennemy.hpp"
 #include "network/protocol.hpp"
+#include "Nono.hpp"
 
 namespace R_TYPE {
 
@@ -42,10 +44,12 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
         broadcast(manager);
     }
     if (_player_id_add_queue.size() > 0) {
-        for (size_t id : _player_id_add_queue)
-            manager.getCurrentScene().addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
+        for (size_t id : _player_id_add_queue) {
+            manager.getScene(SceneManager::SceneType::LEVEL1).addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
+        }
         _player_id_add_queue.clear();
     }
+    bool passed = false;
     if (_event_queue.size() != 0) {
         for (auto &i : _event_queue) {
             for (auto &e : manager.getCurrentScene().get_by_id(i.first)) {
@@ -66,8 +70,11 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
                                 call.up(manager);
                             break;
                         case NetworkSystem::ButtonState::RELEASED:
-                            if (call.released)
+                            if (call.released && !passed) {
+                                if (static_cast<sf::Keyboard::Key>(i.second.first) == sf::Keyboard::Space)
+                                    passed = true;
                                 call.released(manager);
+                            }
                             break;
                     }
                 }
@@ -100,9 +107,21 @@ void ServerSystem::handle_incomming_message()
             }
         }
     if (new_client && _connections.size() < MAX_NUMBER_OF_CONNECTIONS) {
-        _connections.push_back(std::make_unique<Connection> (_edp_buff, _connections.size() + 1));
+        id = 1;
+        for (size_t i = 0; i < _connections.size(); i++) {
+            if (id == _connections[i]->get_id())
+                id += 1;
+        }
+        _connections.push_back(std::make_unique<Connection> (_edp_buff, id));
         _player_id_add_queue.push_back(_connections.back()->get_id());
-        id = _connections.back()->get_id();
+    }
+    if ((protocol::Header)_buffer[c] == protocol::Header::DECONNECT && id != 0) {
+        for (size_t i = 0; i < _connections.size(); i++) {
+            if (_connections[i]->get_id() == id) {
+                _connections.erase(_connections.begin() + i);
+                break;
+            }
+        }
     }
     if ((protocol::Header)_buffer[c] == protocol::Header::EVENT && id != 0) {
         c += sizeof(uint8_t);
@@ -129,6 +148,9 @@ void ServerSystem::broadcast(SceneManager &manager)
     if (true /* not game start */) {
         switch (manager.getCurrentSceneType()) {
             case SceneManager::SceneType::LEVEL1:
+                create_game_info_msg(buff, manager);
+                break;
+            case SceneManager::SceneType::LOSE:
                 create_game_info_msg(buff, manager);
                 break;
             default :
@@ -162,47 +184,111 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
     c += sizeof(protocol::Header);
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
         auto comp = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
-        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
-            buff[c] = (uint8_t)1;
-            c += sizeof(uint8_t);
+        if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::PLAYER, buff, c);
+            c += sizeof(float);
             putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().x, buff, c); // entity's X crd
             c += sizeof(float);
             putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().y, buff, c); // entity's Y crd
             c += sizeof(float);
+            putInt((int)Component::castComponent<Player>((*e)[IComponent::Type::PLAYER])->getState(), buff, c); // entity's status
+            c += sizeof(float);
             putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)1; // to change, entity's status
+            buff[c] = (uint8_t)Component::castComponent<Player>((*e)[IComponent::Type::PLAYER])->isAlive(); // entity's status
             c += sizeof(uint8_t);
         }
     }
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
-        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
-            buff[c] = (uint8_t)1;
-            c += sizeof(uint8_t);
+        if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::PROJECTILES, buff, c);
+            c += sizeof(float);
             putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().x, buff, c); // entity's X crd
             c += sizeof(float);
              putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().y, buff, c); // entity's Y crd
             c += sizeof(float);
+            buff[c] = 0;
+            c += sizeof(float);
             putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES]))->getIsActive(); // to change, entity's status
+            buff[c] = (uint8_t)Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->getIsActive(); // entity's status
             c += sizeof(uint8_t);
+            if (Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->getIsActive() == false)
+                Component::castComponent<Projectiles>((*e)[IComponent::Type::PROJECTILES])->nextTimeSend();
         }
     }
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
-        if (c + sizeof(size_t) + sizeof(float) * 2 + sizeof(uint8_t) * 2) {
-            buff[c] = (uint8_t)1;
-            c += sizeof(uint8_t);
-            putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().x, buff, c); // entity's X crd
+        auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+        if (pos->getPosition().x < GameSystem::getRectWindow().left - 50 || pos->getPosition().x > GameSystem::getRectWindow().left + 300)
+            continue;
+        if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::ENNEMY, buff, c);
             c += sizeof(float);
-            putInt(Component::castComponent<Position>((*e)[IComponent::Type::POSITION])->getPosition().y, buff, c); // entity's Y crd
+            putInt(pos->getPosition().x, buff, c); // entity's X crd
             c += sizeof(float);
-            buff[c] = e->get_id(); // entity's ID
+            putInt(pos->getPosition().y, buff, c); // entity's Y crd
+            c += sizeof(float);
+            putInt((int)Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->getState(), buff, c); // entity's status
+            c += sizeof(float);
+            putInt(e->get_id(), buff, c); // entity's ID
             c += sizeof(size_t);
-            buff[c] = (uint8_t)1; // to change, entity's status
+            buff[c] = (uint8_t)Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->IsAlive(); // to change, entity's status
             c += sizeof(uint8_t);
+            if (Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->IsAlive() == false)
+                Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY])->nextTimeSend();
         }
     }
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::BONUS]) {
+        auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+        if (pos->getPosition().x < GameSystem::getRectWindow().left - 50 || pos->getPosition().x > GameSystem::getRectWindow().left + 300)
+            continue;
+        if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::BONUS, buff, c);
+            c += sizeof(float);
+            putInt(pos->getPosition().x, buff, c); // entity's X crd
+            c += sizeof(float);
+            putInt(pos->getPosition().y, buff, c); // entity's Y crd
+            c += sizeof(float);
+            putInt((int)Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS])->getType(), buff, c); // entity's status
+            c += sizeof(float);
+            putInt(e->get_id(), buff, c); // entity's ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS])->getActive(); // to change, entity's status
+            c += sizeof(uint8_t);
+            if (Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS])->getActive() == false)
+                Component::castComponent<Bonus>((*e)[IComponent::Type::BONUS])->nextTimeSend();
+        }
+    }
+
+    for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
+        auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+        if (pos->getPosition().x < GameSystem::getRectWindow().left - 50 || pos->getPosition().x > GameSystem::getRectWindow().left + 300)
+            continue;
+        if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
+            putInt((int)IEntity::Tags::NONO, buff, c);
+            c += sizeof(float);
+            putInt(pos->getPosition().x, buff, c); // entity's X crd
+            c += sizeof(float);
+            putInt(pos->getPosition().y, buff, c); // entity's Y crd
+            c += sizeof(float);
+            putInt((int)Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->getState(), buff, c); // entity's status
+            c += sizeof(float);
+            putInt(e->get_id(), buff, c); // entity's ID
+            c += sizeof(size_t);
+            buff[c] = (uint8_t)Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive; // to change, entity's status
+            c += sizeof(uint8_t);
+            if (Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->isAlive == false) {
+                Component::castComponent<Nono>((*e)[IComponent::Type::NONO])->nextTimeSend();
+            }
+        }
+    }
+    putInt((int)IEntity::Tags::CAMERA, buff, c);
+    c += sizeof(float);
+    // a remettre a 25
+    putInt(75, buff, c);
+    c += sizeof(float);
+    putInt((int)manager.getCurrentSceneType(), buff, c);
+    c += sizeof(float);
 }
 
 std::list<std::pair<int, NetworkSystem::ButtonState>> ServerSystem::getKeys() const

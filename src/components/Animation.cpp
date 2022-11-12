@@ -8,11 +8,18 @@
 #include "Animation.hpp"
 
 namespace R_TYPE {
-    Animation::Animation(int id, State state, sf::IntRect rect): Component(Component::Type::ANIMATION)
+    Animation::Animation(State state, sf::IntRect rect, int y, int x, int xMax, bool doAction, int posX, int posY): Component(IComponent::Type::ANIMATION)
     {
-        _id = id;
         _state = state;
         _rect = rect;
+        _y = y;
+        _x = x;
+        _xMax = xMax;
+        _xMin = x;
+        _doActions = doAction;
+        _nbFrame = _xMin;
+        _posX = posX;
+        _posY = posY;
     }
 
     Animation::~Animation()
@@ -77,5 +84,55 @@ namespace R_TYPE {
     bool Animation::getDoActions()
     {
         return (_doActions);
+    }
+
+    int Animation::getNbFrame()
+    {
+        return (_nbFrame);
+    }
+
+    void Animation::setNbFrame(int nbFrame)
+    {
+        _nbFrame = nbFrame;
+    }
+
+    void Animation::setCurrentFrame(sf::Time currentFrame)
+    {
+        _currentFrame = currentFrame;
+    }
+
+    sf::Time Animation::getCurrentFrame()
+    {
+        return (_currentFrame);
+    }
+
+    void Animation::restartClock()
+    {
+        _clock.restart();
+    }
+
+    sf::Clock Animation::getClock()
+    {
+        return(_clock);
+    }
+
+    int Animation::getPosX()
+    {
+        return(_posX);
+    }
+
+    int Animation::getPosY()
+    {
+        return(_posY);
+    }
+
+    void Animation::setPosX(int posX)
+    {
+        _posX = posX;
+    }
+
+    void Animation::setPosY(int posY)
+    {
+        _posY = posY;
     }
 }

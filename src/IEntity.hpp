@@ -20,6 +20,10 @@ namespace R_TYPE {
             PLAYER,
             UI,
             ENNEMY,
+            BONUS,
+            NONO,
+            ANIMATED,
+            CAMERA,
         };
 
         virtual ~IEntity() = default;
@@ -34,11 +38,11 @@ namespace R_TYPE {
          * @brief Get entity's components
          * @return Returns a reference of the entity's components vector
          */
-        // virtual std::map<IComponent::Type, std::shared_ptr<IComponent>> &getComponents() = 0;
-        // /**
-        //  * @brief Get entity's tags
-        //  * @return Returns a reference of the entity's tags vector
-        //  */
+        virtual std::map<IComponent::Type, std::vector<std::shared_ptr<IComponent>>> &getComponents() = 0;
+        /**
+         * @brief Get entity's tags
+         * @return Returns a reference of the entity's tags vector
+         */
         virtual const std::vector<Tags> &getTags() const = 0;
         /**
          * @brief [] Operator overload that returns a pointer to a component or null
@@ -50,6 +54,7 @@ namespace R_TYPE {
 
         virtual std::shared_ptr<IComponent> &operator[](IComponent::Type type) = 0;
 
+        virtual std::vector<std::shared_ptr<IComponent>> getFilteredComponents(IComponent::Type components) = 0;
         /**
          * @brief Each entity has an ID, this function lets us access it
          * @return Returns the entity's ID

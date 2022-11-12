@@ -4,6 +4,9 @@
 #include "Entity.hpp"
 #include "GameSystem.hpp"
 #include "Player.hpp"
+#include <cmath>
+
+#define PI 3.14159265
 
 namespace R_TYPE {
 
@@ -12,6 +15,7 @@ namespace R_TYPE {
     {
         isAlive = true;
         type = _type;
+        isLooting = Bonus::BonusType::NONE;
     }
 
     void Ennemy::launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy)
@@ -21,24 +25,29 @@ namespace R_TYPE {
         sf::Vector2f distance = getDistance(manager, *selfPos);
 
         if (type == Ennemy::Type::TURRET) {
+            updateAngle(distance, ennemy);
             if (scripts.turretScript()) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(600, 54, *selfPos, getVelocityTarget(distance), false);
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6021 + GameSystem::getNbrTurretShoot(), 54, 
+                *selfPos, getVelocityTarget(distance), false, sf::IntRect(0, 0, 14, 12));
+                GameSystem::setNbrTurretShoot(GameSystem::getNbrTurretShoot() + 1);
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
-            if (scripts.jorydeScript(distance, selfVel)) {
+            if (scripts.jorydeScript(distance, ennemy)) {
                 if (distance.x > 0)
                     isAlive = false;
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(600, 9, *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6020, 9, *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::ROBOT_DINO) {
-            if (scripts.robotScript(distance, selfVel)) {
-                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(600, 10, *selfPos, Velocity(0, -0.1f), false, sf::IntRect(191, 63, 6, 12));
+            if (scripts.robotScript(distance, ennemy)) {
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6030 + GameSystem::getNbrRocketShoot(), 10, 
+                *selfPos, Velocity(0, -0.1f), false, sf::IntRect(191, 63, 6, 12));
+                GameSystem::setNbrRocketShoot(GameSystem::getNbrRocketShoot() + 1);
                 manager.getCurrentScene().addEntity(shoot);
             }
         } else if (type == Ennemy::Type::SPATIAL) {
-            scripts.spatialScript(selfVel);
+            scripts.spatialScript(ennemy);
         }
     }
 
@@ -80,7 +89,7 @@ namespace R_TYPE {
             velo.setX(-distance.x * 100 / (distance.y * -1) * 0.001);
         }
 
-        if (distance.x > distance.y && distance.y > 0) {
+        if (distance.x > distance.y) {
             velo.setX(0.1f);
             velo.setY(distance.y * 100 / distance.x * 0.001);
         } else if (distance.y > distance.x && distance.x > 0) {
@@ -93,5 +102,34 @@ namespace R_TYPE {
     Ennemy::~Ennemy()
     {
 
+    }
+
+    void Ennemy::setState(Animation::State state)
+    {
+        _state = state;
+    }
+
+    Animation::State Ennemy::getState()
+    {
+        return _state;
+    }
+
+    void Ennemy::updateAngle(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy)
+    {
+        auto sprite = Component::castComponent<Sprite>((*ennemy)[IComponent::Type::SPRITE]);
+        angle = distance.x / distance.y;
+        angle = atan(angle) * 180 / PI;
+        int angleOfSprite = sprite->getAngle();
+
+        if (angle > -90 && angle < -54)
+            sprite->setRect(sf::IntRect(87, 2, 15, 14));
+        else if (angle > -54 && angle < -18)
+            sprite->setRect(sf::IntRect(70, 2, 15, 14));
+        else if (angle > -18 && angle < 18)
+            sprite->setRect(sf::IntRect(36, 2, 15, 14));
+        else if (angle > 18 && angle < 54)
+            sprite->setRect(sf::IntRect(19, 2, 15, 14));
+        else if (angle > 54 && angle < 90)
+            sprite->setRect(sf::IntRect(1, 2, 15, 14));
     }
 }

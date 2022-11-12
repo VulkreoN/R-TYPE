@@ -26,6 +26,7 @@ namespace R_TYPE {
             void destroy() final;
             void sendEvent(int button, NetworkSystem::ButtonState state, bool isKey, int x = 0, int y = 0);
             void createProjectile(SceneManager &manager, int id, float x, float y);
+            void updateNono(Animation::State state, std::shared_ptr<IEntity> nono);
 
             size_t _id;
 
@@ -39,6 +40,7 @@ namespace R_TYPE {
             void broadcast(SceneManager &) final;
 
             int _ping_cooldown;
+            bool firstLaser;
             asio::ip::udp::endpoint _server_endpoint;
             std::unique_ptr<GraphicSystem> graphicSystem;
     };

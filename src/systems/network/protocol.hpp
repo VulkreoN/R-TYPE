@@ -17,7 +17,8 @@
             GAME_INFO,
             PLAYER_ACTION,
             START_GAME,
-            EVENT
+            EVENT,
+            DECONNECT
         };
 
     }

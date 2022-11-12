@@ -12,7 +12,7 @@ namespace R_TYPE {
         Velocity(sf::Vector2f _velocity);
         ~Velocity();
 
-        /// @brief get the Velocity 
+        /// @brief get the Velocity
         sf::Vector2f getVelocity() {return (velocity);};
 
         void setX(float _x) {velocity.x = _x;};

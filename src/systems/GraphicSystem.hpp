@@ -14,6 +14,7 @@
 #include <string>
 #include "ISystem.hpp"
 #include "EventSystem.hpp"
+#include "AnimationManager.hpp"
 
 namespace R_TYPE {
 
@@ -25,7 +26,7 @@ namespace R_TYPE {
             ~GraphicSystem();
 
             void init(SceneManager &manager) final;
-            void update(SceneManager &manager, uint64_t deltaTime) final;
+            void update(SceneManager &manaer, uint64_t deltaTime) final;
             void destroy() final;
 
             static const std::shared_ptr<sf::RenderWindow> &getWindow() {return (window);};
@@ -34,15 +35,19 @@ namespace R_TYPE {
 
             void setCamera(SceneManager &manager);
 
+            static void updateCamera(float offset);
+
         protected:
         private:
             static std::shared_ptr<sf::RenderWindow> window;
             std::unique_ptr<EventSystem> eventSystem;
-            std::shared_ptr<sf::View> camera;
+            static std::shared_ptr<sf::View> camera;
             std::shared_ptr<sf::View> normalView;
             static std::vector<std::shared_ptr<sf::Texture>> _textures;
             std::vector<std::string> _pathTextures;
             bool _isInit;
+            AnimationManager amanager;
+
     };
 }
 

@@ -42,6 +42,13 @@ namespace R_TYPE {
         }
     }
 
+    void EventSystem::putCallback(SceneManager &manager, std::shared_ptr<IEntity> entity)
+    {
+        auto listener = Component::castComponent<Event>((*entity)[IComponent::Type::EVENT]);
+        if (listener)
+            _event[(int)manager.getCurrentSceneType()].push_back(listener);
+    }
+
     void EventSystem::setWindow(std::shared_ptr<sf::RenderWindow> _window, std::shared_ptr<sf::View> _camera,
         std::shared_ptr<sf::View> _normalView)
     {
@@ -70,15 +77,15 @@ namespace R_TYPE {
                 handleMouse(manager, listener, event);
             }
         }
-        for (auto &script : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
-            auto pos = Component::castComponent<Position>((*script)[IComponent::Type::POSITION]);
-            auto ennemy = Component::castComponent<Ennemy>((*script)[IComponent::Type::ENNEMY]);
-            float windowPosX = window->getView().getCenter().x - 135;
+        // for (auto &script : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+        //     auto pos = Component::castComponent<Position>((*script)[IComponent::Type::POSITION]);
+        //     auto ennemy = Component::castComponent<Ennemy>((*script)[IComponent::Type::ENNEMY]);
+        //     float windowPosX = window->getView().getCenter().x - 135;
 
-            if (pos->getPosition().x < windowPosX + 270 && pos->getPosition().x > windowPosX) {
-                ennemy->launchScript(manager, script);
-            }
-        }
+        //     if (pos->getPosition().x < windowPosX + 270 && pos->getPosition().x > windowPosX) {
+        //         ennemy->launchScript(manager, script);
+        //     }
+        // }
     }
 
     void EventSystem::update(SceneManager &manager, uint64_t deltaTime)
@@ -126,8 +133,9 @@ namespace R_TYPE {
                 auto call = listener->getMouseMappings()[static_cast<sf::Mouse::Button>(mouseButtons.front().first)];
                 switch (mouseButtons.front().second) {
                     case NetworkSystem::ButtonState::PRESSED:
-                        if (call._pressed)
+                        if (call._pressed) {
                             call._pressed(manager, sf::Vector2i(mousePositions.front().first, mousePositions.front().second));
+                        }
                         break;
                     case NetworkSystem::ButtonState::RELEASED:
                         if (call._released)
@@ -160,6 +168,7 @@ namespace R_TYPE {
             if (it.second.released && event.type == sf::Event::KeyReleased && event.key.code == it.first) {
                 // it.second.released(manager);
                 dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::RELEASED, true);
+                if (it.first == sf::Keyboard::Space)
                 wasPressed = false;
             }
             if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
@@ -180,6 +189,7 @@ namespace R_TYPE {
     void EventSystem::handleMouse(SceneManager &manager, std::shared_ptr<Event> listener, sf::Event event)
     {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*GraphicSystem::getWindow());
+        mousePosition = (sf::Vector2i)GraphicSystem::getWindow()->mapPixelToCoords(mousePosition);
 
         for (auto &it : listener->getMouseMappings()) {
             if (it.second._pressed && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == it.first) {
