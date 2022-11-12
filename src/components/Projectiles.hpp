@@ -9,6 +9,7 @@ namespace R_TYPE {
     class Projectiles : public Component {
         public:
             enum class Type {
+                LASER_BOUCLE,
                 LASER,
                 PRE_ROCKET,
                 ROCKET,
@@ -26,6 +27,7 @@ namespace R_TYPE {
             void setType(Type _type) {type = _type;};
             Type getType() {return (type);};
 
+            void setSpriteAngle(sf::Vector2f distance, std::shared_ptr<IEntity> entity);
             void nextTimeSend() {timeSend += 1;};
             int getTimeSend() {return (timeSend);};
 

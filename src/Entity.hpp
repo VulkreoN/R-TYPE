@@ -31,12 +31,12 @@ namespace R_TYPE {
             * @brief Get entity's components
             * @return Returns a reference of the entity's components vector
             */
-            // std::map<IComponent::Type, std::shared_ptr<IComponent>> &getComponents();
-            // /**
-            //  * @brief Get entity's tags
-            //  * @return Returns a reference of the entity's tags vector
-            //  */
-             const std::vector<Tags> &getTags() const {return (_tags);};
+            std::map<IComponent::Type, std::vector<std::shared_ptr<IComponent>>> &getComponents();
+            /**
+             * @brief Get entity's tags
+             * @return Returns a reference of the entity's tags vector
+             */
+            const std::vector<Tags> &getTags() const {return (_tags);};
             /**
              * @brief [] Operator overload that returns a pointer to a component or null
              *
@@ -44,6 +44,8 @@ namespace R_TYPE {
              * @return std::shared_ptr<IComponent> to that component or nullptr
              */
             std::shared_ptr<IComponent> &operator[](IComponent::Type type);
+
+            std::vector<std::shared_ptr<IComponent>> getFilteredComponents(IComponent::Type components);
 
             bool hasTag(Tags tag) const;
 
@@ -54,7 +56,7 @@ namespace R_TYPE {
             size_t get_id();
         private:
             std::vector<Tags> _tags;
-            std::map<IComponent::Type, std::shared_ptr<IComponent>> _components;
+            std::map<IComponent::Type, std::vector<std::shared_ptr<IComponent>>> _components;
             std::vector<IComponent::Type> _componentsType;
         protected:
             size_t _id;

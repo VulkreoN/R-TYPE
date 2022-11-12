@@ -11,6 +11,7 @@
 #include "Component.hpp"
 #include "Sprite.hpp"
 #include "Player.hpp"
+#include "Nono.hpp"
 #include "Text.hpp"
 #include "Ennemy.hpp"
 #include "ClientSystem.hpp"
@@ -59,8 +60,6 @@ namespace R_TYPE {
             sf::Texture texture;
             texture.loadFromFile(_pathTextures[i]);
             _textures.push_back(std::make_shared<sf::Texture>(texture));
-            // if (!_textures[i].loadFromFile(_pathTextures[i]))
-            //     std::cerr << "error load texture path\n";
         }
         _isInit = false;
     }
@@ -121,6 +120,16 @@ namespace R_TYPE {
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             // camera->move(0.25f, 0.f);
             window->setView(*camera);
+        
+            for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
+                amanager.update_nono(e, deltaTime);
+            }
+            for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+                amanager.update_ennemy(e, deltaTime);
+            }
+            for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                amanager.update_player(e, deltaTime);
+            }
         }
 
         window->display();

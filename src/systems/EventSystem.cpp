@@ -168,6 +168,7 @@ namespace R_TYPE {
             if (it.second.released && event.type == sf::Event::KeyReleased && event.key.code == it.first) {
                 // it.second.released(manager);
                 dynamic_cast<ClientSystem &>(*_network).sendEvent(it.first, NetworkSystem::ButtonState::RELEASED, true);
+                if (it.first == sf::Keyboard::Space)
                 wasPressed = false;
             }
             if (it.second.pressed && event.type == sf::Event::KeyPressed && event.key.code == it.first) {
