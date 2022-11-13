@@ -12,7 +12,7 @@ there is a link to their documentation below:
 
 Here is the current architecture of the project:
 
-![Architecture](./Images/architecture.png)
+![Architecture](./Images/Architecture.png)
 
 ## **How to build**
 
@@ -83,4 +83,4 @@ The network protocol is based on the UDP protocol, we use the Asio library to ha
 
 Here is the current network protocol:
 
-- [NetworkProtocol](./NetworkProtocol.md) (WIP)
+- [NetworkProtocol](./NetworkProtocol.md)

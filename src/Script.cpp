@@ -93,4 +93,44 @@ namespace R_TYPE {
             clock.restart();
         }
     }
+
+    bool Script::bossScript(std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera)
+    {
+        CurrentFrame = clock.getElapsedTime();
+        auto comp_p = (*ennemy)[IComponent::Type::ENNEMY];
+        auto boss = Component::castComponent<Ennemy>(comp_p);
+        if (leftCamera < 1924.f)
+            clock.restart();
+        if (leftCamera >= 1925.f) {
+            if (CurrentFrame.asSeconds() > 1)
+                boss->setState(Animation::State::BORN1);
+            if (CurrentFrame.asSeconds() > 2)
+                boss->setState(Animation::State::BORN2);
+            if (CurrentFrame.asSeconds() > 3)
+                boss->setState(Animation::State::BORN3);
+            if (CurrentFrame.asSeconds() > 4)
+                boss->setState(Animation::State::BORN4);
+            if (CurrentFrame.asSeconds() > 5)
+                boss->setState(Animation::State::BORN5);
+            if (CurrentFrame.asSeconds() > 6)
+                boss->setState(Animation::State::BORN6);
+            if (CurrentFrame.asSeconds() > 7)
+                boss->setState(Animation::State::BORN7);
+            if (CurrentFrame.asSeconds() > 8)
+                boss->setState(Animation::State::BORN8);
+        }
+        if (repeat == 5)
+            repeat = 0;
+        if (CurrentFrame.asMilliseconds() > 200 && repeat > 0) {
+            repeat += 1;
+            clock.restart();
+            return(true);
+        }
+        if (CurrentFrame.asSeconds() > 5 && repeat == 0) {
+            repeat = 1;
+            clock.restart();
+            return (true);
+        }
+        return false;
+    }
 }

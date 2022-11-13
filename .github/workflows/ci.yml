@@ -1,0 +1,24 @@
+name: Continuous Integration
+on:
+    workflow_dispatch:
+    push:
+        branches: [main]
+
+jobs:
+    pushEpitech:
+        runs-on: ubuntu-latest
+        needs: [Compile_Unix, Compile_Windows]
+        steps:
+        - uses: actions/checkout@v3
+        - uses: cpina/github-action-push-to-another-repository@main
+          env:
+            SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+            API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+          with:
+              source-directory: .
+              destination-repository: ${{ secrets.DESTINATION_REPOSITORY }}
+              destination-github-username: 'GithubAction'
+              destination-repository-name: 'ReposEpitech'
+              user-email: ${{ secrets.USER_EMAIL }}
+              target-branch: main
+
