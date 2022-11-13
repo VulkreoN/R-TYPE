@@ -11,6 +11,7 @@
 #include "ClientSystem.hpp"
 #include "GameSystem.hpp"
 #include "Projectiles.hpp"
+#include "Music.hpp"
 
 namespace R_TYPE {
 
@@ -39,6 +40,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
         broadcast(manager);
     }
     if (!_message_queue.empty()) {
+        std::cout << "got message" << std::endl;
         for (auto msg : _message_queue) {
             if ((protocol::Header)msg[0] == protocol::Header::GAME_INFO) {
                 for (i = sizeof(protocol::Header); readInt(msg, i); i += sizeof(size_t) + sizeof(float) * 3 + sizeof(uint8_t)) {
@@ -109,6 +111,8 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                     if (tags == (int)IEntity::Tags::CAMERA) {
                         GraphicSystem::updateCamera(readFloat(msg, i) / 100);
                         if (manager.getCurrentSceneType() != (SceneManager::SceneType)readInt(msg, i + sizeof(float))) {
+                            for (auto &e : manager.getCurrentScene()[IEntity::Tags::MUSIC])
+                                (Component::castComponent<Music>((*e)[IComponent::Type::MUSIC]))->stop();
                             manager.setCurrentScene((SceneManager::SceneType)readInt(msg, i + sizeof(float)));
                         }
                     }
@@ -184,7 +188,7 @@ void ClientSystem::destroy()
 {
     uint8_t buff[1] = {0};
 
-    buff[0] = protocol::Header::DECONNECT;
+    buff[0] = protocol::Header::DISCONNECT;
     _socket.send_to(asio::buffer(buff), _server_endpoint);
     graphicSystem->destroy();
     _context.stop();

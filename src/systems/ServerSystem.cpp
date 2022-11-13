@@ -115,7 +115,7 @@ void ServerSystem::handle_incomming_message()
         _connections.push_back(std::make_unique<Connection> (_edp_buff, id));
         _player_id_add_queue.push_back(_connections.back()->get_id());
     }
-    if ((protocol::Header)_buffer[c] == protocol::Header::DECONNECT && id != 0) {
+    if ((protocol::Header)_buffer[c] == protocol::Header::DISCONNECT && id != 0) {
         for (size_t i = 0; i < _connections.size(); i++) {
             if (_connections[i]->get_id() == id) {
                 _connections.erase(_connections.begin() + i);

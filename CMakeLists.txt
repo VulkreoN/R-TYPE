@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.16)
 
 project(R-TYPE VERSION 1.0.0 LANGUAGES CXX)
 
+add_compile_options(-fsanitize=address -g)
+add_link_options(-fsanitize=address)
+
 file(GLOB_RECURSE HEADERS "include/*.hpp")
 add_library(${PROJECT_NAME} ${HEADERS})
 add_executable(r-type_server src/main_server.cpp )
@@ -13,12 +16,12 @@ target_link_libraries(r-type_client ${PROJECT_NAME})
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries(${PROJECT_NAME} -lstdc++fs sfml-graphics sfml-system sfml-window -pthread)
+    target_link_libraries(${PROJECT_NAME} -lstdc++fs sfml-graphics sfml-system sfml-window sfml-audio -pthread)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if (MSVC)
     find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} sfml-system sfml-graphics sfml-window)
+    target_link_libraries(${PROJECT_NAME} sfml-system sfml-graphics sfml-window sfml-audio)
 endif (MSVC)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -47,6 +50,7 @@ target_sources(${PROJECT_NAME}
         src/components/Bonus.cpp
         src/components/Animation.cpp
         src/components/Nono.cpp
+        src/components/Music.cpp
 
         src/systems/EventSystem.cpp
         src/systems/GraphicSystem.cpp

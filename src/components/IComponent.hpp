@@ -17,6 +17,7 @@ namespace R_TYPE {
             PROJECTILES,
             BONUS,
             NONO,
+            MUSIC,
 
             HITBOX,
             PLAYER,

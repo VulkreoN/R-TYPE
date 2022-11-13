@@ -15,6 +15,7 @@
 #include "Text.hpp"
 #include "Ennemy.hpp"
 #include "ClientSystem.hpp"
+#include "Music.hpp"
 
 namespace R_TYPE {
 
@@ -105,6 +106,11 @@ namespace R_TYPE {
         window->clear(sf::Color::Black);
         setCamera(manager);
 
+        for (auto &e : manager.getCurrentScene()[IEntity::Tags::MUSIC]) {
+            auto comp = Component::castComponent<Music>((*e)[IComponent::Type::MUSIC]);
+
+            comp->play();
+        }
         for (auto &e : manager.getCurrentScene()[IEntity::Tags::SPRITE_2D]) {
             auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
             auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);

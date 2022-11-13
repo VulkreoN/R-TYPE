@@ -1,0 +1,4 @@
+assets/sound/0.wav
+assets/sound/2.wav
+assets/sound/9.wav
+assets/sound/10.wav

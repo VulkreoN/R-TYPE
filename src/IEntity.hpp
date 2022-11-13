@@ -24,6 +24,7 @@ namespace R_TYPE {
             NONO,
             ANIMATED,
             CAMERA,
+            MUSIC
         };
 
         virtual ~IEntity() = default;

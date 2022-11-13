@@ -29,7 +29,9 @@ namespace R_TYPE {
         {Entity::Tags::PROJECTILES,
          {{IComponent::Type::POSITION, IComponent::Type::VELOCITY, IComponent::Type::PROJECTILES}}},
         {Entity::Tags::NONO,
-         {{IComponent::Type::NONO}}}
+         {{IComponent::Type::NONO}}},
+         {Entity::Tags::MUSIC,
+         {{IComponent::Type::MUSIC}}}
     };
 
     IEntity &Entity::addComponent(std::shared_ptr<IComponent> component) {

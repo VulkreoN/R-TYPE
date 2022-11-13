@@ -18,7 +18,7 @@
             PLAYER_ACTION,
             START_GAME,
             EVENT,
-            DECONNECT
+            DISCONNECT
         };
 
     }

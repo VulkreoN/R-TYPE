@@ -18,6 +18,7 @@
 #include "Projectiles.hpp"
 #include "Nono.hpp"
 #include "Core.hpp"
+#include "Music.hpp"
 
 namespace R_TYPE {
 
@@ -42,7 +43,7 @@ namespace R_TYPE {
     void GameSystem::init(SceneManager &sceneManager)
     {
         std::cout << "Game System init" << std::endl;
-        //sceneManager.addScene(createSceneTest(), SceneManager::SceneType::GAME);
+        sceneManager.addScene(createSceneTest(), SceneManager::SceneType::GAME);
         sceneManager.addScene(createMainMenu(), SceneManager::SceneType::MAIN_MENU);
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
@@ -657,6 +658,11 @@ namespace R_TYPE {
         std::shared_ptr<Entity> entity2 = createSprite(411, 50, 350, 350);
         std::shared_ptr<Entity> entity3 = createSprite(412, 51, 350, 410);
         std::shared_ptr<Entity> entity4 = createSprite(413, 52, 120, 289);
+        std::shared_ptr<Entity> entity5 = std::make_shared<Entity>(414);
+        std::shared_ptr<Music> music = std::make_shared<Music>("assets/sound/0.wav");
+
+        music->setLoop(true);
+        entity5->addComponent(music);
 
         createButtonEvent(entity4, SceneManager::SceneType::LEVEL1, sf::Vector2i(230, 240));
         createButtonEvent(entity3, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
@@ -665,7 +671,8 @@ namespace R_TYPE {
         scene->addEntity(entity)
               .addEntity(entity4)
               .addEntity(entity3)
-              .addEntity(entity2);
+              .addEntity(entity2)
+              .addEntity(entity5);
         return (scene);
     }
 
@@ -750,7 +757,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> dino1 = createEnnemy(76, 10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::NONO_LE_ROBOT);
         std::shared_ptr<Entity> dino2 = createEnnemy(77, 10, 560, 179, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> dino3 = createEnnemy(78, 10, 900, 180, 0.f, Ennemy::Type::ROBOT_DINO);
-        std::shared_ptr<Entity> dino4 = createEnnemy(79, 10, 1155, 180, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino4 = createEnnemy(79, 10, 1158, 180, 0.f, Ennemy::Type::ROBOT_DINO);
 
         std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(80, 5, 300, 102, 0.f, Ennemy::Type::SPATIAL);
         std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(85, 5, 700, 102, 0.f, Ennemy::Type::SPATIAL);
@@ -758,6 +765,13 @@ namespace R_TYPE {
         std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(95, 5, 1200, 102, 0.f, Ennemy::Type::SPATIAL);
 
         std::shared_ptr<Entity> boss = createEnnemy(101, 30, 2022, 6, 0.f, Ennemy::Type::BOSS);
+
+        std::shared_ptr<Entity> sound = std::make_shared<Entity>(418);
+        std::shared_ptr<Music> music = std::make_shared<Music>("assets/sound/2.wav");
+
+        music->setLoopPoints(4, 166);
+        music->setLoop(true);
+        sound->addComponent(music);
 
         scene->addEntity(top_wall)
                 .addEntity(bottom_wall)
@@ -795,7 +809,8 @@ namespace R_TYPE {
                 .addEntities(spatial2)
                 .addEntities(spatial3)
                 .addEntities(spatial4)
-                .addEntity(boss);
+                .addEntity(boss)
+                .addEntity(sound);
         return (scene);
     }
 
@@ -806,6 +821,10 @@ namespace R_TYPE {
         std::shared_ptr<Entity> entity = createText(430, "You Lose", 350, 25, 50);
         std::shared_ptr<Entity> entity1 = createSprite(431, 47, 230, 300);
         std::shared_ptr<Entity> entity2 = createSprite(432, 51, 230, 400);
+        std::shared_ptr<Entity> sound = std::make_shared<Entity>(419);
+        std::shared_ptr<Music> music = std::make_shared<Music>("assets/sound/10.wav");
+
+        sound->addComponent(music);
 
         createButtonEvent(entity1, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
         createButtonEvent(entity2, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
@@ -813,7 +832,8 @@ namespace R_TYPE {
         scene->addEntity(background)
                 .addEntity(entity)
                 .addEntity(entity1)
-                .addEntity(entity2);
+                .addEntity(entity2)
+                .addEntity(sound);
         return (scene);
     }
 
@@ -824,6 +844,10 @@ namespace R_TYPE {
         std::shared_ptr<Entity> entity = createText(440, "You Win", 350, 25, 50);
         std::shared_ptr<Entity> entity1 = createSprite(441, 47, 230, 300);
         std::shared_ptr<Entity> entity2 = createSprite(442, 51, 230, 400);
+        std::shared_ptr<Entity> sound = std::make_shared<Entity>(423);
+        std::shared_ptr<Music> music = std::make_shared<Music>("assets/sound/9.wav");
+
+        sound->addComponent(music);
 
         createButtonEvent(entity1, SceneManager::SceneType::MAIN_MENU, sf::Vector2i(315, 50));
         createButtonEvent(entity2, SceneManager::SceneType::NONE, sf::Vector2i(315, 50));
@@ -831,7 +855,8 @@ namespace R_TYPE {
         scene->addEntity(background)
               .addEntity(entity)
               .addEntity(entity1)
-              .addEntity(entity2);
+              .addEntity(entity2)
+              .addEntity(sound);
         return (scene);
     }
 
