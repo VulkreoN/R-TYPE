@@ -137,13 +137,16 @@ void ServerSystem::handle_incomming_message()
             c += sizeof(uint8_t);
             _mousePositions.push_back(std::make_pair(readInt(_buffer, c), readInt(_buffer, c + sizeof(int))));
         }
+        std::cout << "isKey: " << isKey << std::endl << "button: " << readInt(_buffer, 2) << std::endl << "state: " << (int)_buffer[6] << std::endl;
+        std::cout << "x: " << readInt(_buffer, 7) << std::endl << "y: " << readInt(_buffer, 11) << std::endl;
     }
 }
 
 void ServerSystem::broadcast(SceneManager &manager)
 {
-    uint8_t buff[MAX_MSG_LENGTH];
+    std::vector<uint8_t> buff;
 
+    buff.assign(MAX_MSG_LENGTH, 0);
     for (int i = 0; i < MAX_MSG_LENGTH; buff[i] = '\0', i++);
     if (true /* not game start */) {
         switch (manager.getCurrentSceneType()) {
@@ -168,7 +171,7 @@ void ServerSystem::broadcast(SceneManager &manager)
     }
 }
 
-void ServerSystem::create_start_game_msg(uint8_t *buff, std::unique_ptr<Connection> &connection)
+void ServerSystem::create_start_game_msg(std::vector<uint8_t> &buff, std::unique_ptr<Connection> &connection)
 {
     buff[0] = protocol::Header::START_GAME;
     buff[sizeof(protocol::Header)] = (size_t)connection->get_id();
@@ -176,7 +179,7 @@ void ServerSystem::create_start_game_msg(uint8_t *buff, std::unique_ptr<Connecti
     buff[sizeof(protocol::Header) + 2 * sizeof(size_t)] = '\0';
 }
 
-void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
+void ServerSystem::create_game_info_msg(std::vector<uint8_t> &buff, SceneManager &manager)
 {
     size_t c = 0;
 

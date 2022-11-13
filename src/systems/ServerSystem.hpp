@@ -50,8 +50,8 @@
                 std::vector<std::pair<size_t, std::pair<int, NetworkSystem::ButtonState>>> _event_queue;
 
                 // functions to create messages to send
-                void create_start_game_msg(uint8_t *buff, std::unique_ptr<Connection> &connection);
-                void create_game_info_msg(uint8_t *buff, SceneManager &manager);
+                void create_start_game_msg(std::vector<uint8_t> &buff, std::unique_ptr<Connection> &connection);
+                void create_game_info_msg(std::vector<uint8_t> &buff, SceneManager &manager);
         };
 
     }

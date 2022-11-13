@@ -29,7 +29,8 @@ namespace R_TYPE {
                 RIGHT,
                 LV1,
                 LV2,
-                LV3
+                LV3,
+                DIE
             };
             /// @brief Init Animation class
             /// @param id identifier of the entity

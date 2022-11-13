@@ -33,4 +33,11 @@ namespace R_TYPE {
     {
         sprite.setRotation(angle);
     }
+
+    void Sprite::setSprite(int _name, sf::IntRect rectangle)
+    {
+        name = _name;
+        rect = rectangle;
+        isInit = false;
+    }
 }

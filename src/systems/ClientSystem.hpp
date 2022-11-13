@@ -31,9 +31,9 @@ namespace R_TYPE {
             size_t _id;
 
             // functions to create messages to send
-            void create_event_msg(char *buff);
+            void create_event_msg(std::vector<uint8_t> &buff);
 
-            std::vector<std::unique_ptr<char *>> _message_queue;
+            std::vector<std::vector<uint8_t>> _message_queue;
         protected:
         private:
             void handle_incomming_message() final;

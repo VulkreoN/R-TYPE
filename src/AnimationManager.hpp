@@ -22,7 +22,7 @@ namespace R_TYPE {
 
             void playAnim(std::shared_ptr<Animation> anim, std::shared_ptr<Sprite> sprite);
             void update_player(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
-            void update_ennemy(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
+            bool update_ennemy(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
             void update_projectile(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
             void update_nono(std::shared_ptr<IEntity> &e, uint64_t deltaTime);
 

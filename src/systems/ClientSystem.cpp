@@ -43,9 +43,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
         broadcast(manager);
     }
     if (_message_queue.size() != 0) {
-        for (auto &msg_tmp : _message_queue) {
-            uint8_t msg[MAX_MSG_LENGTH];
-            memcpy(msg, *msg_tmp, MAX_MSG_LENGTH);
+        for (auto msg : _message_queue) {
             if ((protocol::Header)msg[0] == protocol::Header::GAME_INFO) {
                 for (i = sizeof(protocol::Header); readInt(msg, i); i += sizeof(size_t) + sizeof(float) * 3 + sizeof(uint8_t)) {
                     float tags = readInt(msg, i);
@@ -88,9 +86,8 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
                             (Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]))->setState((Animation::State)readInt(msg, i + sizeof(float) * 2));
                             (Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]))->setIsAlive((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)]);
-                            if ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)] == false) {
-                                manager.getCurrentScene().removeEntity(e);
-                            }
+                            //if ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)] == false)
+                            //    manager.getCurrentScene().removeEntity(e);
                         }
                     }
                     if (tags == (int)IEntity::Tags::BONUS) {
@@ -194,8 +191,7 @@ void ClientSystem::destroy()
 
 void ClientSystem::handle_incomming_message()
 {
-    _message_queue.push_back(std::make_unique<char *> (new char [MAX_MSG_LENGTH]));
-    memcpy(*_message_queue.back(), _buffer, MAX_MSG_LENGTH);
+    _message_queue.push_back(_buffer);
     // here, handle the recienved message stored in _buffer
     if ((protocol::Header)_buffer[0] == protocol::Header::START_GAME) {
         std::cout << "Starting game, ID: " << (size_t)_buffer[sizeof(protocol::Header)] << " and there are : " << (size_t)_buffer[sizeof(protocol::Header) + sizeof(size_t)] << " players." << std::endl;
@@ -213,8 +209,9 @@ void ClientSystem::handle_incomming_message()
 
 void ClientSystem::broadcast(SceneManager &manager)
 {
-    char buff[MAX_MSG_LENGTH];
+    std::vector<uint8_t> buff;
 
+    buff.assign(MAX_MSG_LENGTH, 0);
     for (int i = 0; i < MAX_MSG_LENGTH; buff[i] = '\0', i++);
     switch (manager.getCurrentSceneType()) {
         case SceneManager::SceneType::GAME:
@@ -229,7 +226,7 @@ void ClientSystem::broadcast(SceneManager &manager)
     _socket.send_to(asio::buffer(buff), _server_endpoint);
 }
 
-void ClientSystem::create_event_msg(char *buff)
+void ClientSystem::create_event_msg(std::vector<uint8_t> &buff)
 {
     int c = 0;
 
@@ -247,14 +244,15 @@ void ClientSystem::create_event_msg(char *buff)
 
 void ClientSystem::sendEvent(int button, NetworkSystem::ButtonState state, bool isKey, int x, int y)
 {
-    uint8_t buff[15] = {0};
+    std::vector<uint8_t> buff;
     size_t c = 0;
 
-    buff[c] = protocol::Header::EVENT;
+    buff.assign(16, 0);
+    buff[c] = (uint8_t)protocol::Header::EVENT;
     c += sizeof(uint8_t);
     buff[c] = isKey;
     c += sizeof(bool);
-    putInt(button, buff, 2);
+    putInt(button, buff, c);
     c += sizeof(int);
     buff[c] = static_cast<uint8_t>(state);
     if (!isKey) {
@@ -263,7 +261,7 @@ void ClientSystem::sendEvent(int button, NetworkSystem::ButtonState state, bool 
         c += sizeof(int);
         putInt(y, buff, c);
     }
-    _socket.send_to(asio::buffer(buff, 15), _server_endpoint);
+    _socket.send_to(asio::buffer(buff, 16), _server_endpoint);
 }
 
 }

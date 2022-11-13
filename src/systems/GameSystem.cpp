@@ -198,6 +198,17 @@ namespace R_TYPE {
                     break;
                 }
             }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+                auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
+
+                if (ennemy->IsAlive() == false) {
+                    sprite->setSprite(44, sf::IntRect(130, 1, 32, 32));
+                    ennemy->setState(Animation::State::DIE);
+                }
+            }
         }
     }
 
@@ -223,7 +234,7 @@ namespace R_TYPE {
             }
         }
     }
- 
+
     void GameSystem::destroy()
     {
         std::cout << "Game System destroyed" << std::endl;
@@ -303,6 +314,7 @@ namespace R_TYPE {
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
         std::shared_ptr<Ennemy> component3 = std::make_shared<Ennemy>(type);
         std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
+        std::shared_ptr<Animation> anim_die = std::make_shared<Animation>(Animation::State::DIE, sf::IntRect(130, 1, 32, 32), 0, 1, 6, true, 130, 1);
 
         if (type == Ennemy::Type::TURRET) {
             if (angle == 0)
@@ -343,7 +355,8 @@ namespace R_TYPE {
         entity->addComponent(component)
                 .addComponent(component2)
                 .addComponent(component3)
-                .addComponent(velocity);
+                .addComponent(velocity)
+                .addComponent(anim_die);
         return(entity);
     }
 
