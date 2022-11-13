@@ -28,6 +28,7 @@ namespace R_TYPE {
     int GameSystem::nbrLaserShoot;
     int GameSystem::nbrLaserBoucleShoot;
     int GameSystem::nbrBossShoot;
+    int GameSystem::nbrPlayerAlive;
 
     GameSystem::GameSystem()
     {
@@ -108,11 +109,17 @@ namespace R_TYPE {
             }
 
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                if (!e)
+                    continue;
                 auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
                 auto position = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
                 if (player->isAlive() == false) {
-                    sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
+                    nbrPlayerAlive--;
+                    if (nbrPlayerAlive == 0) {
+                        sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
+                        break;
+                    }
                 }
 
                 Position moved(0,0);
@@ -174,9 +181,12 @@ namespace R_TYPE {
     {
         if (sceneManager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+                if (!e)
+                    continue;
                 auto player = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
-                if (player->isAlive() == false)
-                    sceneManager.setCurrentScene(SceneManager::SceneType::LOSE);
+                if (player->isAlive() == false) {
+                    sceneManager.getCurrentScene().removeEntity(e);
+                }
             }
 
             for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
@@ -740,7 +750,7 @@ namespace R_TYPE {
         std::shared_ptr<Entity> dino1 = createEnnemy(76, 10, 345, 179, 0.f, Ennemy::Type::ROBOT_DINO, Bonus::BonusType::NONO_LE_ROBOT);
         std::shared_ptr<Entity> dino2 = createEnnemy(77, 10, 560, 179, 0.f, Ennemy::Type::ROBOT_DINO);
         std::shared_ptr<Entity> dino3 = createEnnemy(78, 10, 900, 180, 0.f, Ennemy::Type::ROBOT_DINO);
-        std::shared_ptr<Entity> dino4 = createEnnemy(79, 10, 1158, 180, 0.f, Ennemy::Type::ROBOT_DINO);
+        std::shared_ptr<Entity> dino4 = createEnnemy(79, 10, 1155, 180, 0.f, Ennemy::Type::ROBOT_DINO);
 
         std::vector<std::shared_ptr<IEntity>> spatial1 = createWavesEnnemy(80, 5, 300, 102, 0.f, Ennemy::Type::SPATIAL);
         std::vector<std::shared_ptr<IEntity>> spatial2 = createWavesEnnemy(85, 5, 700, 102, 0.f, Ennemy::Type::SPATIAL);
@@ -827,8 +837,7 @@ namespace R_TYPE {
 
     void GameSystem::updateRectWindow()
     {
-        // a remettre a 0.25f
         if (rectWindow.left < 1925)
-            rectWindow.left += 0.75f;
+            rectWindow.left += 0.50f;
     }
 }
