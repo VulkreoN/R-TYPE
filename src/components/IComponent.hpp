@@ -25,6 +25,7 @@ namespace R_TYPE {
             UI,
             TYPE_NB
         };
+        virtual ~IComponent() = default;
         virtual const Type &getType() const = 0;
         // virtual bool isInitialized() const = 0;
     };

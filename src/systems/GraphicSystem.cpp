@@ -125,9 +125,7 @@ namespace R_TYPE {
                 amanager.update_nono(e, deltaTime);
             }
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
-                if (!e)
-                    continue;
-                if (amanager.update_ennemy(e, deltaTime))
+                if (e && amanager.update_ennemy(e, deltaTime))
                     manager.getCurrentScene().removeEntity(e);
             }
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {

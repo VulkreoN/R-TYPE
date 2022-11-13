@@ -13,7 +13,8 @@ namespace R_TYPE {
     Ennemy::Ennemy(Ennemy::Type _type):
     Component(Component::Type::ENNEMY)
     {
-        isAlive = true;
+        alive = true;
+        dying = false;
         type = _type;
         isLooting = Bonus::BonusType::NONE;
     }
@@ -24,6 +25,8 @@ namespace R_TYPE {
         auto selfVel = Component::castComponent<Velocity>((*ennemy)[IComponent::Type::VELOCITY]);
         sf::Vector2f distance = getDistance(manager, *selfPos);
 
+        if (dying)
+            return;
         if (type == Ennemy::Type::TURRET) {
             updateAngle(distance, ennemy);
             if (scripts.turretScript()) {
@@ -35,7 +38,7 @@ namespace R_TYPE {
         } else if (type == Ennemy::Type::JORYDE_ALIEN) {
             if (scripts.jorydeScript(distance, ennemy)) {
                 if (distance.x > 0)
-                    isAlive = false;
+                    alive = false;
                 std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6020, 9, *selfPos, Velocity(-0.1f, 0), false, sf::IntRect(18, 59, 15, 15));
                 manager.getCurrentScene().addEntity(shoot);
             }

@@ -24,10 +24,6 @@ ServerSystem::ServerSystem(size_t port) : NetworkSystem(port)
     eventSystem = std::make_unique<EventSystem>(std::unique_ptr<NetworkSystem>(this));
 }
 
-ServerSystem::~ServerSystem()
-{
-}
-
 void ServerSystem::init(SceneManager &manager)
 {
     std::cout << "Server Network System initiating" << std::endl;
@@ -50,7 +46,7 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
         _player_id_add_queue.clear();
     }
     bool passed = false;
-    if (_event_queue.size() != 0) {
+    if (!_event_queue.empty()) {
         for (auto &i : _event_queue) {
             for (auto &e : manager.getCurrentScene().get_by_id(i.first)) {
                 auto listener = Component::castComponent<Event>((*e)[IComponent::Type::EVENT]);
@@ -87,6 +83,9 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
 
 void ServerSystem::destroy()
 {
+    eventSystem->destroy();
+    _context.stop();
+    _threadContext.join();
     std::cout << "Network System destroyed" << std::endl;
 }
 
@@ -137,8 +136,6 @@ void ServerSystem::handle_incomming_message()
             c += sizeof(uint8_t);
             _mousePositions.push_back(std::make_pair(readInt(_buffer, c), readInt(_buffer, c + sizeof(int))));
         }
-        std::cout << "isKey: " << isKey << std::endl << "button: " << readInt(_buffer, 2) << std::endl << "state: " << (int)_buffer[6] << std::endl;
-        std::cout << "x: " << readInt(_buffer, 7) << std::endl << "y: " << readInt(_buffer, 11) << std::endl;
     }
 }
 

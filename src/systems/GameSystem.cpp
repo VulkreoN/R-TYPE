@@ -204,9 +204,10 @@ namespace R_TYPE {
                 auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
                 auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
 
-                if (ennemy->IsAlive() == false) {
+                if (ennemy->IsAlive() == false && ennemy->IsDying() == false) {
                     sprite->setSprite(44, sf::IntRect(130, 1, 32, 32));
                     ennemy->setState(Animation::State::DIE);
+                    ennemy->setIsDying(true);
                 }
             }
         }

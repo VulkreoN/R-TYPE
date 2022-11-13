@@ -19,7 +19,7 @@ namespace R_TYPE {
     class ClientSystem : public NetworkSystem {
         public:
             ClientSystem(std::string ip, size_t port);
-            ~ClientSystem();
+            ~ClientSystem() = default;
 
             void init(SceneManager &manager) final;
             void update(SceneManager &manager, uint64_t deltaTime) final;

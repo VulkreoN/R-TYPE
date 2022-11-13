@@ -16,20 +16,14 @@ namespace R_TYPE {
             anim->setRect(sf::IntRect(anim->getX() * anim->getRect().width, anim->getY() * anim->getRect().height, anim->getRect().width,anim->getRect().height));
             sprite->setRect(anim->getRect());
         } else {
-            if (anim->getState() == Animation::State::DIE)
-                std::cout << "Anim rect before: left -> " << anim->getRect().left << " top -> " << anim->getRect().top << " width -> " << anim->getRect().width << " height -> " << anim->getRect().height << std::endl;
             anim->setCurrentFrame(anim->getClock().getElapsedTime());
             if (anim->getCurrentFrame().asSeconds() > 0.1) {
-                if (anim->getState() == Animation::State::DIE)
-                    std::cout << "Anim frame: " << anim->getNbFrame() << " Anim pos x: " << anim->getPosX() << " Anim X: " << anim->getX() << std::endl;
                 anim->setRect(sf::IntRect(anim->getNbFrame() * anim->getRect().width + anim->getPosX() - anim->getRect().width,anim->getY() * anim->getRect().height + anim->getPosY(),anim->getRect().width,anim->getRect().height));
                 if (anim->getNbFrame() >= anim->getXmax())
-                    anim->setNbFrame(anim->getX() - 1);
+                    anim->setNbFrame(anim->getX());
                 anim->setNbFrame(anim->getNbFrame() + 1);
                 sprite->setRect(anim->getRect());
                 anim->restartClock();
-                if (anim->getState() == Animation::State::DIE)
-                    std::cout << "Sprite rect after: left -> " << sprite->getRect().left << " top -> " << sprite->getRect().top << " width -> " << sprite->getRect().width << " height -> " << sprite->getRect().height << std::endl;
             }
         }
     }
@@ -52,15 +46,16 @@ namespace R_TYPE {
         auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
         auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
         auto anims = e->getFilteredComponents(IComponent::Type::ANIMATION);
+        bool ret = false;
         for (int i = 0; i < anims.size(); i++) {
             auto anim_cast = Component::castComponent<Animation>(anims[i]);
             if (anim_cast->getState() == ennemy->getState()) {
+                if (ennemy->getState() == Animation::State::DIE && anim_cast->getNbFrame() >= anim_cast->getXmax())
+                    ret = true;
                 playAnim(anim_cast, sprite);
-                if (ennemy->getState() == Animation::State::DIE && anim_cast->getNbFrame() == anim_cast->getX())
-                    return true;
             }
         }
-        return false;
+        return ret;
     }
 
     void AnimationManager::update_nono(std::shared_ptr<IEntity> &e, uint64_t deltaTime)

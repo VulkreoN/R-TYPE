@@ -35,7 +35,7 @@
 
                 NetworkSystem();
                 NetworkSystem(size_t port);
-                ~NetworkSystem();
+                virtual ~NetworkSystem() = default;
 
             protected:
                 void read_setup();

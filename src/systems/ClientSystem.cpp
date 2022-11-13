@@ -21,10 +21,6 @@ ClientSystem::ClientSystem(std::string ip, size_t port) : _server_endpoint(asio:
     graphicSystem = std::make_unique<GraphicSystem>(std::unique_ptr<ClientSystem>(this));
 }
 
-ClientSystem::~ClientSystem()
-{
-}
-
 void ClientSystem::init(SceneManager &manager)
 {
     std::cout << "Client Network System initiating" << std::endl;
@@ -42,7 +38,7 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
         _ping_cooldown = 0;
         broadcast(manager);
     }
-    if (_message_queue.size() != 0) {
+    if (!_message_queue.empty()) {
         for (auto msg : _message_queue) {
             if ((protocol::Header)msg[0] == protocol::Header::GAME_INFO) {
                 for (i = sizeof(protocol::Header); readInt(msg, i); i += sizeof(size_t) + sizeof(float) * 3 + sizeof(uint8_t)) {
@@ -82,12 +78,12 @@ void ClientSystem::update(SceneManager &manager, uint64_t deltaTime)
                     }
                     if (tags == (int)IEntity::Tags::ENNEMY) {
                         for (auto &e : manager.getCurrentScene().get_by_id(id)) {
+                            if ((Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]))->IsDying())
+                                continue;
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setX(readFloat(msg, i));
                             (Component::castComponent<Position>((*e)[IComponent::Type::POSITION]))->setY(readFloat(msg, i + sizeof(float)));
                             (Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]))->setState((Animation::State)readInt(msg, i + sizeof(float) * 2));
                             (Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]))->setIsAlive((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)]);
-                            //if ((bool)msg[i + sizeof(float) * 3 + sizeof(size_t)] == false)
-                            //    manager.getCurrentScene().removeEntity(e);
                         }
                     }
                     if (tags == (int)IEntity::Tags::BONUS) {
@@ -186,6 +182,9 @@ void ClientSystem::destroy()
 
     buff[0] = protocol::Header::DECONNECT;
     _socket.send_to(asio::buffer(buff), _server_endpoint);
+    graphicSystem->destroy();
+    _context.stop();
+    _threadContext.join();
     std::cout << "Network System destroyed" << std::endl;
 }
 

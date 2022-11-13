@@ -22,7 +22,7 @@
         class ServerSystem : public NetworkSystem {
             public:
                 ServerSystem(size_t port);
-                ~ServerSystem();
+                ~ServerSystem() = default;
 
                 void init(SceneManager &manager) final;
                 void update(SceneManager &manager, uint64_t deltaTime) final;
