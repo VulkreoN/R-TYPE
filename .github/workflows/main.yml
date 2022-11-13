@@ -43,17 +43,3 @@ jobs:
           run: |
             pip install -r requirements.txt
             python3 build.py
-
-    MergeMain:
-        needs: [Compile_Unix, Compile_Windows]
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v3
-        - name: Merge
-          uses: devmasx/merge-branch@1.4.0
-          with:
-            type: now
-            from_branch: Dev
-            to_branch: Main
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            commit_message: Merge Dev to Main
