@@ -56,6 +56,8 @@ namespace R_TYPE {
             box.width = box.width * 0.7;
             box.height = box.height * 0.7;
 
+            if (component->IsDying())
+                continue;
             if (component->getType() == Ennemy::Type::ROBOT_DINO) {
                 if (pos->getPosition().y > 32)
                     if (isBlack(*pos, box) == false) {

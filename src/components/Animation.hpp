@@ -30,6 +30,7 @@ namespace R_TYPE {
                 LV1,
                 LV2,
                 LV3,
+                DIE,
                 BORN1,
                 BORN2,
                 BORN3,

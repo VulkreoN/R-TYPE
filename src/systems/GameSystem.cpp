@@ -41,7 +41,7 @@ namespace R_TYPE {
     void GameSystem::init(SceneManager &sceneManager)
     {
         std::cout << "Game System init" << std::endl;
-        sceneManager.addScene(createSceneTest(), SceneManager::SceneType::GAME);
+        //sceneManager.addScene(createSceneTest(), SceneManager::SceneType::GAME);
         sceneManager.addScene(createMainMenu(), SceneManager::SceneType::MAIN_MENU);
         sceneManager.addScene(createOptionMenu(), SceneManager::SceneType::OPTION);
         sceneManager.addScene(createPauseMenu(), SceneManager::SceneType::PAUSE);
@@ -208,6 +208,18 @@ namespace R_TYPE {
                     break;
                 }
             }
+            for (auto &e : sceneManager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
+                auto velocity = Component::castComponent<Velocity>((*e)[IComponent::Type::VELOCITY]);
+                auto pos = Component::castComponent<Position>((*e)[IComponent::Type::POSITION]);
+                auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
+                auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
+
+                if (ennemy->IsAlive() == false && ennemy->IsDying() == false) {
+                    sprite->setSprite(44, sf::IntRect(130, 1, 32, 32));
+                    ennemy->setState(Animation::State::DIE);
+                    ennemy->setIsDying(true);
+                }
+            }
         }
     }
 
@@ -233,7 +245,7 @@ namespace R_TYPE {
             }
         }
     }
- 
+
     void GameSystem::destroy()
     {
         std::cout << "Game System destroyed" << std::endl;
@@ -312,6 +324,7 @@ namespace R_TYPE {
 
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
         std::shared_ptr<Ennemy> component3 = std::make_shared<Ennemy>(type);
+        std::shared_ptr<Animation> anim_die = std::make_shared<Animation>(Animation::State::DIE, sf::IntRect(130, 1, 32, 32), 0, 1, 6, true, 130, 1);
 
         if (type == Ennemy::Type::TURRET) {
             if (angle == 0)
@@ -372,7 +385,8 @@ namespace R_TYPE {
         entity->addComponent(component)
                 .addComponent(component2)
                 .addComponent(component3)
-                .addComponent(velocity);
+                .addComponent(velocity)
+                .addComponent(anim_die);
         return(entity);
     }
 
@@ -425,14 +439,14 @@ namespace R_TYPE {
         std::shared_ptr<Entity> player_e = std::make_shared<Entity>(id);
         std::shared_ptr<Position> player_pos = std::make_shared<Position>(posX, posY);
         std::shared_ptr<Player> player = std::make_shared<Player>(*player_pos);
-        std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(name, *player_pos, 0, sf::IntRect(67, 3 + (17 * (id - 1)), 33, 15));
+        std::shared_ptr<Sprite> sprite = std::make_shared<Sprite>(name, *player_pos, 0, sf::IntRect(67, 2 + (17 * (id - 1)), 33, 17));
         std::shared_ptr<Event> event_p = std::make_shared<Event>();
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0,0);
-        std::shared_ptr<Animation> anim_idle = std::make_shared<Animation>(Animation::State::IDLE, sprite->getRect(), 0, 2, 0, false);
-        std::shared_ptr<Animation> anim_up_pressed = std::make_shared<Animation>(Animation::State::UP_PRESS, sprite->getRect(), 0, 3, 0, false);
-        std::shared_ptr<Animation> anim_down_down = std::make_shared<Animation>(Animation::State::DOWN_DOWN, sprite->getRect(), 0, 0, 0, false);
-        std::shared_ptr<Animation> anim_up_down = std::make_shared<Animation>(Animation::State::DOWN_PRESS, sprite->getRect(), 0, 1, 0, false);
-        std::shared_ptr<Animation> anim_down_pressed = std::make_shared<Animation>(Animation::State::UP_DOWN, sprite->getRect(), 0, 4, 0, false);
+        std::shared_ptr<Animation> anim_idle = std::make_shared<Animation>(Animation::State::IDLE, sprite->getRect(), id - 1, 2, 0, false);
+        std::shared_ptr<Animation> anim_up_pressed = std::make_shared<Animation>(Animation::State::UP_PRESS, sprite->getRect(), id - 1, 3, 0, false);
+        std::shared_ptr<Animation> anim_down_down = std::make_shared<Animation>(Animation::State::DOWN_DOWN, sprite->getRect(), id - 1, 0, 0, false);
+        std::shared_ptr<Animation> anim_up_down = std::make_shared<Animation>(Animation::State::DOWN_PRESS, sprite->getRect(), id - 1, 1, 0, false);
+        std::shared_ptr<Animation> anim_down_pressed = std::make_shared<Animation>(Animation::State::UP_DOWN, sprite->getRect(), id - 1, 4, 0, false);
 
 
         player_e->addComponent(player)

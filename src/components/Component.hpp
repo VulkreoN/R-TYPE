@@ -11,6 +11,7 @@ namespace R_TYPE {
     class Component : public IComponent {
         public:
             Component(const Type &type);
+            virtual ~Component() = default;
             const Type &getType() const;
 
             /// @brief Fonction to get a component from Entity

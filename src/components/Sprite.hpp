@@ -25,6 +25,8 @@ namespace R_TYPE {
 
             void setAngle(float angle);
 
+            void setSprite(int name, sf::IntRect rect = sf::IntRect(0, 0, 0, 0));
+
             int getName() const {return (name);};
             Position getPosition() const {return (position);};
             float getAngle() const {return (angle);};

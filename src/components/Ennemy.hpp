@@ -23,11 +23,17 @@ namespace R_TYPE {
             Ennemy(Ennemy::Type type);
             ~Ennemy();
 
-            /// @brief check if ennemy is alive 
-            bool IsAlive() {return (isAlive);};
+            /// @brief check if ennemy is alive
+            bool IsAlive() {return (alive);};
+
+            /// @brief check if ennemy is dying
+            bool IsDying() {return (dying);};
 
             /// @brief set ennemy alive
-            void setIsAlive(bool _isAlive) {isAlive = _isAlive;};
+            void setIsAlive(bool _alive) {alive = _alive;};
+
+            /// @brief set ennemy dying
+            void setIsDying(bool _dying) {dying = _dying;};
 
             /// @brief Launch the good script with the type of the ennemy
             void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera);
@@ -53,7 +59,8 @@ namespace R_TYPE {
             void nextTimeSend() {timeSend += 1;};
             int getTimeSend() {return (timeSend);};
         private:
-            bool isAlive;
+            bool alive;
+            bool dying;
             Bonus::BonusType isLooting;
             Type type;
             Script scripts;

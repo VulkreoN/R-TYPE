@@ -28,6 +28,7 @@ namespace R_TYPE {
 
     EventSystem::~EventSystem()
     {
+        _network.release();
     }
 
     void EventSystem::init(SceneManager &manager)

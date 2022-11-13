@@ -35,22 +35,27 @@ namespace R_TYPE {
         auto anims = e->getFilteredComponents(IComponent::Type::ANIMATION);
         for (int i = 0; i < anims.size(); i++) {
             auto anim_cast = Component::castComponent<Animation>(anims[i]);
-            if (anim_cast->getState() == player->getState())
+            if (anim_cast->getState() == player->getState()) {
                 playAnim(anim_cast, sprite);
+            }
         }
     }
 
-    void AnimationManager::update_ennemy(std::shared_ptr<IEntity> &e, uint64_t deltaTime)
+    bool AnimationManager::update_ennemy(std::shared_ptr<IEntity> &e, uint64_t deltaTime)
     {
         auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
         auto sprite = Component::castComponent<Sprite>((*e)[IComponent::Type::SPRITE]);
         auto anims = e->getFilteredComponents(IComponent::Type::ANIMATION);
+        bool ret = false;
         for (int i = 0; i < anims.size(); i++) {
             auto anim_cast = Component::castComponent<Animation>(anims[i]);
             if (anim_cast->getState() == ennemy->getState()) {
+                if (ennemy->getState() == Animation::State::DIE && anim_cast->getNbFrame() >= anim_cast->getXmax())
+                    ret = true;
                 playAnim(anim_cast, sprite);
             }
         }
+        return ret;
     }
 
     void AnimationManager::update_nono(std::shared_ptr<IEntity> &e, uint64_t deltaTime)

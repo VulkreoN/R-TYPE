@@ -17,7 +17,7 @@ namespace R_TYPE {
 
     class ISystem {
         public:
-
+            virtual ~ISystem() = default;
             /**
              * @brief Initialize the system before the game loop
              * @param manager The scene manager

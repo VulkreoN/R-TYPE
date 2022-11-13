@@ -35,7 +35,7 @@ namespace R_TYPE {
             void handleKeyboard(SceneManager &manager, std::shared_ptr<Event> listener, sf::Event event);
             void handleMouse(SceneManager &, std::shared_ptr<Event> listener, sf::Event event);
             static std::map<int, std::vector<std::shared_ptr<Event>>> _event;
-            
+
             std::unique_ptr<NetworkSystem> _network;
             std::shared_ptr<sf::RenderWindow> window;
             std::shared_ptr<sf::View> camera;
