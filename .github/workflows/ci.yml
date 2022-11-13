@@ -9,15 +9,13 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v3
-        - uses: cpina/github-action-push-to-another-repository@main
-          env:
-            SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-            API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        - uses: andstor/copycat-action@v3
           with:
-              source-directory: .
-              destination-repository: ${{ secrets.DESTINATION_REPOSITORY }}
-              destination-github-username: 'EpitechPromo2025'
-              destination-repository-name: 'B-CPP-500-TLS-5-1-rtype-maxence.folio'
-              user-email: ${{ secrets.USER_EMAIL }}
-              target-branch: main
-
+            personal_token: ${{ secrets.GITHUB_TOKEN }}
+            src_path: /.
+            src_branch: main
+            dst_path: /.
+            dst_branch: main
+            dst_owner: EpitechPromo2025
+            dst_repo_name: B-CPP-500-TLS-5-1-rtype-maxence.folio
+            commit_message: "Push to ID: ${{ github.run_id }} by github action from ${{ github.repository }}"
