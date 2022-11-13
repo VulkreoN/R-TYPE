@@ -16,6 +16,7 @@ namespace R_TYPE {
         isAlive = true;
         type = _type;
         isLooting = Bonus::BonusType::NONE;
+        _pv = 1;
     }
 
     void Ennemy::launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera)
@@ -137,5 +138,15 @@ namespace R_TYPE {
             sprite->setRect(sf::IntRect(19, 2, 15, 14));
         else if (angle > 54 && angle < 90)
             sprite->setRect(sf::IntRect(1, 2, 15, 14));
+    }
+
+    void Ennemy::setPv(int pv)
+    {
+        _pv = pv;
+    }
+
+    int Ennemy::getPv()
+    {
+        return (_pv);
     }
 }
