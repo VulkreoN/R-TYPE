@@ -7,7 +7,6 @@ on:
 jobs:
     pushEpitech:
         runs-on: ubuntu-latest
-        needs: [Compile_Unix, Compile_Windows]
         steps:
         - uses: actions/checkout@v3
         - uses: cpina/github-action-push-to-another-repository@main
