@@ -16,8 +16,8 @@ jobs:
           with:
               source-directory: .
               destination-repository: ${{ secrets.DESTINATION_REPOSITORY }}
-              destination-github-username: 'GithubAction'
-              destination-repository-name: 'ReposEpitech'
+              destination-github-username: 'EpitechPromo2025'
+              destination-repository-name: 'B-CPP-500-TLS-5-1-rtype-maxence.folio'
               user-email: ${{ secrets.USER_EMAIL }}
               target-branch: main
 
