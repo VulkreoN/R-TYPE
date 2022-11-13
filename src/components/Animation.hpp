@@ -30,7 +30,15 @@ namespace R_TYPE {
                 LV1,
                 LV2,
                 LV3,
-                DIE
+                DIE,
+                BORN1,
+                BORN2,
+                BORN3,
+                BORN4,
+                BORN5,
+                BORN6,
+                BORN7,
+                BORN8,
             };
             /// @brief Init Animation class
             /// @param id identifier of the entity
@@ -67,7 +75,7 @@ namespace R_TYPE {
 
             bool getDoActions();
 
-            int setNbFrame(int nbFrame);
+            void setNbFrame(int nbFrame);
 
             int getNbFrame();
 

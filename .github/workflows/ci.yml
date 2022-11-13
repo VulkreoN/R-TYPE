@@ -1,0 +1,21 @@
+name: Continuous Integration
+on:
+    workflow_dispatch:
+    push:
+        branches: [main]
+
+jobs:
+    pushEpitech:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v3
+        - uses: andstor/copycat-action@v3
+          with:
+            personal_token: ${{ secrets.GITHUB_TOKEN }}
+            src_path: /.
+            src_branch: main
+            dst_path: /.
+            dst_branch: main
+            dst_owner: EpitechPromo2025
+            dst_repo_name: B-CPP-500-TLS-5-1-rtype-maxence.folio
+            commit_message: "Push to ID: ${{ github.run_id }} by github action from ${{ github.repository }}"

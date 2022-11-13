@@ -17,9 +17,10 @@ namespace R_TYPE {
         dying = false;
         type = _type;
         isLooting = Bonus::BonusType::NONE;
+        _pv = 1;
     }
 
-    void Ennemy::launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy)
+    void Ennemy::launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera)
     {
         auto selfPos = Component::castComponent<Position>((*ennemy)[IComponent::Type::POSITION]);
         auto selfVel = Component::castComponent<Velocity>((*ennemy)[IComponent::Type::VELOCITY]);
@@ -51,6 +52,13 @@ namespace R_TYPE {
             }
         } else if (type == Ennemy::Type::SPATIAL) {
             scripts.spatialScript(ennemy);
+        } else if (type == Ennemy::Type::BOSS) {
+            if (scripts.bossScript(ennemy, leftCamera)) {
+                std::shared_ptr<Entity> shoot = GameSystem::createProjectiles(6066 + GameSystem::getNbrBossShoot(), 30, 
+                Position(2070, 120), Velocity(-0.1f, 0), false, sf::IntRect(574, 2062, 24, 22));
+                GameSystem::setNbrBossShoot(GameSystem::getNbrBossShoot() + 1);
+                manager.getCurrentScene().addEntity(shoot);
+            }
         }
     }
 
@@ -134,5 +142,15 @@ namespace R_TYPE {
             sprite->setRect(sf::IntRect(19, 2, 15, 14));
         else if (angle > 54 && angle < 90)
             sprite->setRect(sf::IntRect(1, 2, 15, 14));
+    }
+
+    void Ennemy::setPv(int pv)
+    {
+        _pv = pv;
+    }
+
+    int Ennemy::getPv()
+    {
+        return (_pv);
     }
 }

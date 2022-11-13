@@ -27,6 +27,7 @@ namespace R_TYPE {
     int GameSystem::nbrRocketShoot;
     int GameSystem::nbrLaserShoot;
     int GameSystem::nbrLaserBoucleShoot;
+    int GameSystem::nbrBossShoot;
 
     GameSystem::GameSystem()
     {
@@ -50,7 +51,10 @@ namespace R_TYPE {
         sceneManager.setCurrentScene(SceneManager::SceneType::MAIN_MENU);
         nbrBasicShoot = 0;
         nbrTurretShoot = 0;
+        nbrLaserShoot = 0;
         nbrRocketShoot = 0;
+        nbrLaserBoucleShoot = 0;
+        nbrBossShoot = 0;
     }
 
     void GameSystem::update(SceneManager &sceneManager, uint64_t deltaTime)
@@ -96,6 +100,8 @@ namespace R_TYPE {
                         setNbrLaserShoot(getNbrLaserShoot() - 1);
                     } else if (projectile->getType() == Projectiles::Type::LASER_BOUCLE)
                         GameSystem::setNbrLaserBoucleShoot(GameSystem::getNbrLaserBoucleShoot() - 1);
+                    else if (projectile->getType() == Projectiles::Type::BOSS)
+                        GameSystem::setNbrBossShoot(GameSystem::getNbrBossShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -133,12 +139,14 @@ namespace R_TYPE {
                 auto ennemy = Component::castComponent<Ennemy>((*e)[IComponent::Type::ENNEMY]);
 
                 if (pos->getPosition().x > rectWindow.left - 30 && pos->getPosition().x < rectWindow.left + 300) {
-                    ennemy->launchScript(sceneManager, e);
+                    ennemy->launchScript(sceneManager, e, rectWindow.left);
                     pos->setX(pos->getPosition().x + velocity->getVelocity().x * deltaTime);
                     pos->setY(pos->getPosition().y + velocity->getVelocity().y * deltaTime);
                 }
 
                 if (ennemy->getTimeSend() > 4) {
+                    if (ennemy->getType() == Ennemy::Type::BOSS)
+                        sceneManager.setCurrentScene(SceneManager::SceneType::WIN);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -186,6 +194,8 @@ namespace R_TYPE {
                         GameSystem::setNbrLaserShoot(GameSystem::getNbrLaserShoot() - 1);
                     else if (proj->getType() == Projectiles::Type::LASER_BOUCLE)
                         GameSystem::setNbrLaserBoucleShoot(GameSystem::getNbrLaserBoucleShoot() - 1);
+                    else if (proj->getType() == Projectiles::Type::BOSS)
+                        GameSystem::setNbrBossShoot(GameSystem::getNbrBossShoot() - 1);
                     sceneManager.getCurrentScene().removeEntity(e);
                     break;
                 }
@@ -314,7 +324,6 @@ namespace R_TYPE {
 
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
         std::shared_ptr<Ennemy> component3 = std::make_shared<Ennemy>(type);
-        std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
         std::shared_ptr<Animation> anim_die = std::make_shared<Animation>(Animation::State::DIE, sf::IntRect(130, 1, 32, 32), 0, 1, 6, true, 130, 1);
 
         if (type == Ennemy::Type::TURRET) {
@@ -345,11 +354,31 @@ namespace R_TYPE {
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(0, 0, 33, 36));
             velocity = std::make_shared<Velocity>(0, 0);
             std::shared_ptr<Animation> anim_move = std::make_shared<Animation>(Animation::State::MOVE, component->getRect(), 0, 0, 7, true);
-            compoment3->setState(Animation::State::MOVE);
+            component3->setState(Animation::State::MOVE);
             entity->addComponent(anim_move);
             component->getSprite().setScale(0.7, 0.7);
         } else if (type == Ennemy::Type::BOSS) {
-            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(0, 0, 167, 208));
+            component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(24, 0, 161, 213));
+            component3->setState(Animation::State::BORN1);
+            std::shared_ptr<Animation> anim_born1 = std::make_shared<Animation>(Animation::State::BORN1, component->getRect(), 1, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born2 = std::make_shared<Animation>(Animation::State::BORN2, component->getRect(), 2, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born3 = std::make_shared<Animation>(Animation::State::BORN3, component->getRect(), 3, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born4 = std::make_shared<Animation>(Animation::State::BORN4, component->getRect(), 4, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born5 = std::make_shared<Animation>(Animation::State::BORN5, component->getRect(), 5, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born6 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 6, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born7 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 7, 0, 0, false, 24);
+            std::shared_ptr<Animation> anim_born8 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 8, 0, 0, false, 24);
+            component3->setPv(100);
+
+            component->getSprite().setScale(0.9, 0.9);
+            entity->addComponent(anim_born1)
+                    .addComponent(anim_born2)
+                    .addComponent(anim_born3)
+                    .addComponent(anim_born4)
+                    .addComponent(anim_born5)
+                    .addComponent(anim_born6)
+                    .addComponent(anim_born7)
+                    .addComponent(anim_born8);
         }
         component3->setLoot(bonusType);
 
@@ -393,6 +422,8 @@ namespace R_TYPE {
             component3->setType(Projectiles::Type::LASER);
         else if (id >= 6056 && id <= 6065)
             component3->setType(Projectiles::Type::LASER_BOUCLE);
+        else if (id >= 6066 && id <= 6076)
+            component3->setType(Projectiles::Type::BOSS); 
         
         component->getSprite().setScale(0.7, 0.7);
 
@@ -716,6 +747,8 @@ namespace R_TYPE {
         std::vector<std::shared_ptr<IEntity>> spatial3 = createWavesEnnemy(90, 5, 1200, 122, 0.f, Ennemy::Type::SPATIAL);
         std::vector<std::shared_ptr<IEntity>> spatial4 = createWavesEnnemy(95, 5, 1200, 102, 0.f, Ennemy::Type::SPATIAL);
 
+        std::shared_ptr<Entity> boss = createEnnemy(101, 30, 2022, 6, 0.f, Ennemy::Type::BOSS);
+
         scene->addEntity(top_wall)
                 .addEntity(bottom_wall)
                 .addEntity(tower1)
@@ -751,7 +784,8 @@ namespace R_TYPE {
                 .addEntities(spatial1)
                 .addEntities(spatial2)
                 .addEntities(spatial3)
-                .addEntities(spatial4);
+                .addEntities(spatial4)
+                .addEntity(boss);
         return (scene);
     }
 

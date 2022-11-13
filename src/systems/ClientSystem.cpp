@@ -25,8 +25,8 @@ void ClientSystem::init(SceneManager &manager)
 {
     std::cout << "Client Network System initiating" << std::endl;
     _socket.open(asio::ip::udp::v4());
-    read_setup();
     _threadContext = std::thread([this]() { _context.run(); });
+    read_setup();
     graphicSystem->init(manager);
 }
 
@@ -173,6 +173,10 @@ void ClientSystem::createProjectile(SceneManager &manager, int id, float x, floa
         GameSystem::setNbrLaserShoot(GameSystem::getNbrLaserShoot() + 1);
     } else if (id >= 6056 && id <= 6065)
         proj = GameSystem::createProjectiles(id, 2, Position(x, y), Velocity(0, 0), false, sf::IntRect(37, 470, 63, 31));
+    else if (id >= 6066 && id <= 6076) {
+        proj = GameSystem::createProjectiles(id, 30, Position(x, y), Velocity(0, 0), false, sf::IntRect(574, 2062, 24, 22));
+        GameSystem::setNbrBossShoot(GameSystem::getNbrBossShoot() + 1);
+    }
     manager.getCurrentScene().addEntity(proj);
 }
 
