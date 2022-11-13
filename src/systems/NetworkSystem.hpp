@@ -35,15 +35,15 @@
 
                 NetworkSystem();
                 NetworkSystem(size_t port);
-                ~NetworkSystem();
+                virtual ~NetworkSystem() = default;
 
             protected:
                 void read_setup();
                 virtual void broadcast(SceneManager &) = 0;
                 virtual void handle_incomming_message() = 0;
-                void putInt(int value, uint8_t buff[], size_t c);
-                int readInt(uint8_t buff[], size_t c);
-                float readFloat(uint8_t buff[], size_t c);
+                void putInt(int value, std::vector<uint8_t> &buff, size_t c);
+                int readInt(const std::vector<uint8_t> &buff, size_t c);
+                float readFloat(const std::vector<uint8_t> &buff, size_t c);
 
                 // network variables
                 asio::io_context _context;
@@ -52,7 +52,7 @@
 
                 // buffers for reading
                 asio::ip::udp::endpoint _edp_buff;
-                uint8_t _buffer[1024];
+                std::vector<uint8_t> _buffer;
             private:
         };
 

@@ -24,10 +24,6 @@ ServerSystem::ServerSystem(size_t port) : NetworkSystem(port)
     eventSystem = std::make_unique<EventSystem>(std::unique_ptr<NetworkSystem>(this));
 }
 
-ServerSystem::~ServerSystem()
-{
-}
-
 void ServerSystem::init(SceneManager &manager)
 {
     std::cout << "Server Network System initiating" << std::endl;
@@ -45,12 +41,13 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
     }
     if (_player_id_add_queue.size() > 0) {
         for (size_t id : _player_id_add_queue) {
-            manager.getScene(SceneManager::SceneType::LEVEL1).addEntity(GameSystem::createPlayer(id, 53, 50, 40 + 20 * id));
+            manager.getScene(SceneManager::SceneType::LEVEL1).addEntity(GameSystem::createPlayer(id, 42, 50, 40 + 20 * id));
+            GameSystem::setNbrPlayerAlive(GameSystem::getNbrPlayerAlive() + 1);
         }
         _player_id_add_queue.clear();
     }
     bool passed = false;
-    if (_event_queue.size() != 0) {
+    if (!_event_queue.empty()) {
         for (auto &i : _event_queue) {
             for (auto &e : manager.getCurrentScene().get_by_id(i.first)) {
                 auto listener = Component::castComponent<Event>((*e)[IComponent::Type::EVENT]);
@@ -87,6 +84,9 @@ void ServerSystem::update(SceneManager &manager, uint64_t deltaTime)
 
 void ServerSystem::destroy()
 {
+    eventSystem->destroy();
+    _context.stop();
+    _threadContext.join();
     std::cout << "Network System destroyed" << std::endl;
 }
 
@@ -142,8 +142,9 @@ void ServerSystem::handle_incomming_message()
 
 void ServerSystem::broadcast(SceneManager &manager)
 {
-    uint8_t buff[MAX_MSG_LENGTH];
+    std::vector<uint8_t> buff;
 
+    buff.assign(MAX_MSG_LENGTH, 0);
     for (int i = 0; i < MAX_MSG_LENGTH; buff[i] = '\0', i++);
     if (true /* not game start */) {
         switch (manager.getCurrentSceneType()) {
@@ -154,6 +155,9 @@ void ServerSystem::broadcast(SceneManager &manager)
                 create_game_info_msg(buff, manager);
                 break;
             case SceneManager::SceneType::WIN:
+                create_game_info_msg(buff, manager);
+                break;
+            case SceneManager::SceneType::MAIN_MENU:
                 create_game_info_msg(buff, manager);
                 break;
             default :
@@ -171,7 +175,7 @@ void ServerSystem::broadcast(SceneManager &manager)
     }
 }
 
-void ServerSystem::create_start_game_msg(uint8_t *buff, std::unique_ptr<Connection> &connection)
+void ServerSystem::create_start_game_msg(std::vector<uint8_t> &buff, std::unique_ptr<Connection> &connection)
 {
     buff[0] = protocol::Header::START_GAME;
     buff[sizeof(protocol::Header)] = (size_t)connection->get_id();
@@ -179,13 +183,22 @@ void ServerSystem::create_start_game_msg(uint8_t *buff, std::unique_ptr<Connecti
     buff[sizeof(protocol::Header) + 2 * sizeof(size_t)] = '\0';
 }
 
-void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
+void ServerSystem::create_game_info_msg(std::vector<uint8_t> &buff, SceneManager &manager)
 {
     size_t c = 0;
 
     buff[c] = protocol::Header::GAME_INFO;
     c += sizeof(protocol::Header);
+    putInt((int)IEntity::Tags::CAMERA, buff, c);
+    c += sizeof(float);
+    putInt(50, buff, c);
+    c += sizeof(float);
+    putInt((int)manager.getCurrentSceneType(), buff, c);
+    c += sizeof(float);
+    c += sizeof(float) + sizeof(size_t) + sizeof(uint8_t);
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
+        if (!e)
+            continue;
         auto comp = Component::castComponent<Player>((*e)[IComponent::Type::PLAYER]);
         if (c + sizeof(size_t) + sizeof(float) * 4 + sizeof(uint8_t)) {
             putInt((int)IEntity::Tags::PLAYER, buff, c);
@@ -200,6 +213,8 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             c += sizeof(size_t);
             buff[c] = (uint8_t)Component::castComponent<Player>((*e)[IComponent::Type::PLAYER])->isAlive(); // entity's status
             c += sizeof(uint8_t);
+            if (Component::castComponent<Player>((*e)[IComponent::Type::PLAYER])->isAlive() == false)
+                manager.getCurrentScene().removeEntity(e);
         }
     }
     for (auto &e : manager.getCurrentScene()[IEntity::Tags::PROJECTILES]) {
@@ -285,13 +300,6 @@ void ServerSystem::create_game_info_msg(uint8_t *buff, SceneManager &manager)
             }
         }
     }
-    putInt((int)IEntity::Tags::CAMERA, buff, c);
-    c += sizeof(float);
-    // a remettre a 25
-    putInt(75, buff, c);
-    c += sizeof(float);
-    putInt((int)manager.getCurrentSceneType(), buff, c);
-    c += sizeof(float);
 }
 
 std::list<std::pair<int, NetworkSystem::ButtonState>> ServerSystem::getKeys() const

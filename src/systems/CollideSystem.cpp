@@ -42,7 +42,7 @@ namespace R_TYPE {
                 didHitEnnemi(sceneManager, e);
         }
         for (auto &player : sceneManager.getCurrentScene()[IEntity::Tags::PLAYER]) {
-            collideEnnemyPlayer(sceneManager, player);
+            // collideEnnemyPlayer(sceneManager, player);
             collideBonusPlayer(sceneManager, player);
             collideNonoPlayer(sceneManager, player);
         }
@@ -56,6 +56,8 @@ namespace R_TYPE {
             box.width = box.width * 0.7;
             box.height = box.height * 0.7;
 
+            if (component->IsDying())
+                continue;
             if (component->getType() == Ennemy::Type::ROBOT_DINO) {
                 if (pos->getPosition().y > 32)
                     if (isBlack(*pos, box) == false) {
@@ -230,6 +232,13 @@ namespace R_TYPE {
                     if (ennemy->getLoot() != Bonus::BonusType::NONE) {
                         auto bonus = GameSystem::createBonus(300, 56, posEnnemi->getPosition(), ennemy->getLoot());
                         sceneManager.getCurrentScene().addEntity(bonus);
+                    }
+                    if (ennemy->getType() == Ennemy::Type::BOSS) {
+                        projectile->setIsActive(false);
+                        if (projectile->getType() == Projectiles::Type::LASER_BOUCLE) {
+                            ennemy->setPv(ennemy->getPv() - 4);
+                        } else if (projectile->getType() == Projectiles::Type::CHARGED)
+                            ennemy->setPv(ennemy->getPv() - 2);
                     }
                     ennemy->setPv(ennemy->getPv() - 1);
                     if (ennemy->getPv() <= 0)

@@ -120,12 +120,13 @@ namespace R_TYPE {
         if (manager.getCurrentSceneType() == SceneManager::SceneType::LEVEL1) {
             // camera->move(0.25f, 0.f);
             window->setView(*camera);
-        
+
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::NONO]) {
                 amanager.update_nono(e, deltaTime);
             }
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::ENNEMY]) {
-                amanager.update_ennemy(e, deltaTime);
+                if (e && amanager.update_ennemy(e, deltaTime))
+                    manager.getCurrentScene().removeEntity(e);
             }
             for (auto &e : manager.getCurrentScene()[IEntity::Tags::PLAYER]) {
                 amanager.update_player(e, deltaTime);
