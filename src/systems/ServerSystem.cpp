@@ -157,6 +157,9 @@ void ServerSystem::broadcast(SceneManager &manager)
             case SceneManager::SceneType::WIN:
                 create_game_info_msg(buff, manager);
                 break;
+            case SceneManager::SceneType::MAIN_MENU:
+                create_game_info_msg(buff, manager);
+                break;
             default :
                 buff[0] = protocol::Header::PING;
                 break;
