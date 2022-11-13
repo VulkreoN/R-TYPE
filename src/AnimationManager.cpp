@@ -13,7 +13,7 @@ namespace R_TYPE {
     void AnimationManager::playAnim(std::shared_ptr<Animation> anim, std::shared_ptr<Sprite> sprite)
     {
         if (anim->getDoActions() == false) {
-            anim->setRect(sf::IntRect(anim->getX() * anim->getRect().width, anim->getY() * anim->getRect().height, anim->getRect().width,anim->getRect().height));
+            anim->setRect(sf::IntRect(anim->getX() * anim->getRect().width + anim->getPosX(), anim->getY() * anim->getRect().height + anim->getPosY(), anim->getRect().width,anim->getRect().height));
             sprite->setRect(anim->getRect());
         } else {
             anim->setCurrentFrame(anim->getClock().getElapsedTime());

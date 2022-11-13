@@ -30,7 +30,7 @@ namespace R_TYPE {
             void setIsAlive(bool _isAlive) {isAlive = _isAlive;};
 
             /// @brief Launch the good script with the type of the ennemy
-            void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy);
+            void launchScript(SceneManager &manager, std::shared_ptr<R_TYPE::IEntity> ennemy, float leftCamera);
 
             static sf::Vector2f getDistance(SceneManager &manager, Position selfPos);
 
@@ -45,6 +45,10 @@ namespace R_TYPE {
 
             Animation::State getState();
 
+            void setPv(int pv);
+
+            int getPv();
+
             void updateAngle(sf::Vector2f distance, std::shared_ptr<R_TYPE::IEntity> ennemy);
             void nextTimeSend() {timeSend += 1;};
             int getTimeSend() {return (timeSend);};
@@ -56,6 +60,7 @@ namespace R_TYPE {
             Animation::State _state;
             float angle;
             int timeSend;
+            int _pv;
     };
 }
 

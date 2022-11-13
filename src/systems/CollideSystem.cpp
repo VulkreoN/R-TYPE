@@ -231,7 +231,9 @@ namespace R_TYPE {
                         auto bonus = GameSystem::createBonus(300, 56, posEnnemi->getPosition(), ennemy->getLoot());
                         sceneManager.getCurrentScene().addEntity(bonus);
                     }
-                    ennemy->setIsAlive(false);
+                    ennemy->setPv(ennemy->getPv() - 1);
+                    if (ennemy->getPv() <= 0)
+                        ennemy->setIsAlive(false);
                     return;
                 }
             } else if (sprite->getAngle() == 180) {
@@ -243,7 +245,9 @@ namespace R_TYPE {
                         auto bonus = GameSystem::createBonus(300, 56, posEnnemi->getPosition(), ennemy->getLoot());
                         sceneManager.getCurrentScene().addEntity(bonus);
                     }
-                    ennemy->setIsAlive(false);
+                    ennemy->setPv(ennemy->getPv() - 1);
+                    if (ennemy->getPv() <= 0)
+                        ennemy->setIsAlive(false);
                     return;
                 }
             }
