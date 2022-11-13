@@ -304,7 +304,6 @@ namespace R_TYPE {
 
         std::shared_ptr<Velocity> velocity = std::make_shared<Velocity>(0, 0);
         std::shared_ptr<Ennemy> component3 = std::make_shared<Ennemy>(type);
-        std::shared_ptr<Ennemy> compoment3 = std::make_shared<Ennemy>(type);
 
         if (type == Ennemy::Type::TURRET) {
             if (angle == 0)
@@ -334,12 +333,12 @@ namespace R_TYPE {
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(0, 0, 33, 36));
             velocity = std::make_shared<Velocity>(0, 0);
             std::shared_ptr<Animation> anim_move = std::make_shared<Animation>(Animation::State::MOVE, component->getRect(), 0, 0, 7, true);
-            compoment3->setState(Animation::State::MOVE);
+            component3->setState(Animation::State::MOVE);
             entity->addComponent(anim_move);
             component->getSprite().setScale(0.7, 0.7);
         } else if (type == Ennemy::Type::BOSS) {
             component = std::make_shared<Sprite>(name, *component2, angle, sf::IntRect(24, 0, 161, 213));
-            compoment3->setState(Animation::State::BORN1);
+            component3->setState(Animation::State::BORN1);
             std::shared_ptr<Animation> anim_born1 = std::make_shared<Animation>(Animation::State::BORN1, component->getRect(), 1, 0, 0, false, 24);
             std::shared_ptr<Animation> anim_born2 = std::make_shared<Animation>(Animation::State::BORN2, component->getRect(), 2, 0, 0, false, 24);
             std::shared_ptr<Animation> anim_born3 = std::make_shared<Animation>(Animation::State::BORN3, component->getRect(), 3, 0, 0, false, 24);
@@ -348,6 +347,7 @@ namespace R_TYPE {
             std::shared_ptr<Animation> anim_born6 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 6, 0, 0, false, 24);
             std::shared_ptr<Animation> anim_born7 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 7, 0, 0, false, 24);
             std::shared_ptr<Animation> anim_born8 = std::make_shared<Animation>(Animation::State::BORN6, component->getRect(), 8, 0, 0, false, 24);
+            component3->setPv(100);
 
             component->getSprite().setScale(0.9, 0.9);
             entity->addComponent(anim_born1)
